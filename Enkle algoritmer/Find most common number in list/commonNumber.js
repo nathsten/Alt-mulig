@@ -7,7 +7,6 @@ let numbers = [5,2,4,6,5,7,2,1,2];
  * @returns {Number} 
  */
 const commonNumbers = (n) => {
-    let numberAndIndex = [];
     let output;
     let numberTimesFound = [];
     
@@ -18,7 +17,6 @@ const commonNumbers = (n) => {
         for(let j=0; j<n.length; j++){
             if(n[i] === n[j] && i !== j){
                 timesFound += 1;
-                numberAndIndex.push([n[j], i, j]);
             }
         }
 
