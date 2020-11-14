@@ -443,6 +443,12 @@ var highScoreDIV = document.getElementById("highScoreLI");
 //Lagre high score i en array;
 let highScoreArray = [];
 
+if(localStorage.getItem("mazeGameHighScore")){
+    let getHighScore = JSON.parse(localStorage.getItem("mazeGameHighScore"));
+    highScoreArray = getHighScore;
+    highScoreDIV.innerHTML += `<h2 id="highScore"> High score: ${finnHighScore(highScoreArray)}`;    
+}
+
 //Timer som teller hvor lang tid du bruker
 var timer = document.getElementById("timer");
 let tidBrukt = 90;
@@ -459,28 +465,12 @@ var scoreList = document.getElementById("scoreListLi");
 
 //Finne high score og lagre den slik at den vises 
 function finnHighScore(score){
-    let maxScore = highScoreArray[0];
-    for (let i=0; i<score.length; i+=1){
-        const hs = score[i];
-        if (maxScore < hs){maxScore = hs};
+    let maxScore = score[0];
+    for (let i=0; i<score.length; i++){
+        let s = score[i];
+        if (maxScore < s){maxScore = s};
     }
     return maxScore
-}
-
-//Lage en array som skal lagres i localStorrage
-//Denne skal sorters slik at jeg enkelt kan hente ut første verdi
-let storrageScore = [];
-storrageScore.sort((a,b) => a-b).reverse();
-storrageScore[0];
-
-//Henter ut highscore;
-//Ting fungerer nesten nå, men den henter alle localStorrage items
-//Må få den til å kun huske den største, kanskje lage en forLoop
-if (localStorage.length > 0){
-    highScoreDIV.innerHTML += `<h2 id="highScore"> High score: ${localStorage.getItem("myScore")}`;
-    header.style.marginLeft = "250px";
-}   else{
-    highScoreDIV.innerHTML += `<div id="noShow"`;
 }
 
 //Etter spiller har trykker på denne starter spillet,
@@ -582,18 +572,15 @@ function startSpillet(){
             holdes 2-1 verdier inni arrayen
             **/
             highScoreArray.push(gameScore);
-            storrageScore.push(gameScore);
-            storrageScore.sort((a,b) => a-b);
-            if (storrageScore[0] < gameScore){
-                localStorage.setItem("myScore",gameScore);
-            }
+            // storrageScore.push(gameScore);
+            localStorage.setItem("mazeGameHighScore", JSON.stringify(highScoreArray));
             //Setter inn scoren din når du vinner eller taper;
             scoreList.innerHTML = `<div id="noShow">${String(0)}`; //Denner bare ekststerer for å holde den slik at verdiene blir endret, ikke lagt til.
             scoreList.innerHTML += `<h2 id="Score">Score: ${gameScore}`;
             scoreList.innerHTML += `<h2 id="Time">Time: ${90-tidBrukt}s`;
             scoreList.innerHTML += `<h2 id="Attempts">Attempts: ${forsøk}`;
             highScoreDIV.innerHTML = `<div id="noShow"> ${String(0)}`;
-            highScoreDIV.innerHTML += `<h2 id="highScore"> High score: ${finnHighScore(highScoreArray)}`;
+            highScoreDIV.innerHTML += `<h2 id="highScore"> High score: ${finnHighScore(highScoreArray)}`; //Fikse dette
             //Flytter på header
             var header = document.getElementById("header");
             header.style.marginLeft = "250px";
@@ -621,13 +608,8 @@ function startSpillet(){
             s.div.style.display = "block";
             //Pusher scoren.
             highScoreArray.push(gameScore);
-            storrageScore.push(gameScore);
-            storrageScore.sort((a,b) => a-b);
-            if (localStorage.length = 0){
-                localStorage.setItem("myScore",gameScore);
-            }   else if (storrageScore[0] < gameScore){
-                localStorage.setItem("myScore",gameScore);
-            }
+            // storrageScore.push(gameScore);
+            localStorage.setItem("mazeGameHighScore", JSON.stringify(highScoreArray));
             t.div.style.transform = "rotate(0deg)";
             t.div.style.transition = "0s";
            
@@ -637,7 +619,7 @@ function startSpillet(){
             scoreList.innerHTML += `<h2 id="Time">Time: ${90-tidBrukt}s`;
             scoreList.innerHTML += `<h2 id="Attempts">Attempts: ${forsøk}`;
             highScoreDIV.innerHTML = `<div id="noShow"> ${String(0)}`;
-            highScoreDIV.innerHTML += `<h2 id="highScore"> High score: ${finnHighScore(highScoreArray)}`;
+            highScoreDIV.innerHTML += `<h2 id="highScore"> High score: ${finnHighScore(highScoreArray)}`; //Her også highscore
             //Flytter på header
             var header = document.getElementById("header");
             header.style.marginLeft = "250px";
@@ -647,8 +629,6 @@ function startSpillet(){
             forsøk = 0;
             antForsøk.innerHTML = "Your tries: ";
             gameScore = 4000;
-            localStorage.setItem("myScore",storrageScore);
-            // localStorage.removeItem("myScore");
         }// Lage det slik at når forsøk overstiger 5 så vises start skjerm i gjen og spillet stopper.
 
         //Hvis tid blir til 0 sekund;
