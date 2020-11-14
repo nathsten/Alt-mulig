@@ -29,6 +29,9 @@ const commonNumbers = (n) => {
         }
     }
     
+    /**
+     * @param {Number[][]} n
+     */
     const findCommonNumber = (n) => {
         let commonNumber = n[0][1];
 
