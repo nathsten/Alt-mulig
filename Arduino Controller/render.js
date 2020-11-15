@@ -16,23 +16,29 @@ let btnClicked = false;
 
 function controllArduino(){
     if(btnClicked !== true){
-        try{
-            let tOn = turnOn();
-        }   catch(err){ };
-
+        preform();
         btnClicked = true;
         btn.style.backgroundColor = "#ea450a";
         btn.style.transition = "0.25s";
         btn.innerHTML = "Turn Off"
     }
     else{
-        try{
-            let tOff = turnOff();
-        }   catch(err){ }
- 
+        preform();
         btnClicked = false;
         btn.style.backgroundColor = "#15d325";
         btn.style.transition = "0.25s";
         btn.innerHTML = "Turn On";
+    }
+}
+
+const preform = () => {
+    if(btnClicked !== true){
+        let tOn = turnOn();
+    }
+    else if(btnClicked === true){
+        let tOff = turnOff();
+    }
+    else{
+        return console.error("WTF");
     }
 }
