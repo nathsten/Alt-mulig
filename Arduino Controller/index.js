@@ -1,24 +1,39 @@
 const {Board, Led} = require("johnny-five");
-const board = new Board();
+const express = require('express');
+const port = 3000;
+const index = express();
+const server = index.listen(port, callBack);
 
-export function turnOn(){
-    board.on("ready", () => {
-        const led = new Led(11);
+index.use(express.static('public'))
 
-        led.brightness(255);
-    });
+function callBack(error){
+    if(error){
+        console.error('Noe gikk galt...')
+    }
+    else{
+        console.log(`Server kjører på locahost:${port}`);
+    }
 }
 
-export function turnOff(){
-    board.on("ready", () => {
-        const led = new Led(11);
+index.get('/power/:onOff', turnOnFunk);
 
-        led.brightness(0);
-    });
+function turnOnFunk(req, res){
+    const onOff = req.params.onOff;
+    if(onOff === 'on'){
+        console.log('Turning on...');
+        turnOn();
+    }
+    else if(onOff === 'off'){
+        console.log('Turning off...')
+        turnOff();
+    }
+    else{
+        console.log('Fokk...');
+    }
 }
 
-// Funksjoner som ikke eksporteres:
 function turnOn(){
+    const board = new Board();
     board.on("ready", () => {
         const led = new Led(11);
 
@@ -27,23 +42,10 @@ function turnOn(){
 }
 
 function turnOff(){
+    const board = new Board();
     board.on("ready", () => {
         const led = new Led(11);
 
         led.brightness(0);
     });
 }
-
-// Utføre funksjonene.
-// turnOff();
-// turnOn();
-
-// kjøre funksjonen i terminal:
-// node /Users/nathaniel/Documents/VG2/IT/Alt-mulig/Arduino\ Controller/index.js 
-
-
-// let currWindow = remote.BrowserWindow.getFocusedWindow();
-
-// window.closeCurrentWindow = function(){
-//     currWindow.close();
-// }
