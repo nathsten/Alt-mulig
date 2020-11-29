@@ -11,7 +11,7 @@ function callBack(error){
         console.error('Noe gikk galt...')
     }
     else{
-        console.log(`Server kjører på locahost:${port}`);
+        console.log(`Server kjører på localhost:${port}`);
     }
 }
 
