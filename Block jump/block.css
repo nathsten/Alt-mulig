@@ -1,0 +1,27 @@
+#gameDiv{
+    position: relative;
+    border: solid black 1px;
+    width: 600px;
+    height: 400px;
+    left: calc(50% - 300px);
+    top: 40px;
+    overflow: hidden;
+}
+
+#player{
+    position: absolute;
+    width: 40px;
+    height: 80px;
+    background-color: blue;
+    left: 60px;
+    bottom: 0px;
+}
+
+#block{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: green;
+    bottom: 0px;
+    right: 0px;
+}
