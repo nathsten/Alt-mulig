@@ -1,0 +1,1 @@
+# Dette er en mappe med masse forskjellige små prosjekter jeg holder på med.
