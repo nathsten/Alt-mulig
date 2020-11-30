@@ -1,5 +1,3 @@
-//@ts-check
-
 const $ = (id) => document.getElementById(id);
 
 function setup(){
@@ -1591,6 +1589,7 @@ function setup(){
     function sjekkFargeNavn(){
         let hex = inptHex.value;
 
+        // Lage noe som får den til å regne ut den nermeste?
         fargeNavnOut.innerHTML = alleFarger[hex];
         fargeNavnOut.style.color = `#${hex}`;
 
@@ -1599,25 +1598,3 @@ function setup(){
 
     }
 }
-
-// function finnFargeNavn(hex){
-//     const alleFarger = 
-//     {
-//         "FFFFFF": "Hvit",
-//         "000000": "svart",
-//         "FF0000": "rød",
-//         "00FF00": "grønn",
-//         "0000FF": "blå",
-//         "FF00FF": "rosa",
-//         "FFFF00": "gul",
-//         "00FFFF": "turkis"
-//     }
-//     if (alleFarger[hex] != undefined){
-//         return alleFarger[hex];
-//     }   else{
-//         return "Skriv inn en gyldig Hex-kode"
-//     }
-
-// }
-
-// console.log(finnFargeNavn("FFF00")):
