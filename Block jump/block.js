@@ -1,11 +1,39 @@
+// @ts-check
+
+/**
+ * @param {string} id
+ * @returns {object}
+ */
 const $ = (id) => document.getElementById(id);
 
-const player = $("player");
+let player = $("player");
 const gameDiv = $("gameDiv");
 const scoreDiv = $("score");
 const highscoreDiv = $("highscore");
 
-let allIntervals = [];
+// Vet ikke om dette blir rett, må finne ut hvordan jeg skal flytte flere av intervallene
+//  og variablene inn i class.
+class Player{
+    x = 0;
+    y = 0;
+    vy = 1;
+    ay = 0.2;
+    div = player;
+
+    jump(){
+        this.div.style.left = `${this.x}px`;
+        // Skirve om hele jump funksjonen her...
+    }
+}
+
+player = new Player;
+player.x = 80;
+player.y = 0;
+player.vy = 1;
+player.ay = 0.2;
+player.jump();
+
+let allIntervals = [0];
 
 let jumping = false;
 let playing = false;
@@ -16,12 +44,25 @@ let playerx = 40;
 let playerVY = 1;
 
 let score = 0;
-let scoreArr = [];
+let scoreArr = [0];
 
 let scoreInter;
 
+/**
+ * @param {Number[]} arr
+ */
+function highscore(arr){
+    let hs = arr[0];
+    for(let i=0; i<arr.length; i++){
+        if(arr[i] > hs){hs = arr[i]};
+    }
+    highscoreDiv.innerHTML = `Highscore: ${hs}`;
+}
+
+highscore(scoreArr);
+
 const jump = () => {
-    playerY = 1;
+    playerY = 0;
     playerVY = 1;
     let move;
     let vxup;
@@ -63,6 +104,9 @@ const moveBlock = () => {
     let vankslighetsgrad;
     let time = 10;
 
+    blockVX = 2;
+    blockX = -40
+
     function createMoveBlockTimer(){
         moveBlock = setInterval(() => {
             blockX += blockVX;
@@ -90,18 +134,25 @@ const moveBlock = () => {
     allIntervals.push(moveBlock, vankslighetsgrad);
 }
 
-const checkSpace = (e) => {if(e.keyCode === 32 || e.keyCode === 13){
+/**
+ * @param {{ keyCode: number; key: string; }} e
+ */
+const checkSpace = (e) => {if(e.keyCode === 32){
     if(jumping !== true && playing !== false){
         jump();
         jumping = true;
     }
 }};
 
-const checkEnter = (e) => {if(e.keyCode === 32){
+/**
+ * @param {{ keyCode: number; key: string; }} e
+ */
+const checkEnter = (e) => {if(e.keyCode === 32 || e.key === 'Enter'){
     if(playing !== true){
         if($("block")){
             $("block").remove();
         }
+
         moveBlock();
         jump();
         scoreUp();
@@ -115,6 +166,8 @@ function checkFail(){
         blockX = -40;
         blockVX = 2;
         playerY = 0;
+        scoreArr.push(score);
+        highscore(scoreArr);
         score = 0;
         $("block").style.right = `${blockX}px`;
         player.style.bottom = `${playerY}px`;
