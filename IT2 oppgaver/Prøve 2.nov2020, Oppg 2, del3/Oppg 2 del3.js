@@ -1,6 +1,7 @@
 const $ = (id) => document.getElementById(id);
 
 const alleFarger = {
+    "000000": "Black",
     "000080": "Navy Blue",
     "0000C8": "Dark Blue",
     "0000FF": "Blue",
@@ -1593,6 +1594,7 @@ addHex();
 const inptHex = /**@type {HTMLInputElement} */ ($("inptHex"));
 const fargeNavnOut = $("fargeNavnOut");
 const submit = $("submit");
+inptHex.focus();
 submit.addEventListener("click", sjekkFargeNavn);
 document.addEventListener("keyup", sjekkEnter);
 
@@ -1610,10 +1612,10 @@ function sjekkFargeNavn(){
     let hex = inptHex.value;
 
     let dec = Number(hexToDec(hex));
+    console.log(dec)
 
     function findClosest(){
         let bench = Number(dec - decimalCodes[34]);
-        console.log(bench)
         let cHex = Hexkoder[1];
 
         for(let i=0; i<decimalCodes.length; i++){
