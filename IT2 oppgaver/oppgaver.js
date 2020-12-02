@@ -29,6 +29,17 @@ let tallF = [1,3,-3];
 // console.log(filterNumbers(tallA, tallB, tallC, tallD, tallE, tallF));
 
 
+/** Sorter ut tall over 0.
+ * @param {number[]} a
+ */
+function filterUnder0(a){
+    let kopi = [];
+    for(let i=0; i<a.length; i++){
+    if(a[i] > 0){kopi.push(a[i])}
+    }
+    return kopi;
+}
+
 /** Finner det miste tallet blandt tre alternativ
  * @param {number} a
  * @param {number} b
@@ -171,7 +182,9 @@ function uniq(a){
 
 // console.log(uniq([1,2,2,1,1,4,4,3,5,2,2,1,2]));
 
-/**
+/** Gjør om tilsendt valuta til NOK
+ * Veldig tungvint, mulig bedre å splitte på lengden -3
+ * Denne finner valuaen selv om valuta koden (SEK/NOK/USD/etc..) er lengre enn 3.
  * @param {string} a
  */
 function valuta(a){
@@ -220,20 +233,101 @@ function valuta(a){
             convertet = Number(sumHel) * 0.9;
             break;
     }
-    return convertet;
+    return convertet + " kr";
 }
-let penger = "192USD";
-console.log(valuta(penger));
+console.log(valuta("192SEK"));
 
 
+/** Sjekker at a&b ikke er tomme, lengden av "a" er større enn 2, og at "b" er 
+        større enn 8 og mindre enn 92
+ * @param {{ value: string; length: number; }} a
+ * @param {{ value: string; }} b
+ */
 function dd(a,b){
     let korret = false;
-    if(a.value !== "" && b.value !== "" && 
-        a.length > 2 && Number(b) > 8 && 
-        Number(b) < 92){
-            korret = true;
+    if(a.value !== "" && b.value !== ""){
+        if(a.length > 2){
+            if(Number(b.value) > 8 && Number(b.value) < 92){
+                korret = true;
+            }
+        }
     }
     return korret;
 }
 
-// console.log(dd("he", "32"))
+// console.log(dd("he", "32"));
+
+/** Returnerer alle ord som begynner på "c"
+ * @param {string[]} a
+ */
+function katalogFilter(a){
+    let cTabell = [];
+
+    for(let i=0; i<a.length; i++){
+        if(a[i].toLowerCase().charAt(0) === "c"){
+            cTabell.push(a[i]);
+        }
+    }
+    return cTabell;
+}
+
+let ordListe = ["aaa", "Cdf", "agc", "cgd"];
+
+// console.log(katalogFilter(ordListe));
+
+/** Summere alle tall under 89.
+ * @param {Number[]} a
+ */
+function summer(a){
+    let sumTable = [];
+
+    for(let i=0; i<a.length; i++){
+        if(a[i] > 89){
+            sumTable.push(a[i])
+        }
+    }
+    return sumTable.reduce((a,b) => a+b);
+}
+
+// console.log(summer([12,45,100,112]))
+
+/** Summerer prisen av alle objekter som er billigere enn 208kr
+ * @param {Object} a
+ */
+function prisberegning(a){
+    let t = [];
+    let ps = Object.keys(a);
+    
+    for(let i=0; i<ps.length; i++){
+        if(Number(a[ps[i]].pris) < 208){
+            t.push(Number(a[ps[i]].pris))
+        }
+    }
+
+    return t.reduce((a,b) => a+b);
+}
+
+let prisliste = {
+    "bukse": {"pris": 100},
+    "sko": {"pris": 120},
+    "skjorte": {"pris": 250}
+}
+
+// console.log(prisberegning(prisliste))
+
+/** Sjekker om alle ord i en array begynner med "c".
+ * @param {string[]} a
+ */
+function katalogC(a){
+    let tof = true;
+
+    for(let i=0; i<a.length; i++){
+        if(a[i].toLowerCase().charAt(0) !== "c"){
+            tof = false
+        }
+    }
+
+    return tof;
+}
+
+// console.log(katalogC(["csj", "csso", "cdi", "fds"]));
