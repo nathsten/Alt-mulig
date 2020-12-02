@@ -140,19 +140,19 @@ function topN(a){
         }
     }
     const findCommonWord = (n) =>{
-        let commonNumber = [n[0][0]];
+        let commonWord = [n[0][0]];
         let bench = n[0][1];
 
         for(let i=0; i<n.length; i++){
             if(n[i][1] > bench){
-                commonNumber = [n[i][0]];
+                commonWord = [n[i][0]];
                 bench = n[i][1];
             }
             else if(n[i][1] === bench){
-                commonNumber.push(n[i][0]);
+                commonWord.push(n[i][0]);
             }
         }
-        return commonNumber;
+        return commonWord;
     }
     output = findCommonWord(gjentattord);
     if(output.length > 1){
