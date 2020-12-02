@@ -14,7 +14,7 @@ const scoreDiv = $("score");
 const highscoreDiv = $("highscore");
 
 let playerMove;
-let playerAX;
+let playerAY;
 let blockMove;
 let blockAX;
 let blockAXTime = 100;
@@ -38,7 +38,7 @@ class gameObject{
         this.y = 0;
         this.ay = 0.2;
         this.vy = 1;
-        playerAX = setInterval(() => {
+        playerAY = setInterval(() => {
             this.vy += this.ay;
         }, 1);
         playerMove = setInterval(() => {
@@ -48,12 +48,12 @@ class gameObject{
                 this.ay = -0.2;
             }
             if(this.y < 0){
-                clearInterval(playerAX);
+                clearInterval(playerAY);
                 clearInterval(playerMove);
                 jumping = false;
             }
         }, 10);
-    allIntervals.push(playerAX, playerMove);
+    allIntervals.push(playerAY, playerMove);
     }
 
     moveBlock(){
@@ -72,11 +72,17 @@ class gameObject{
             this.div.style.right = `${this.x}px`;
             checkFail(player.y, block.x);
             if(this.x > 600){
-                this.x = -40;
+                const rndPos = () => Math.floor(Math.random() * 100) * (-1);
+                console.log(rndPos());
+                this.x = rndPos();
             }
         }, 10);
     allIntervals.push(blockAX, blockMove, blockAXIntervall);
     }
+}
+
+if(localStorage.getItem("blockScore")){
+    scoreArr = JSON.parse(localStorage.getItem("blockScore"));
 }
 
 player = new gameObject;
@@ -127,6 +133,7 @@ const checkFail = (p, b) => {
         playing = false;
         scoreArr.push(score);
         highscore(scoreArr);
+        localStorage.setItem("blockScore", JSON.stringify(scoreArr));
         score = 0;
         block.x = -40;
         blockAXTime = 100;
@@ -137,7 +144,7 @@ const checkFail = (p, b) => {
 /**
  * @param {Number[]} arr
  */
-function highscore(arr){
+const highscore = (arr) => {
     let hs = arr[0];
     for(let i=0; i<arr.length; i++){
         if(arr[i] > hs){hs = arr[i]};

@@ -151,7 +151,7 @@ function topN(a){
     return output;
 }
 
-// console.log(topN("det var en gang en mann som sa det er en gang det"));
+console.log(topN("det var en gang en mann som sa det er en gang det"));
 
 /** Tar vekke alle like tall i en array. 
  * @param {array} a 
@@ -170,3 +170,47 @@ function uniq(a){
 }
 
 // console.log(uniq([1,2,2,1,1,4,4,3,5,2,2,1,2]));
+
+/**
+ * @param {string} a
+ */
+function valuta(a){
+    let sum = [];
+    let valuta = [];
+    let sumHel = "";
+    let valutaHel = "";
+    let convertet;
+
+    let split = a.split("");
+    // console.log(split);
+
+    for(let i=0; i<split.length; i++){
+        if(Number(split[i]) || Number(split[i]) == 0){
+            sum.push(Number(split[i]));
+        }
+        else{
+            valuta.push(split[i])
+        }
+    }
+    
+    for(let i=0; i<sum.length; i++){
+        sumHel += sum[i];
+    }
+
+    for(let i=0; i<valuta.length; i++){
+        valutaHel += valuta[i];
+    }
+    console.log(sumHel, valutaHel);
+    
+    if(valutaHel === "USD"){
+        convertet = Number(sumHel) * 6.5;
+    }
+    else if( valutaHel === "DK"){
+        convertet = Number(sumHel) * 1.2;
+    }
+
+
+    return convertet;
+}
+let penger = "100USD";
+// console.log(valuta(penger));
