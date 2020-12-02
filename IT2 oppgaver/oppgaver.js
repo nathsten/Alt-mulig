@@ -233,9 +233,9 @@ function valuta(a){
             convertet = Number(sumHel) * 0.9;
             break;
     }
-    return convertet + " kr";
+    return convertet;
 }
-console.log(valuta("192SEK"));
+// console.log(valuta("192SEK"));
 
 
 /** Sjekker at a&b ikke er tomme, lengden av "a" er større enn 2, og at "b" er 
@@ -331,3 +331,59 @@ function katalogC(a){
 }
 
 // console.log(katalogC(["csj", "csso", "cdi", "fds"]));
+
+/** Finner hyppigheten til hvert ord i en settning. 
+ * @param {string} a
+ * @returns {object}
+ */
+function wordFrequency(a){
+    let wf = {};
+    let w = a.split(" ");
+
+    for(let i=0; i<w.length; i++){
+        if(wf[w[i]] === undefined){
+            wf[w[i]] = 1;
+        }
+        else{
+        wf[w[i]] += 1;
+        }
+    }
+
+    return wf;
+}
+
+// console.log(wordFrequency("det var en gang en mann som en gang sa det"))
+
+/** Gjør om entall til flertall
+ * @param {string} a
+ * @returns {string}
+ */
+function plural(a){
+    let i = a.length;
+    if(a.split("")[i-1] !== "s"){
+        a += "s";
+    }
+    return a;
+}
+
+// console.log(plural("cat"));
+
+/** Teller opp hvor mange tall det finnes i en array. 
+ * @param {number[]} a
+ * @returns {object}
+ */
+function telling(a){
+    let t = {};
+
+    for(let i=0; i<a.length; i++){
+        if(t[a[i]] !== undefined){
+            t[a[i]] += 1;
+        }
+        else{
+            t[a[i]] = 1;
+        }
+    }
+    return t;
+}
+
+console.log(telling([1,1,1,1,2,2,2,3,3,4,4,5,5,6,6,6,6]));
