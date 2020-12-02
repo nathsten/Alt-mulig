@@ -151,7 +151,7 @@ function topN(a){
     return output;
 }
 
-console.log(topN("det var en gang en mann som sa det er en gang det"));
+// console.log(topN("det var en gang en mann som sa det er en gang det"));
 
 /** Tar vekke alle like tall i en array. 
  * @param {array} a 
@@ -182,7 +182,6 @@ function valuta(a){
     let convertet;
 
     let split = a.split("");
-    // console.log(split);
 
     for(let i=0; i<split.length; i++){
         if(Number(split[i]) || Number(split[i]) == 0){
@@ -200,17 +199,41 @@ function valuta(a){
     for(let i=0; i<valuta.length; i++){
         valutaHel += valuta[i];
     }
-    console.log(sumHel, valutaHel);
     
-    if(valutaHel === "USD"){
-        convertet = Number(sumHel) * 6.5;
+    switch(valutaHel){
+        case("USD"):
+            convertet = Number(sumHel) * 6.4;
+            break;
+        case("GBP"):
+            convertet = Number(sumHel) * 10.4;
+            break;
+        case("DKK"):
+            convertet = Number(sumHel) * 1.1;
+            break;
+        case("EUR"):
+            convertet = Number(sumHel) * 8.2;
+            break;
+        case("JPY"):
+            convertet = Number(sumHel) * 6.0;
+            break;
+        case("SEK"):
+            convertet = Number(sumHel) * 0.9;
+            break;
     }
-    else if( valutaHel === "DK"){
-        convertet = Number(sumHel) * 1.2;
-    }
-
-
     return convertet;
 }
-let penger = "100USD";
-// console.log(valuta(penger));
+let penger = "192USD";
+console.log(valuta(penger));
+
+
+function dd(a,b){
+    let korret = false;
+    if(a.value !== "" && b.value !== "" && 
+        a.length > 2 && Number(b) > 8 && 
+        Number(b) < 92){
+            korret = true;
+    }
+    return korret;
+}
+
+// console.log(dd("he", "32"))
