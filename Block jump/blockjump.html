@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Block jump</title>
     <link rel="stylesheet" href="block.css">
+    <script src="block.js"></script>
 </head>
 <body>
 
@@ -13,9 +14,16 @@
         <div id="highscore"></div>
         <div id="player"></div>
         <div id="block"></div>
+        <div id="welcomeMsg" class="msg">
+            <p>Press space to start the game!</p>
+        </div>
+        <div id="gameOver" class="msg">
+            <p>Game over! Press space to restart!</p>
+        </div>
     </div>
 
-    
-    <script src="block.js"></script>
+    <script>
+        setup();
+    </script>
 </body>
 </html>

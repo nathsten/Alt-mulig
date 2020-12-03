@@ -139,6 +139,9 @@ function topN(a){
             }
         }
     }
+    /**
+     * @param {string | any[]} n
+     */
     const findCommonWord = (n) =>{
         let commonWord = [n[0][0]];
         let bench = n[0][1];
@@ -162,7 +165,7 @@ function topN(a){
     return output;
 }
 
-// console.log(topN("det var en gang en mann som sa det er en gang det"));
+console.log(topN("det var en gang en mann som sa det er en gang det"));
 
 /** Tar vekke alle like tall i en array. 
  * @param {array} a 
@@ -237,13 +240,48 @@ function valuta(a){
 }
 // console.log(valuta("192SEK"));
 
+/** Litt bedre måte å gjøre det på.
+ * @param {string} a
+ * @returns {Number}
+ */
+const valutaToNOK = (a) => {
+    let valuta = a.slice(a.length-3);
+    let valutaNum;
+    let sumStr = ""; for(let i=0; i<a.length-3; i++){sumStr += a[i]}; // Må garrantert finnes en bedre måte å gjøre dette på...
+    let sum = Number(sumStr);
+
+    switch(valuta.toUpperCase()){
+        case("USD"):
+            valutaNum = 6.4;
+            break;
+        case("GBP"):
+            valutaNum = 10.4;
+            break;
+        case("DKK"):
+            valutaNum = 1.1;
+            break;
+        case("EUR"):
+            valutaNum = 8.2;
+            break;
+        case("JPY"):
+            valutaNum = 6.0;
+            break;
+        case("SEK"):
+            valutaNum = 0.9;
+            break;
+    }
+    return sum*valutaNum;
+}
+
+// console.log(valutaToNOK("178gbp"))
+
 
 /** Sjekker at a&b ikke er tomme, lengden av "a" er større enn 2, og at "b" er 
         større enn 8 og mindre enn 92
  * @param {{ value: string; length: number; }} a
  * @param {{ value: string; }} b
  */
-function dd(a,b){
+function checkAB(a,b){
     let korret = false;
     if(a.value !== "" && b.value !== ""){
         if(a.length > 2){
@@ -255,7 +293,7 @@ function dd(a,b){
     return korret;
 }
 
-// console.log(dd("he", "32"));
+// console.log(checkAB("he", "32"));
 
 /** Returnerer alle ord som begynner på "c"
  * @param {string[]} a
@@ -386,4 +424,71 @@ function telling(a){
     return t;
 }
 
-console.log(telling([1,1,1,1,2,2,2,3,3,4,4,5,5,6,6,6,6]));
+// console.log(telling([1,1,1,1,2,2,2,3,3,4,4,5,5,6,6,6,6]));
+
+/** Finner den kombinasjonen av pakkene(b) som er mindre eller lik "a";
+ * @param {number} a
+ * @param {number[]} b
+ */
+function taMedBest(a,b){
+    let summer = [];
+
+    for(let i=0; i<b.length; i++){
+        let sum = 0;
+        for(let j=i; j<b.length; j++){
+            sum += b[j];
+            summer.push(sum);
+        }
+        summer.push(sum);
+    }
+
+    let best = summer[0];
+
+    for(let i=0; i<summer.length; i++){
+        if(summer[i] > best && summer[i] <= a){
+            best = summer[i];
+        }
+    }
+
+    return best;
+}
+
+// console.log(taMedBest(60, [8,20,30,5,4]));
+
+/** Newton for å finne nullpunkt (ikke helt newton men den funker)
+ * @param {string} a
+ * @param {number} b
+ * @param {number} c
+ */
+const newton = (a,b,c) => {
+    let nullpunkt;
+
+    let n = "";
+    for(let i=0; i<a.length; i++){
+        if(Number(a[i]) || Number(a[i]) === 0){
+            n += String(a[i]);
+        }
+    }
+    
+    let cN = Number(n);
+
+    let x1 = -0+(Math.sqrt(0**2 - 4*1*-cN))/2;
+    let x2 = -0-(Math.sqrt(0**2 - 4*1*-cN))/2;
+
+    if(x1 > b && x1 < c && x2 > b && x2 < c){
+        nullpunkt = [x1.toFixed(3), x2.toFixed(3)];
+    }
+    else if(x1 > b && x1 < c){
+        nullpunkt = x1.toFixed(3);
+    }
+    else if(x2 > b && x2 < c){
+        nullpunkt = x2.toFixed(3);
+    }
+    else{
+        nullpunkt = "Fant ingen nullpunkt innenfor intervallet";
+    }
+
+    return nullpunkt;
+}
+
+console.log(newton("x*x-16", -1, 12));
