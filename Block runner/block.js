@@ -150,10 +150,7 @@ const setup = () => {
      * @param {Number[]} arr
      */
     const highscore = (arr) => {
-        let hs = arr[0];
-        for(let i=0; i<arr.length; i++){
-            if(arr[i] > hs){hs = arr[i]};
-        }
+        let hs = arr.reduce((a,b) => b > a ? b:a);
         highscoreDiv.innerHTML = `Highscore: ${hs}`;
         scoreDiv.innerHTML = `Score: ${score}`;
     }
