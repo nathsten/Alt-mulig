@@ -1573,7 +1573,7 @@ const Hexkoder = Object.keys(alleFarger);
 
 let decimalCodes = [];
 
-function hexToDec(hex) {
+const hexToDec = (hex) => {
     let result = 0, digitValue;
     hex = hex.toLowerCase();
     for (let i = 0; i < hex.length; i++) {
@@ -1583,7 +1583,7 @@ function hexToDec(hex) {
     return result;
 }
 
-function addHex(){
+const addHex = () => {
     for(let i=0; i<Hexkoder.length; i++){
         let dec = hexToDec(Hexkoder[i]);
         decimalCodes.push(dec);
@@ -1595,48 +1595,50 @@ const inptHex = /**@type {HTMLInputElement} */ ($("inptHex"));
 const fargeNavnOut = $("fargeNavnOut");
 const submit = $("submit");
 inptHex.focus();
-submit.addEventListener("click", sjekkFargeNavn);
-document.addEventListener("keyup", sjekkEnter);
 
 /**
  * @param {{ key: string; }} tast
  * @returns {void}
  */
-function sjekkEnter(tast){
+const sjekkEnter = (tast) => {
     if(tast.key === 'Enter'){
         sjekkFargeNavn();
     }
 }
 
-function sjekkFargeNavn(){
+const sjekkFargeNavn = () => {
     let hex = inptHex.value;
-
-    let dec = Number(hexToDec(hex));
-    console.log(dec)
-
-    function findClosest(){
-        let bench = Number(dec - decimalCodes[0]);
-        let cHex = Hexkoder[0];
-
-        for(let i=0; i<decimalCodes.length; i++){
-            let diff = dec - Number(decimalCodes[i]);
-            console.log(diff);
-            if(diff > 0 && diff < bench){
-                bench = diff;
-                cHex = Hexkoder[i];
-            }
-        }
-        return cHex;
+    if(hex.length < 6 || hex === ""){
+        alert("Skriv inn en gyldig hex-kode");
     }
-    
-    let farge = findClosest();
+    else{
 
-    // Finner bare hvitt... tallet for hvitt og svart er for store....
-    fargeNavnOut.innerHTML = `Nermeste farge er: ${alleFarger[farge]}`;
+        let dec = Number(hexToDec(hex));
 
-    fargeNavnOut.style.color = `#${farge}`;
+        const findClosest = () => {
+            let bench = Number(dec - decimalCodes[0]);
+            let cHex = Hexkoder[0];
 
-    // inptHex.value = "";
-    // inptHex.focus();
+            for(let i=0; i<decimalCodes.length; i++){
+                let diff = dec - Number(decimalCodes[i]);
+                if(diff > 0 && diff < bench){
+                    bench = diff;
+                    cHex = Hexkoder[i];
+                }
+            }
+            return cHex;
+        }
+        
+        let farge = findClosest();
 
+        // Finner bare hvitt... tallet for hvitt og svart er for store....
+        fargeNavnOut.innerHTML = "";
+        fargeNavnOut.innerHTML += `<p>Nermeste fargenavn for #${hex} er: ${alleFarger[farge]}</p><hr>`;
+        fargeNavnOut.innerHTML += `<div class="hexFarge" style="background-color: #${farge};"><p>Nermeste farge: </p></>`;
+        fargeNavnOut.innerHTML += `<div class="hexFarge" style="background-color: #${hex};"><p>Inskrevet farge: </p></>`;
+        inptHex.value = "";
+        inptHex.focus();
+    }
 }
+submit.addEventListener("click", sjekkFargeNavn);
+document.addEventListener("keyup", sjekkEnter);
