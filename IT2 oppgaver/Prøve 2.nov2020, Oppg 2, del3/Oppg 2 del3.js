@@ -1615,12 +1615,14 @@ function sjekkFargeNavn(){
     console.log(dec)
 
     function findClosest(){
-        let bench = Number(dec - decimalCodes[34]);
-        let cHex = Hexkoder[1];
+        let bench = Number(dec - decimalCodes[0]);
+        let cHex = Hexkoder[0];
 
         for(let i=0; i<decimalCodes.length; i++){
-            if(Number(dec - decimalCodes[i]) < bench){
-                bench = Number(dec - decimalCodes[i]);
+            let diff = dec - Number(decimalCodes[i]);
+            console.log(diff);
+            if(diff > 0 && diff < bench){
+                bench = diff;
                 cHex = Hexkoder[i];
             }
         }
