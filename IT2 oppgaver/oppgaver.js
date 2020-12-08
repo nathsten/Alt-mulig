@@ -165,7 +165,7 @@ function topN(a){
     return output;
 }
 
-console.log(topN("det var en gang en mann som sa det er en gang det"));
+// console.log(topN("det var en gang en mann som sa det er en gang det"));
 
 /** Tar vekke alle like tall i en array. 
  * @param {array} a 
@@ -491,4 +491,92 @@ const newton = (a,b,c) => {
     return nullpunkt;
 }
 
-console.log(newton("x*x-16", -1, 12));
+// console.log(newton("x*x-16", -1, 12));
+
+/**
+ * @param {string | any[]} a
+ * @param {number} b
+ * @returns {string[]}
+ */
+function numberNames(a,b){
+    let numsStr = "";
+    let names = "";
+    let output = [];
+    let index = 1000;
+    let numbers = [];
+
+    for(let i=0; i<a.length; i++){
+        if(Number(a[i])){
+            numsStr += String(a[i]);
+            if(index === 1000){
+                index = i;
+            }
+        }
+        else if (Number(a[i]) === 0 || String(a[i])) {
+            names += String(a[i])
+        }
+    }
+
+    for(let i=0; i<b; i++){
+        let o = Number(numsStr) + i;
+        numbers.push(o)
+    }
+
+    for(let i=0; i<numbers.length; i++){
+        let o = names + numbers[i]
+        output.push(o)
+    }
+
+    return output
+}
+
+// console.log(numberNames("1bilde", 3))
+
+function reduce(a){
+    let nums = "";
+    let str = "";
+
+    a.split("").reduce((a,b) => {
+        if(Number(a)){
+            nums += String(a);
+        }
+        if(Number(b)){
+            nums += String(b);
+        }
+        else{
+            str += String(b);
+        }
+    })
+    return [nums, str]
+}
+
+console.log(reduce("hei12"))
+
+let byLister = ["oslo", "os"];
+
+// console.log(byLister.map(e => `<o>${e}</o>`).join(``));
+
+class Elev{
+    fornanvn; 
+    etternavn;
+    constructor(a,b){
+        this.fornanvn = a;
+        this.etternavn = b
+    }
+}
+
+let n = new Date();
+// console.log(n)
+
+function su(a){
+    return a.reduce((a,b) => a+b, 0)
+}
+
+// console.log(su([1,2,3]))
+
+function cylinder(r,h){
+    let areal = r**2*Math.PI;
+    return areal*h;
+}
+
+console.log(cylinder(10, 5))
