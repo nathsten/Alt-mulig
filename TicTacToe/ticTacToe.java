@@ -201,7 +201,6 @@ class tictactoe{
         if(!msg.equals(" ")){
             System.out.println(msg);
         }
-
         return state;
     }
 }
