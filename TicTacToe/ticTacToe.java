@@ -13,6 +13,8 @@ class tictactoe{
 
         boolean playing = checkVictory(board);
 
+        placeBoard(board);	
+
         while(playing == true){
             System.out.println();
             System.out.println("Type in position 1-9");
@@ -156,6 +158,7 @@ class tictactoe{
         String msg = " ";
 
         for(int i = 0; i<board.length; i++){
+            // Horizontally
             if((board[i][0] == 'X') & (board[i][2] == 'X') & (board[i][4] == 'X')){
                 state = false;
                 msg = "You won";
@@ -164,10 +167,9 @@ class tictactoe{
                 state = false;
                 msg = "You lost";
             }
-        }
 
-        for(int i = 0; i<board.length; i++){
-            if((board[0][i] == 'X') & (board[2][i] == 'X') & (board[4][i] == 'X')){
+            // vertically
+            else if((board[0][i] == 'X') & (board[2][i] == 'X') & (board[4][i] == 'X')){
                 state = false;
                 msg = "You won";
             }
@@ -175,9 +177,28 @@ class tictactoe{
                 state = false;
                 msg = "You lost";
             }
-        }
 
-        if(!msg.equals("")){
+            // Diagonal from left
+            else if((board[0][0] == 'X') & (board[2][2] == 'X') & (board[4][4] == 'X')){
+                state = false;
+                msg = "You won";
+            }
+            else if((board[0][0] == 'O') & (board[2][2] == 'O') & (board[4][4] == 'O')){
+                state = false;
+                msg = "You lost";
+            }
+
+            // Diagonal from right
+            else if((board[0][4] == 'X') & (board[2][2] == 'X') & (board[4][0] == 'X')){
+                state = false;
+                msg = "You won";
+            }
+            else if((board[0][4] == 'O') & (board[2][2] == 'O') & (board[4][0] == 'O')){
+                state = false;
+                msg = "You lost";
+            }
+        }
+        if(!msg.equals(" ")){
             System.out.println(msg);
         }
 
