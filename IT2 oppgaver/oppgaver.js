@@ -579,4 +579,5 @@ function cylinder(r,h){
     return areal*h;
 }
 
-console.log(cylinder(10, 5))
+// console.log(cylinder(10, 5));
+
