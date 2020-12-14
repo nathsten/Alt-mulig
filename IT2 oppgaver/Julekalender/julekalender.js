@@ -16,6 +16,7 @@ if(localStorage.getItem("calendarEvents")){
 }
 
 const createCalendarDays = () => {
+    kalenderDiv.innerHTML = "";
     for(let i=1; i<=31; i++){
         const days = document.createElement("div");
         days.className = "days";
@@ -40,11 +41,10 @@ const addDateValue = (e) => {
     const lagreHendelse = () => {
         let hendelse = "";
         hendelse = inputHendelse.value;
-        tDiv.innerHTML = `<div id="hendelse${tDiv.id}">${tDiv.innerHTML} ${hendelse}</div>`;
         allCalendarEvents[tDiv.id] = hendelse;
         inputDiv.style.display = "none";
         localStorage.setItem("calendarEvents", JSON.stringify(allCalendarEvents));
-        location.reload();
+        createCalendarDays();
     };
 
     lagre.addEventListener("click", lagreHendelse);
