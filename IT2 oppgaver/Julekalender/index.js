@@ -33,7 +33,6 @@ index.get('/dateID/:id/eventValue/:value', (req, res) => {
 
 index.get('/deleteItem/:dateID', (req, res) => {
     const dateID = req.params.dateID;
-    console.log("DateID " + dateID);
 
     delete allEvents[dateID];
     fs.writeFileSync('allEvents.json', JSON.stringify(allEvents, null, 2));

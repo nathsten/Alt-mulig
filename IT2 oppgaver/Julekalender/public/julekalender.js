@@ -1,3 +1,7 @@
+/**
+ * @param {string} id
+ * @returns {object}
+ */
 const $ = (id) => document.getElementById(id);
 
 const kalenderDiv = $("kalenderDiv");
@@ -32,10 +36,9 @@ const getAllEvents = async () => {
 
 getAllEvents();
 
-// Legge til funk for å ta vekk events
-// og at den ikke legger til på alle som er trykket på. 
-// lagre i en json fil, fetche den og laste den inn i createCalendarDays();
-
+/**
+ * @param {{ target: any; }} e
+ */
 const addDateValue = (e) => {
     const tDiv = e.target;
     if(tDiv.className === "days"){
@@ -44,6 +47,7 @@ const addDateValue = (e) => {
             const lagre = $("lagre");
             const x = $("x");
             inputDiv.style.display = "block";
+            inputHendelse.focus();
             inptLabel.innerHTML = `Skriv inn hendelse for ${tDiv.innerHTML}`;
             inputHendelse.value = "";
             const lagreHendelse = () => {
@@ -55,7 +59,11 @@ const addDateValue = (e) => {
             };
 
             lagre.addEventListener("click", lagreHendelse);
-            inputHendelse.addEventListener("keydown", e => {
+            inputHendelse.addEventListener("keydown", 
+            /**
+             * @param {{ keyCode: number; }} e
+             */
+            e => {
                 if(e.keyCode === 13){
                     lagreHendelse();
                 }
@@ -67,8 +75,12 @@ const addDateValue = (e) => {
         }
     }
     if(removeEventBtnPressed === true){
-        if(tDiv.className === "days" ){
-            fetch(`/deleteItem/${tDiv.id}`)
+        if(tDiv.className === "days" || tDiv.className === "eventClass"){
+            let sendID = tDiv.id;
+            if(tDiv.className === "eventClass"){
+                sendID = tDiv.parentElement.id;
+            }
+            fetch(`/deleteItem/${sendID}`)
                 .then(header.innerHTML = "Julekalender")
                 .then(removeEventBtn.innerHTML = `<div>Slett hendelse</div>`)
                 .then(removeEventBtnPressed = false)
