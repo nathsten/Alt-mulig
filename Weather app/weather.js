@@ -8,7 +8,7 @@ const searchBtn = $("searchIcon");
 const useGeolocation = $("useGeolocation");
 const weatherDiv = $("weatherDiv");
 
-const key = "d385a8eca1409e6cdecc28fbb6c85b38";
+const key = "";
 
 const getWeatherByCoords = async () => {
     if(navigator.geolocation){
