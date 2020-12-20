@@ -38,6 +38,9 @@ body{
     background: linear-gradient(to right, #2837dc, #5e28dc, #2837dc);
     color: #adcafa;
     user-select: none;
+    overflow: hidden;
+    z-index: 1;
+    animation-fill-mode: forwards;
 }
 
 #searchCityLabel{
@@ -115,7 +118,7 @@ body{
 
 .loadingScreenMain{
     position: absolute;
-    top: 250px;
+    top: 80px;
     left: 10%;
     width: 80%;
     height: 150px;
@@ -184,8 +187,8 @@ body{
     width: 80%;
     height: 350px;
     left: 10%;
-    top: 250px;
-    border: solid 1px black;
+    top: 130px;
+    color: #adcafa;
 }
 
 #weatherDivHeader{
@@ -193,14 +196,16 @@ body{
     left: 5%;
     width: 90%;
     height: 30%;
-    border: solid 1px black;
 }
 
 #weatherImg{
-    width: 80px;
+    position: absolute;
+    left: calc(50% - 50px);
+    bottom: 10px;
+    width: 100px;
     height: 60px;
     background-position: center;
-    background-size: 100%;
+    background-size: 120%;
     background-repeat: no-repeat;
 }
 
@@ -208,9 +213,103 @@ body{
     position: absolute;
     width: 90%;
     height: 60%;
-    top: 40%;
+    top: 35%;
     left: 5%;
-    border: solid 1px black;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+}
+
+#weatherDescription{
+    font-size: 1.4em;
+    text-align: center;
+}
+
+.weatherData{
+    text-align: center;
+    font-size: 1.2em;
+    margin: 5px;
+}
+
+.closeSearchDiv{
+    animation: close 500ms linear;
+    animation-fill-mode: forwards;
+}
+
+.openSearchDiv{
+    animation: open 500ms linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes close{
+    0%{
+        width: 80%;
+        height: 150px;
+        left: 10%;
+    }
+    100%{
+        width: 0%;
+        left: 50%;
+        height: 0px;
+        opacity: 0;
+    }
+}
+
+@keyframes open{
+    0%{
+        width: 0%;
+        height: 0px;
+        left: 50%;
+        opacity: 0;
+    }
+    100%{
+        width: 80%;
+        height: 150px;
+        left: 10%;
+        opacity: 1;
+    }
+}
+
+#openSearchDiv{
+    position: absolute;
+    width: 100px;
+    font-size: 110%;
+    text-align: center;
+    border: solid 2px #2a74eb;
+    border-radius: 10px;
+    padding: 5px 0px 5px 0px;
+    background-color: #2837dc;
+    left: calc(50% - 50px);
+    top: 80px;
+    box-shadow: 0px 2px black;
+    transition: 250ms;
+    cursor: pointer;
+    color: #adcafa;
+    display: none;
+}
+#openSearchDiv:hover{
+    background-color: #2a74eb;
+}
+#openSearchDiv:active{
+    box-shadow: none;
+    transform: translateY(1px);
+}
+
+.slideUp{
+    animation: slideUp linear 500ms;
+    animation-fill-mode: forwards;
+}
+
+.slideDown{
+    animation: slideDown linear 500ms;
+    animation-fill-mode: forwards;
+}
+
+@keyframes slideUp{
+    0%{top:250px;}
+    100%{top: 130px;}
+}
+
+@keyframes slideDown{
+    0%{top:130px;}
+    100%{top: 250px;}
 }

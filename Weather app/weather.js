@@ -2,15 +2,21 @@
  * @param {string} id
  * @returns {object}
  */
-const $ = (id) => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-const ce = (element) => document.createElement(element)
+/**
+ * @param {String} element 
+ * @returns {object}
+ */
+const ce = element => document.createElement(element)
 
 const inputSearchCity = $("inputSearchCity");
 const mainDiv = $("mainDiv");
 const searchBtn = $("searchIcon");
 const useGeolocation = $("useGeolocation");
 const weatherDiv = $("weatherDiv");
+const inputSearchCityDiv = $("inputSearchCityDiv");
+const openSearchDiv = $("openSearchDiv");
 
 const loadingScreenDiv = $("loadingScreenDiv");
 
@@ -44,8 +50,13 @@ const getWeatherBySearch = async () => {
 
 const displayCurrentWeather = (WeatherData) => {
     weatherDiv.innerHTML = "";
-    weatherDiv.innerHTML += '<div id="weatherDivHeader"></div>';
-    weatherDiv.innerHTML += '<div id="weatherDivDescription"></div>';
+
+    weatherDiv.innerHTML +=
+    `
+        <div id="weatherDivHeader"></div>
+        <div id="weatherDivDescription"></div>
+    `;
+
     const city = WeatherData.name;
     const weatherImg = WeatherData.weather[0].icon;
     const mainDescription = WeatherData.weather[0].main;
@@ -106,6 +117,7 @@ const displayCurrentWeather = (WeatherData) => {
 }
 
 let scanElement;
+let inputDisplay = true;
 const loadingScreen = () => {
     if($("description")){
         loadingScreenDiv.style.display = "none";
@@ -114,9 +126,23 @@ const loadingScreen = () => {
 
 }
 
+const render = () => {
+    loadingScreenDiv.style.display = "block";
+    inputSearchCityDiv.classList.remove("closeSearchDiv");
+    inputSearchCityDiv.classList.remove("openSearchDiv");
+    void inputSearchCityDiv.offsetWidth;
+    inputSearchCityDiv.classList.add("closeSearchDiv");
+    openSearchDiv.style.display = "block";
+    weatherDiv.classList.remove("slideUp", "slideDown");
+    void weatherDiv.offsetWidth;
+    weatherDiv.classList.add("slideUp");
+    inputDisplay = false;
+    weatherDiv.innerHTML = "";
+}
+
 inputSearchCity.addEventListener("keydown", e => {
     if(e.keyCode === 13){
-        loadingScreenDiv.style.display = "block";
+        render();
         scanElement = setInterval(() => {
             loadingScreen();
         }, 10);
@@ -124,7 +150,7 @@ inputSearchCity.addEventListener("keydown", e => {
     }
 });
 searchBtn.addEventListener("click", () => {
-    loadingScreenDiv.style.display = "block";
+    render();
     scanElement = setInterval(() => {
         loadingScreen();
     }, 10);
@@ -133,12 +159,49 @@ searchBtn.addEventListener("click", () => {
 
 
 useGeolocation.addEventListener("click", () => {
-    loadingScreenDiv.style.display = "block";
+    render();
     scanElement = setInterval(() => {
         loadingScreen();
     }, 10);
     getWeatherByCoords();
 });
+
+openSearchDiv.addEventListener("click", () => {
+    inputSearchCityDiv.classList.remove("closeSearchDiv");
+    inputSearchCityDiv.classList.remove("openSearchDiv");
+    void inputSearchCityDiv.offsetWidth;
+    inputSearchCityDiv.classList.add("openSearchDiv");
+    openSearchDiv.style.display = "none";
+    weatherDiv.classList.remove("slideUp", "slideDown");
+    void weatherDiv.offsetWidth;
+    weatherDiv.classList.add("slideDown");
+    inputDisplay = true;
+})
+
+const renderWeatherDiv = () => {
+    inputSearchCityDiv.classList.remove("closeSearchDiv");
+    inputSearchCityDiv.classList.remove("openSearchDiv");
+    void inputSearchCityDiv.offsetWidth;
+    inputSearchCityDiv.classList.add("closeSearchDiv");
+    openSearchDiv.style.display = "block";
+    weatherDiv.style.top = "130px";
+    inputDisplay = false;
+    weatherDiv.classList.remove("slideUp", "slideDown");
+    void weatherDiv.offsetWidth;
+    weatherDiv.classList.add("slideUp");
+}
+
+document.addEventListener("keydown", e => {
+    if(e.keyCode === 27){
+        renderWeatherDiv();
+    }
+})
+
+weatherDiv.addEventListener("click", () => {
+    if(inputDisplay !== false){
+        renderWeatherDiv();
+    }
+})
 
 // Bilde link http://openweathermap.org/img/wn/{bildeID}@2x.png
 // API for lat og long api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
