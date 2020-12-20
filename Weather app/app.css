@@ -112,3 +112,105 @@ body{
     box-shadow: none;
     transform: translateY(1px);
 }
+
+.loadingScreenMain{
+    position: absolute;
+    top: 250px;
+    left: 10%;
+    width: 80%;
+    height: 150px;
+    border: solid 2px #2a74eb;
+    border-radius: 20px;
+    background: linear-gradient(to right, #2837dc, #5e28dc, #2837dc);
+    color: #adcafa;
+    display: none;
+}
+
+#loadingText{
+    position: absolute;
+    left: calc(50% - 47px);
+    top: 33%;
+    overflow: hidden;
+    width: 85px;
+    animation: dotdotdot 1s linear infinite;
+    /* border: black solid 1px; */
+}
+#loadingText>div{
+    width: 200px;
+    font-size: 1.5em;
+}
+
+@keyframes dotdotdot{
+    0%{width: 85px;}
+    100%{width: 105px;}
+}
+
+#loadingIcon{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #397ff0;
+    border-radius: 50%;
+    left: calc(50% - 20px);
+    animation: roll 1500ms infinite linear;
+    background-position-x: 100%;
+}
+
+@keyframes roll{
+    0%{
+        left: calc(50% - 20px);
+        top: 0%;
+    }
+    25%{
+        left: calc(100% - 40px);
+        top: 30%;
+    }
+    50%{
+        left: calc(50% - 20px);
+        top: calc(100% - 40px);
+    }
+    75%{
+        left: calc(0%);
+        top: 30%;
+    }
+    100%{
+        left: calc(50% - 20px);
+        top: 0%;
+    }
+}
+
+.weatherDivClass{
+    position: absolute;
+    width: 80%;
+    height: 350px;
+    left: 10%;
+    top: 250px;
+    border: solid 1px black;
+}
+
+#weatherDivHeader{
+    position: absolute;
+    left: 5%;
+    width: 90%;
+    height: 30%;
+    border: solid 1px black;
+}
+
+#weatherImg{
+    width: 80px;
+    height: 60px;
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+#weatherDivDescription{
+    position: absolute;
+    width: 90%;
+    height: 60%;
+    top: 40%;
+    left: 5%;
+    border: solid 1px black;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
