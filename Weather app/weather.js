@@ -22,26 +22,43 @@ const loadingScreenDiv = $("loadingScreenDiv");
 
 const getWeatherByCoords = async () => {
     if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition( async (p) => {
-            const lat = await p.coords.latitude;;
-            const lon = await p.coords.longitude;
-            const getWeatherData = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${key}`);
-            const WeatherData = await getWeatherData.json();
+        try{
+            navigator.geolocation.getCurrentPosition( async (p) => {
+                const lat = await p.coords.latitude;;
+                const lon = await p.coords.longitude;
+                const getWeatherData = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${key}`);
+                const WeatherData = await getWeatherData.json();
 
-            displayCurrentWeather(WeatherData);
-            console.log(WeatherData);
-        })
+                displayCurrentWeather(WeatherData);
+            })
+        }
+        catch(e){ }
     }
 }
 
 const getWeatherBySearch = async () => {
     const city = inputSearchCity.value;
     if(city !== ""){
-        const getWeatherData = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${key}`);
-        const WeatherData = await getWeatherData.json();
-        displayCurrentWeather(WeatherData);
-        console.log(WeatherData);
-        inputSearchCity.value = "";
+        try{
+            const getWeatherData = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${key}`);
+            const WeatherData = await getWeatherData.json();
+            displayCurrentWeather(WeatherData);
+            inputSearchCity.value = "";
+        }
+        catch(e){
+            alert("Invalid city name, please check spelling");
+            loadingScreenDiv.style.display = "none";
+            inputSearchCity.value = "";
+            inputSearchCityDiv.classList.remove("closeSearchDiv");
+            inputSearchCityDiv.classList.remove("openSearchDiv");
+            void inputSearchCityDiv.offsetWidth;
+            inputSearchCityDiv.classList.add("openSearchDiv");
+            openSearchDiv.style.display = "none";
+            weatherDiv.classList.remove("slideUp", "slideDown");
+            void weatherDiv.offsetWidth;
+            weatherDiv.classList.add("slideDown");
+            inputDisplay = true;
+        }
     }
     else{
         alert("Please fill inn city name!");
