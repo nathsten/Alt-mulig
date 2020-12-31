@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinding algorithm</title>
+    <link rel="stylesheet" href="board.css">
+    <link rel="stylesheet" href="path.css">
+</head>
+<body>
+    <div id="board" class="boardMain"></div>
+
+    <div id="menu" class="menuMain">
+        <div id="header" class="headerMenu">Pathfinding algorithm</div>
+        <hr style="margin-top: 15px;">
+        <br>
+        <div id="infoDiv" class="infoDivMain">
+            <div id="selectBrick" class="selectBrick infotxt">Hold shift and hover over the bricks you want to select.</div>
+            <div id="selectSPoint" class="selectSPoint infotxt">Press "s" and then select start point.</div>
+            <div id="selectEPoint" class="selectEPoint infotxt">Press "e" and then select end point.</div>
+            <div id="deleteBrick" class="deleteBrick infotxt">Press "d" and then select the brick you want to delete.</div>
+        </div>
+        <button id="start" class="sumbitBtn">Find path</button>
+    </div>
+    
+    <script src="draw.js"></script>
+    <script src="algorthm.js"></script>
+</body>
+</html>
