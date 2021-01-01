@@ -64,6 +64,9 @@ const drawBoard = b => {
             if(b[i][j] === 3){
                 n.classList.add("startPoint");
             }
+            if(b[i][j] === 4){
+                n.classList.add("path");
+            }
             boardDiv.append(n);
         }
     }
