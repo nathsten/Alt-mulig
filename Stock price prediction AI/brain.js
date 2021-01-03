@@ -14,28 +14,27 @@ index.listen(port, e => {
     };
 });
 
-index.use('/', express.static('public'));
+index.use('/open/stockPricePrediction', express.static('stockPricePrediction'));
 
 const APIKey = JSON.parse(fs.readFileSync('apikey.json')).APIKey;
 
-nuralNet.train([
-    {input: [1,0,0,1], output: [1]},
-    {input: [0,1,0,1], output: [0]}
-]);
-
-const prediction = nuralNet.run([0,1,1,1]);
-
-index.post('/sendCompanyName', (req, res) => {
+index.get('/getStockData/:ticker', (req, res) => {
     const getStockAPIData = async () => {
         try{
-            const ticker = req.body.ticker;
+            const ticker = req.params.ticker;
             const getStockData = await nodeFetch(`http://api.marketstack.com/v1/eod?access_key=${APIKey}&symbols=${ticker}`);
             const stockData = await getStockData.json();
-            res.json(stockData);
+            res.send(stockData);
         }
         catch(e){
             res.send(`Failed ${e}`);
         }
     }
     getStockAPIData();
+});
+
+const testFile = JSON.parse(fs.readFileSync('testfile.json'));
+
+index.get('/getTestfile', (req, res) => {
+    res.send(testFile);
 })
