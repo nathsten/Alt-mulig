@@ -1,6 +1,6 @@
 //@ts-check
 
-let numbers = [5,2,4,6,5,7,2,1,2];
+let numbers = [5,6,2,4,6,6,5,7,2,1,6,2];
 
 /**
  * @param {Number[]} n
@@ -46,4 +46,17 @@ const commonNumbers = (n) => {
     return output;
 }
 
-console.log(commonNumbers(numbers));
+// console.log(commonNumbers(numbers));
+
+/**
+ * @param {number[]} n
+ * @returns {string}
+ */
+const findCommonNumber = n => {
+    const numbers = {};
+    n.forEach(e => numbers[e] ? numbers[e] += 1:0 || numbers[e] === undefined ? numbers[e] = 1:0);
+    let commonNumber = Object.keys(numbers)[0];
+    Object.keys(numbers).forEach(num => numbers[num] > numbers[commonNumber] ? commonNumber = num:0);
+    return commonNumber;
+}
+console.log(findCommonNumber(numbers))

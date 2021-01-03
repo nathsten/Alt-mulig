@@ -1,9 +1,4 @@
-const settning = "Hei jeg er 17år jeg har en bror på 12år. Min far er 44år og min mor er 32år, jeg har også en bror på 1år";
-// const numbers = Number(settning[34] + settning[35]);
-// const output = [];
-// output.push(numbers);
-
-// console.log(numbers)
+const settning = "Hei jeg er 17år jeg har en bror på 12år. Min far er 44år og min mor er 32år, min bestemor er 112 år jeg har også en bror på 1år";
 
 function finnTall(a){
     let output = [];
@@ -19,13 +14,27 @@ function finnTall(a){
         }
     }
     return output;
-}   
-console.log(finnTall(settning))
+}
 
-
-// let yes = 1 + "a";
-// if(isNaN(yes) === false){
-//     console.log("Yes " + yes);
-// }else{
-//     console.log("No")
-// }
+const findNumbers = ord => {
+    const tall = [];
+    for(let i=0; i<ord.length; i++){
+        let ts = "";
+        if(Number(ord[i])){
+            let j=i;
+            while(Number(ord[j])){
+                ts += ord[j];
+                i = j;
+                j++
+                if(!Number(ord[j])){
+                    break;
+                }
+            }
+            if(ts){
+                tall.push(Number(ts));
+            }
+        }
+    }
+    return tall;
+}
+console.log(findNumbers(settning))
