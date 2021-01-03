@@ -29,6 +29,9 @@ class tictactoe{
             placeBoard(board);
             checkVictory(board);
             playing = checkVictory(board);
+            if(playing != true){
+                scan.close();
+            }
         }
     }
 
