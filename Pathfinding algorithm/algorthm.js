@@ -26,67 +26,96 @@ const findPath = b => {
     let end = [];
     boardDiv.childNodes.forEach(a => a.className.includes("startPoint") ? a.id.split(" ").forEach(id => start.push(Number(id))):0);
     boardDiv.childNodes.forEach(a => a.className.includes("endPoint") ? a.id.split(" ").forEach(id => end.push(Number(id))):0);
+    let pathFound = false;
 
-    // Visualize empty bricks
-    for(let i=0; i<b.length; i++){
-        for(let j=0; j<b[i].length; j++){
-            if(b[start[0]+i][start[1]+j] === 0){
-                b[start[0]+i][start[1]+j] = 4;
-                drawBoard(b);
-            }
-            if(b[start[0]-i][start[1]-j] === 0){
-                b[start[0]-i][start[1]-j] = 4;
-                drawBoard(b);
-            }
-            if(b[start[0]+(i+j)][start[1]]){
-                if(b[start[0]+(i+j)][start[1]] === 0){
-                    b[start[0]+(i+j)][start[1]] = 4;
-                    drawBoard(b)
-                };
-            }
-            if(b[start[0]-(i+j)][start[1]]){
-                if(b[start[0]-(i+j)][start[1]] === 0){
-                    b[start[0]-(i+j)][start[1]] = 4;
-                    drawBoard(b);
-                }
-            }
-            if(b[start[0]+(i+j)][start[1]+(i+j)] === 0){
-                b[start[0]+(i+j)][start[1]+(i+j)] = 4;
-                drawBoard(b);
-            }
-            if(b[start[0]-(i+j)][start[1]-(i+j)] === 0){
-                b[start[0]-(i+j)][start[1]-(i+j)] = 4;
-                drawBoard(b);
-            }
-            if(b[start[0]-(i+j)][start[1]+(i+j)] === 0){
-                b[start[0]-(i+j)][start[1]+(i+j)] = 4;
-                drawBoard(b);
-            }
-            if(b[start[0]+(i+j)][start[1]-(i+j)] === 0){
-                b[start[0]+(i+j)][start[1]-(i+j)] = 4;
-                drawBoard(b);
-            }
-        }
-    }
-
-    // Mulig ubrukelig...
     switch(findDirection(end[0], start[0])){
         case "up":{
             switch(findDirection(end[1], start[1])){
                 case"up":{
                     console.log("up up");
-                    // for(let i=0; i<b.length; i++){
-                    //     for(let j=0; j<b[i].length; j++){
-                    //         if(b[start[0]+i][start[1]+j] === 0){
-                    //             b[start[0]+i][start[1]+j] = 4;
-                    //             drawBoard(b);
-                    //         }
-                    //     }
-                    // }
+                    let currentNode = [start[0], start[1]];
+                    while(pathFound === false){
+                        for(let i=0; i<3; i++){
+                            for(let j=0; j<3; j++){
+                                if(b[currentNode[0]+i][currentNode[1+j]] === 0){
+                                    b[currentNode[0]+i][currentNode[1]+j] = 4;
+                                    currentNode = [(currentNode[0]+i), (currentNode[1]+j)]
+                                    drawBoard(b);
+                                }
+                                else if(b[currentNode[0]+i][currentNode[1-j]] === 0){
+                                    b[currentNode[0]+i][currentNode[1]-j] = 4;
+                                    currentNode = [(currentNode[0]+i), (currentNode[1]-j)]
+                                    drawBoard(b);
+                                }
+                                else if(b[currentNode[0]-i][currentNode[1+j]] === 0){
+                                    b[currentNode[0]-i][currentNode[1]+j] = 4;
+                                    currentNode = [(currentNode[0]-i), (currentNode[1]+j)]
+                                    drawBoard(b);
+                                }
+                                if(b[currentNode[0]+i][currentNode[1]+j] === 2){
+                                    pathFound = true;
+                                }
+                            }
+                        }
+                    }
                     break;
                 }
                 case"down":{
                     console.log("up down");
+                    let currentNode = [start[0], start[1]];
+                    while(pathFound === false){
+                        for(let i=0; i<3; i++){
+                            for(let j=0; j<3; j++){
+                                if(b[currentNode[0]+i][currentNode[1]] === 2){
+                                    pathFound = true;
+                                }
+                                if(b[currentNode[0]][currentNode[1]+j] === 2){
+                                    pathFound = true;
+                                }
+                                if(b[currentNode[0]+i][currentNode[1]+j] === 2){
+                                    pathFound = true;
+                                }
+                                if(b[currentNode[0]+i][currentNode[1]-j] === 2){
+                                    pathFound = true;
+                                }
+                                if(b[currentNode[0]-i][currentNode[1]+j] === 2){
+                                    pathFound = true;
+                                }
+                                if(b[currentNode[0]][currentNode[1]-j] === 2){
+                                    pathFound = true;
+                                }
+                                if(b[currentNode[0]+i][currentNode[1]] === 2){
+                                    pathFound = true;
+                                }
+                                
+                                if(b[currentNode[0]+i][currentNode[1]-j] === 0){
+                                    b[currentNode[0]+i][currentNode[1]-j] = 4;
+                                    currentNode = [(currentNode[0]+i), (currentNode[1]-j)];
+                                    drawBoard(b);
+                                }
+                                else if(b[currentNode[0]][currentNode[1]-j] === 0){
+                                    b[currentNode[0]][currentNode[1]-j] = 4;
+                                    currentNode = [(currentNode[0]), (currentNode[1]-j)];
+                                    drawBoard(b);
+                                }
+                                else if(b[currentNode[0]][currentNode[1]+j] === 0){
+                                    b[currentNode[0]][currentNode[1]+j] = 4;
+                                    currentNode = [(currentNode[0]), (currentNode[1]+j)];
+                                    drawBoard(b);
+                                }
+                                else if(b[currentNode[0]+i][currentNode[1]] === 0){
+                                    b[currentNode[0]+i][currentNode[1]] = 4;
+                                    currentNode = [(currentNode[0]+i), (currentNode[1])];
+                                    drawBoard(b);
+                                }
+                                else if(b[currentNode[0]-i][currentNode[1]-j] === 0){
+                                    b[currentNode[0]-i][currentNode[1]-j] = 4;
+                                    currentNode = [(currentNode[0]-i), (currentNode[1]-j)];
+                                    drawBoard(b);
+                                }
+                            }
+                        }
+                    }
                     break;
                 }
                 case"diagonal":{
