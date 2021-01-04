@@ -1,0 +1,16 @@
+#teining{
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border: solid 1px black;
+    left: 10px;
+}
+
+#drawBoard{
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border: solid 1px black;
+    left: 10px;
+    top: 420px;
+}
