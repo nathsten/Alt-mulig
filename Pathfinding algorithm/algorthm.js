@@ -1,5 +1,5 @@
 //@ts-check
-const start = $("start");
+const startBtn = $("start");
 
 /**
  * @param {number} s
@@ -24,7 +24,8 @@ const findDirection = (e, s) => {
 const findPath = b => {
     let start = [];
     let end = [];
-    boardDiv.childNodes.forEach(a => {if(a.className.includes("startPoint")){a.id.split(" ").forEach(id => start.push(Number(id)))}if (a.className.includes("endPoint")){a.id.split(" ").forEach(i => end.push(Number(i)))}});
+    boardDiv.childNodes.forEach(a => a.className.includes("startPoint") ? a.id.split(" ").forEach(id => start.push(Number(id))):0);
+    boardDiv.childNodes.forEach(a => a.className.includes("endPoint") ? a.id.split(" ").forEach(id => end.push(Number(id))):0);
 
     // Visualize empty bricks
     for(let i=0; i<b.length; i++){
@@ -37,12 +38,32 @@ const findPath = b => {
                 b[start[0]-i][start[1]-j] = 4;
                 drawBoard(b);
             }
-            if(b[start[0]-i][start[1]+j] === 0){
-                b[start[0]-i][start[1]+j] = 4;
+            if(b[start[0]+(i+j)][start[1]]){
+                if(b[start[0]+(i+j)][start[1]] === 0){
+                    b[start[0]+(i+j)][start[1]] = 4;
+                    drawBoard(b)
+                };
+            }
+            if(b[start[0]-(i+j)][start[1]]){
+                if(b[start[0]-(i+j)][start[1]] === 0){
+                    b[start[0]-(i+j)][start[1]] = 4;
+                    drawBoard(b);
+                }
+            }
+            if(b[start[0]+(i+j)][start[1]+(i+j)] === 0){
+                b[start[0]+(i+j)][start[1]+(i+j)] = 4;
                 drawBoard(b);
             }
-            if(b[start[0]+i][start[1]-j] === 0){
-                b[start[0]+i][start[1]-j] = 4;
+            if(b[start[0]-(i+j)][start[1]-(i+j)] === 0){
+                b[start[0]-(i+j)][start[1]-(i+j)] = 4;
+                drawBoard(b);
+            }
+            if(b[start[0]-(i+j)][start[1]+(i+j)] === 0){
+                b[start[0]-(i+j)][start[1]+(i+j)] = 4;
+                drawBoard(b);
+            }
+            if(b[start[0]+(i+j)][start[1]-(i+j)] === 0){
+                b[start[0]+(i+j)][start[1]-(i+j)] = 4;
                 drawBoard(b);
             }
         }
@@ -54,14 +75,14 @@ const findPath = b => {
             switch(findDirection(end[1], start[1])){
                 case"up":{
                     console.log("up up");
-                    for(let i=0; i<b.length; i++){
-                        for(let j=0; j<b[i].length; j++){
-                            if(b[start[0]+i][start[1]+j] === 0){
-                                b[start[0]+i][start[1]+j] = 4;
-                                drawBoard(b);
-                            }
-                        }
-                    }
+                    // for(let i=0; i<b.length; i++){
+                    //     for(let j=0; j<b[i].length; j++){
+                    //         if(b[start[0]+i][start[1]+j] === 0){
+                    //             b[start[0]+i][start[1]+j] = 4;
+                    //             drawBoard(b);
+                    //         }
+                    //     }
+                    // }
                     break;
                 }
                 case"down":{
@@ -112,7 +133,7 @@ const findPath = b => {
     }
 }
 
-start.addEventListener("click", () => {
+startBtn.addEventListener("click", () => {
     if(startPoint === true && endPoint === true){
         findPath(board);
     }
