@@ -35,87 +35,67 @@ const findPath = b => {
                     console.log("up up");
                     let currentNode = [start[0], start[1]];
                     while(pathFound === false){
-                        for(let i=0; i<3; i++){
-                            for(let j=0; j<3; j++){
-                                if(b[currentNode[0]+i][currentNode[1+j]] === 0){
-                                    b[currentNode[0]+i][currentNode[1]+j] = 4;
-                                    currentNode = [(currentNode[0]+i), (currentNode[1]+j)]
+                        if(b[currentNode[0]-1][currentNode[1]] === 2
+                            || b[currentNode[0]+1][currentNode[1]] === 2
+                            || b[currentNode[0]][currentNode[1]+1] === 2
+                            || b[currentNode[0]][currentNode[1]-1] === 2){
+                                pathFound = true;
+                        }
+
+                        // Down
+                        if(b[currentNode[0]+1][currentNode[1]] === 0){
+                            if(currentNode[0] >= end[0] && b[currentNode[0]][currentNode[1]+1] === 0){
+                                if(currentNode[1] >= end[1] && b[currentNode[0]-1][currentNode[1]] === 0){
+                                    b[currentNode[0]-1][currentNode[1]] = 4;
+                                    currentNode = [currentNode[0]-1, currentNode[1]];
                                     drawBoard(b);
                                 }
-                                else if(b[currentNode[0]+i][currentNode[1-j]] === 0){
-                                    b[currentNode[0]+i][currentNode[1]-j] = 4;
-                                    currentNode = [(currentNode[0]+i), (currentNode[1]-j)]
+                                else{
+                                    b[currentNode[0]][currentNode[1]+1] = 4;
+                                    currentNode = [currentNode[0], currentNode[1]+1];
                                     drawBoard(b);
-                                }
-                                else if(b[currentNode[0]-i][currentNode[1+j]] === 0){
-                                    b[currentNode[0]-i][currentNode[1]+j] = 4;
-                                    currentNode = [(currentNode[0]-i), (currentNode[1]+j)]
-                                    drawBoard(b);
-                                }
-                                if(b[currentNode[0]+i][currentNode[1]+j] === 2){
-                                    pathFound = true;
                                 }
                             }
+                            else{
+                                b[currentNode[0]+1][currentNode[1]] = 4;
+                                currentNode = [currentNode[0]+1, currentNode[1]];
+                                drawBoard(b);
+                            }
+                        }
+                        // Right
+                        else if(b[currentNode[0]][currentNode[1]+1] === 0){
+                            if(currentNode[1] >= end[1] && b[currentNode[0]+1][currentNode[1]] === 0){
+                                b[currentNode[0]+1][currentNode[1]] = 4;
+                                currentNode = [currentNode[0]+1, currentNode[1]];
+                                drawBoard(b);
+                            }
+                            else{
+                                b[currentNode[0]][currentNode[1]+1] = 4;
+                                currentNode = [currentNode[0], currentNode[1]+1];
+                                drawBoard(b);
+                            }
+                        }
+                        // Up
+                        else if(b[currentNode[0]-1][currentNode[1]] === 0){
+                            b[currentNode[0]-1][currentNode[1]] = 4;
+                            currentNode = [currentNode[0]-1, currentNode[1]];
+                            drawBoard(b);
+                        }
+                        // Left
+                        else if(b[currentNode[0]][currentNode[1]-1] === 0){
+                            b[currentNode[0]][currentNode[1]-1] = 4;
+                            currentNode = [currentNode[0], currentNode[1]-1];
+                            drawBoard(b);
+                        }
+
+                        if(pathFound === true){
+                            break;
                         }
                     }
                     break;
                 }
                 case"down":{
                     console.log("up down");
-                    let currentNode = [start[0], start[1]];
-                    while(pathFound === false){
-                        for(let i=0; i<3; i++){
-                            for(let j=0; j<3; j++){
-                                if(b[currentNode[0]+i][currentNode[1]] === 2){
-                                    pathFound = true;
-                                }
-                                if(b[currentNode[0]][currentNode[1]+j] === 2){
-                                    pathFound = true;
-                                }
-                                if(b[currentNode[0]+i][currentNode[1]+j] === 2){
-                                    pathFound = true;
-                                }
-                                if(b[currentNode[0]+i][currentNode[1]-j] === 2){
-                                    pathFound = true;
-                                }
-                                if(b[currentNode[0]-i][currentNode[1]+j] === 2){
-                                    pathFound = true;
-                                }
-                                if(b[currentNode[0]][currentNode[1]-j] === 2){
-                                    pathFound = true;
-                                }
-                                if(b[currentNode[0]+i][currentNode[1]] === 2){
-                                    pathFound = true;
-                                }
-                                
-                                if(b[currentNode[0]+i][currentNode[1]-j] === 0){
-                                    b[currentNode[0]+i][currentNode[1]-j] = 4;
-                                    currentNode = [(currentNode[0]+i), (currentNode[1]-j)];
-                                    drawBoard(b);
-                                }
-                                else if(b[currentNode[0]][currentNode[1]-j] === 0){
-                                    b[currentNode[0]][currentNode[1]-j] = 4;
-                                    currentNode = [(currentNode[0]), (currentNode[1]-j)];
-                                    drawBoard(b);
-                                }
-                                else if(b[currentNode[0]][currentNode[1]+j] === 0){
-                                    b[currentNode[0]][currentNode[1]+j] = 4;
-                                    currentNode = [(currentNode[0]), (currentNode[1]+j)];
-                                    drawBoard(b);
-                                }
-                                else if(b[currentNode[0]+i][currentNode[1]] === 0){
-                                    b[currentNode[0]+i][currentNode[1]] = 4;
-                                    currentNode = [(currentNode[0]+i), (currentNode[1])];
-                                    drawBoard(b);
-                                }
-                                else if(b[currentNode[0]-i][currentNode[1]-j] === 0){
-                                    b[currentNode[0]-i][currentNode[1]-j] = 4;
-                                    currentNode = [(currentNode[0]-i), (currentNode[1]-j)];
-                                    drawBoard(b);
-                                }
-                            }
-                        }
-                    }
                     break;
                 }
                 case"diagonal":{
