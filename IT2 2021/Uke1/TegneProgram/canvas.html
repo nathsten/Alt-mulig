@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tegning</title>
+    <link rel="stylesheet" href="canvas.css">
+    <script src="canvas.js"></script>
+</head>
+<body>
+    <div id="gui">
+        <select name="type" id="type">
+            <option>sirkel</option>
+            <option>firkant</option>
+            <option>trekant</option>
+        </select>
+        <button id="visk">Visk</button>
+        <button id="deleteAll">Slett tegning</button>
+    </div>
+    <canvas id="tegning"
+      width="400" height="400"
+    ></canvas>
+    <!-- https://teorisider.onrender.com/docs/IT2/Programmering/canvas -->
+    <script>
+        setup();
+    </script>
+</body>
+</html>
