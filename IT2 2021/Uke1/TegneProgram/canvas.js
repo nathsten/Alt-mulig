@@ -64,6 +64,57 @@ const p1 = { x: 1, y: 1 };
 const p2 = { x: 1, y: 1 };
 let antallPunkt = 0;
 
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {{ x: any; y: any; }} p1
+ */
+function resistor(ctx,p1) {
+  // henta denne fra MDN - søkte på canvas path mdn
+  // m x y <=> moveTo(x,y)
+  // l x y <=> lineTo(x,y)
+  // h x   => lineTo(x,0)
+  // v y   => lineTo(0,y)
+  //let p = new Path2D('M10 10 h 80 v 80 h -80 Z');
+  ctx.beginPath();
+  let p = new Path2D(
+    `M ${p1.x} ${p1.y} h 20 l 5 5 l 10 -10 l 10 10 l 10 -10 l 10 10 l 10 -10 l 5 5 h 20 z`);
+  //------/\/\/-----
+  ctx.stroke(p);
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {{ x: any; y: any; }} p1
+ */
+function kapasitans(ctx, p1){
+  ctx.beginPath();
+  let p = new Path2D(`
+  M ${p1.x} ${p1.y} h20 v 10 -20 10 h10 v10 -20 10 h20
+  `);
+  ctx.stroke(p);
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {{ x: any; y: any; }} p1
+ */
+function spole(ctx, p1){
+  ctx.beginPath();
+  let line1 = new Path2D(`M ${p1.x} ${p1.y+15} h40`);
+  let spol1 = new Path2D(`M ${p1.x+40} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
+  let spol2 = new Path2D(`M ${p1.x+50} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
+  let spol3 = new Path2D(`M ${p1.x+60} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
+  let spol4 = new Path2D(`M ${p1.x+70} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
+  let spol5 = new Path2D(`M ${p1.x+80} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
+  let line2 = new Path2D(`M ${p1.x+80} ${p1.y+15} h40`);
+  ctx.stroke(line1);
+  ctx.stroke(spol1);
+  ctx.stroke(spol2);
+  ctx.stroke(spol3);
+  ctx.stroke(spol4);
+  ctx.stroke(spol5);
+  ctx.stroke(line2);
+}
 
 /**
  * @param {MouseEvent} e
@@ -71,8 +122,8 @@ let antallPunkt = 0;
 function registrerPunkt(e) {
   p2.x = p1.x; p2.y = p1.y;
   const { offsetX, offsetY } = e;
-  p1.x = offsetX;
-  p1.y = offsetY;
+  p1.x = Math.round(offsetX/10)*10;
+  p1.y = Math.round(offsetY/10)*10;
   antallPunkt++;
   if (antallPunkt === 2) {
     const event = new Event('toPunkt');
@@ -111,6 +162,15 @@ function setup() {
   function tegn() {
     if(viskBtnClicked !== true){
       const type = selType.value;
+      if (type === "spole") {
+        spole(ctx,p1);
+      }
+      if (type === "kapasitans") {
+        kapasitans(ctx,p1);
+      }
+      if (type === "resistor") {
+        resistor(ctx,p1);
+      }
       if (type === "sirkel") {
         const radius = dist(p1, p2);
         sirkel(ctx,p1,radius);
