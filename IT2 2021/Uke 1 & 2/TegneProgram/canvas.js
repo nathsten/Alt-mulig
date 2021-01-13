@@ -12,10 +12,17 @@ function dist(a, b) {
   const dy = a.y - b.y;
   return Math.sqrt(dx * dx + dy * dy)
 }
+/**
+* @param {{ x: number; y: number; }} p1
+* @param {{ x: number; y: number; }} p2
+*/
+function vinkel(p1, p2) {
+  return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / π;
+}
 
 /**
  * @param {CanvasRenderingContext2D} ctx
- * @param {{ x: any; y: any; }} p
+ * @param {{ x: number; y: number; }} p
  * @param {number} r
  */
 function sirkel(ctx, p, r) {
@@ -30,8 +37,8 @@ function sirkel(ctx, p, r) {
 /**
  * Tegn en firkant
  * @param {CanvasRenderingContext2D} ctx
- * @param {{ x: any; y: any; }} p1
- * @param {{ x: any; y: any; }} p2
+ * @param {{ x: number; y: number; }} p1
+ * @param {{ x: number; y: number; }} p2
  */
 function firkant(ctx, p1, p2) {
   // tegner en firkant
@@ -42,12 +49,11 @@ function firkant(ctx, p1, p2) {
   // ctx.stroke();
 }
 
-
 /**
  * Tegn en trekant
  * @param {CanvasRenderingContext2D} ctx
- * @param {{ x: any; y: any; }} p1
- * @param {{ x: any; y: any; }} p2
+ * @param {{ x: number; y: number; }} p1
+ * @param {{ x: number; y: number; }} p2
  */
 function trekant(ctx, p1, p2) {
   ctx.beginPath();
@@ -66,54 +72,55 @@ let antallPunkt = 0;
 
 /**
  * @param {CanvasRenderingContext2D} ctx
- * @param {{ x: any; y: any; }} p1
+ * @param {{ x: number; y: number; }} p1
+ * @param {{ x: number; y: number; }} p2
  */
-function resistor(ctx,p1) {
-  // henta denne fra MDN - søkte på canvas path mdn
-  // m x y <=> moveTo(x,y)
-  // l x y <=> lineTo(x,y)
-  // h x   => lineTo(x,0)
-  // v y   => lineTo(0,y)
-  //let p = new Path2D('M10 10 h 80 v 80 h -80 Z');
+function resistor(ctx,p1, p2) {
   ctx.beginPath();
   let p = new Path2D(
-    `M ${p1.x} ${p1.y} h 20 l 5 5 l 10 -10 l 10 10 l 10 -10 l 10 10 l 10 -10 l 5 5 h 20 z`);
+    `M ${p1.x} ${p1.y} h ${Math.abs(dist(p1,p2)/2)} l 2 5  l 4 -10  l 4 10  l 4 -10  l 4 10  l 4 -10  l 2 5 h ${Math.abs(dist(p1,p2)/2)}`);
   //------/\/\/-----
+  ctx.save();
+  ctx.translate(p1.x, p1.y);
+  ctx.rotate(vinkel(p1,p2)*π/180);
+  ctx.translate(-p1.x, -p1.y);
   ctx.stroke(p);
+  ctx.restore();
 }
 
 /**
  * @param {CanvasRenderingContext2D} ctx
- * @param {{ x: any; y: any; }} p1
+ * @param {{ x: number; y: number; }} p1
+ * @param {{ x: number; y: number; }} p2
  */
-function kapasitans(ctx, p1){
+function kapasitans(ctx, p1, p2){
   ctx.beginPath();
   let p = new Path2D(`
-  M ${p1.x} ${p1.y} h20 v 10 -20 10 h10 v10 -20 10 h20
+  M ${p1.x} ${p1.y} h ${Math.abs(dist(p1,p2)/2)} v 10 -20 10 h10 v10 -20 10 h ${Math.abs(dist(p1,p2)/2)}
   `);
+  ctx.save();
+  ctx.translate(p1.x, p1.y);
+  ctx.rotate(vinkel(p1,p2)*π/180);
+  ctx.translate(-p1.x, -p1.y);
   ctx.stroke(p);
+  ctx.restore();
 }
 
 /**
  * @param {CanvasRenderingContext2D} ctx
- * @param {{ x: any; y: any; }} p1
+ * @param {{ x: number; y: number; }} p1
+ * @param {{ x: number; y: number; }} p2
  */
-function spole(ctx, p1){
+function spole(ctx, p1, p2){
   ctx.beginPath();
-  let line1 = new Path2D(`M ${p1.x} ${p1.y+15} h40`);
-  let spol1 = new Path2D(`M ${p1.x+40} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
-  let spol2 = new Path2D(`M ${p1.x+50} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
-  let spol3 = new Path2D(`M ${p1.x+60} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
-  let spol4 = new Path2D(`M ${p1.x+70} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
-  let spol5 = new Path2D(`M ${p1.x+80} ${p1.y} q -11.25 10 0 27.5 q 11.25 -10 0 -27.5`);
-  let line2 = new Path2D(`M ${p1.x+80} ${p1.y+15} h40`);
-  ctx.stroke(line1);
-  ctx.stroke(spol1);
-  ctx.stroke(spol2);
-  ctx.stroke(spol3);
-  ctx.stroke(spol4);
-  ctx.stroke(spol5);
-  ctx.stroke(line2);
+  let p = new Path2D(
+    `M ${p1.x} ${p1.y} h ${Math.abs((dist(p1,p2))/2)} t 2 -5 , 4 0 , 4 0, 4 0, 4 0, 4 0, 4 0, 4 0 l 2 5 h ${Math.abs((dist(p1,p2))/2)}`);
+  ctx.save();
+  ctx.translate(p1.x, p1.y);
+  ctx.rotate(vinkel(p1,p2)*π/180);
+  ctx.translate(-p1.x, -p1.y);
+  ctx.stroke(p);
+  ctx.restore();
 }
 
 /**
@@ -163,13 +170,13 @@ function setup() {
     if(viskBtnClicked !== true){
       const type = selType.value;
       if (type === "spole") {
-        spole(ctx,p1);
+        spole(ctx,p1,p2);
       }
       if (type === "kapasitans") {
-        kapasitans(ctx,p1);
+        kapasitans(ctx,p1, p2);
       }
       if (type === "resistor") {
-        resistor(ctx,p1);
+        resistor(ctx,p1, p2);
       }
       if (type === "sirkel") {
         const radius = dist(p1, p2);
