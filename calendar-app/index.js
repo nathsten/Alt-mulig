@@ -20,6 +20,8 @@ index.listen(port, (err) => {
 
 client.connect();
 
+index.use('/open/calendarApp', express.static('calendar'));
+
 index.get('/', async (req, res) => {
     const queryUserlist = await client.query(`SELECT * FROM userlist;`);
     const data = await queryUserlist.rows;
