@@ -1,4 +1,44 @@
-.daysMain{
+body{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: rgb(21, 21, 21);
+    color: rgb(255, 255, 255);
+}
+/*Calendar div desktop*/
+.calendar_desktop{
+    position: absolute;
+    width: 75%;
+    height: 650px;
+    border: solid 1px white;
+    border-radius: 10px;
+    left: 1%;
+    top: 100px;
+}
+
+.calendarDays_div_desktop{
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+.calendarDays_desktop{
+    font-size: 1.3em;
+    height: 40px;
+    border: solid 1px white;
+    border-radius: 10px;
+    margin: 10px 5px 0px 5px;
+    line-height: 35px;
+}
+
+/*Date events*/
+.eventDiv_desktop{
+    position: absolute;
+    width: 20%;
+    height: 650px;
+    border: solid 1px white;
+    border-radius: 10px;
+    right: 1%;
+    top: 100px;
+    text-align: center;
+}
+.eventHeader_desktop{
+    font-size: 1.8em;
 }

@@ -1,26 +1,37 @@
-const element = React.createElement;
 const select = value => document.querySelector(value);
+const today = new Date();
 
-const test = select("#test");
+const allDays = "Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split(" ");
 
-const days = "Mandag Tirsdag Onsdag Torsdag Fredag Lørdag Søndag".split(" ");
+const header = new Vue({
 
-class TestJSX extends React.Component {
-    render() {
-        return (
-            <div className="daysMain">{days.map(day => 
-                <div 
-                key={day.split("").splice(0,3).join("")} 
-                id={day.split("").splice(0,3).join("")}
-                className="days">
-                    {day}
-                </div>)}
-            </div>
-        );
+});
+
+const calendar = new Vue({
+  el: "#calendarRoot",
+  data: {
+    days: [],
+    classObject: {
+      isActive: true,
+      isMobile: false,
+      isDesktop: false
+    },
+    eventHeader: {text: 'Events on "date"'}
+  },
+  methods: {
+    test: txt => {
+      alert(txt);
     }
-}
+  }
+})
 
-ReactDOM.render(
-    <TestJSX />,
-    test
-);
+allDays.map(dag => calendar.days.push({text: dag}));
+
+window.onload = () => {
+  if (screen.width < 700){
+    calendar.classObject.isMobile = true;
+  }
+  else{
+    calendar.classObject.isDesktop = true;
+  }
+}

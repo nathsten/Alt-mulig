@@ -4,21 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar App</title>
-
     <link rel="stylesheet" href="desktop.css">
     <link rel="stylesheet" href="mobile.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
 <body>
 
-    <div id="test"></div>
-    
-    <!-- <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script> -->
-    <!-- <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+  <div id="headerRoot"></div>
 
-    <script type="text/babel" src="app.js"></script>
+  <div id="calendarRoot">
+    <!--Calendar div-->
+    <div id="calendar" v-bind:class="{
+      calendar_mobile: classObject.isMobile,
+      calendar_desktop: classObject.isDesktop}">
+
+      <!--Calendar div-->
+      <div v-bind:class="{
+        calendarDays_div_mobile: classObject.isMobile,
+        calendarDays_div_desktop: classObject.isDesktop}">
+        <!--Days divs-->
+        <div
+        v-bind:class="{
+          calendarDays_mobile: classObject.isMobile,
+          calendarDays_desktop: classObject.isDesktop
+        }"
+        v-for="day in days"
+        v-bind:id="day.text.toLowerCase()"
+        v-on:click="test(day.text)">
+          {{ day.text }}
+        </div>
+      </div>
+      </div>
+
+      <!--Events on selected day-->
+      <div id="eventDiv"
+      v-bind:class="{
+        eventDiv_mobile: classObject.isMobile,
+        eventDiv_desktop: classObject.isDesktop
+      }">
+        <!--Header-->
+        <div 
+        v-bind:class="{
+          eventHeader_mobile: classObject.isMobile,
+          eventHeader_desktop: classObject.isDesktop}">
+        {{ eventHeader.text }}
+      </div>
+        <!--Events on selected date-->
+
+    </div>
+  </div>
+
+    <script src="app.js"></script>
     <script src="regDate.js"></script>
 </body>
 </html>
