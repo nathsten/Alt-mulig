@@ -2,8 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { client } = require('./client.js');
-const { encryptPassword } = require('./passProtect.js');
-const { decryptPasword } = require('./passProtect.js');
+const { encryptPassword, decryptPasword } = require('./passProtect.js');
 const port = 8080;
 const index = express();
 index.use(cookieParser());
@@ -27,3 +26,15 @@ index.get('/', async (req, res) => {
     const data = await queryUserlist.rows;
     res.json(data);
 });
+
+const fs = require('fs');
+const testDates = JSON.parse(fs.readFileSync('testDates.json'));
+
+index.get('/getTestDates', (req, res) => {
+    res.json(testDates);
+})
+
+index.post('/open/calendarApp/', (req, res) => {
+    console.log(req.body.test);
+    res.redirect('/open/calendarApp/')
+})

@@ -26,6 +26,26 @@ body{
     border-radius: 10px;
     margin: 10px 5px 0px 5px;
     line-height: 35px;
+    background-color: #013e88d6;
+}
+.calendarDates_div_desktop{
+    position: absolute;
+    width: 100%;
+    height: 90%;
+    bottom: 0%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+.activeDateDesktop{
+    cursor: pointer;
+    font-size: 1.4em;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin: 5px;
+    background-color: #0350afd6;
+}
+.activeDateDesktop>p{
+    margin: 5px 0px 0px 5px;
 }
 
 /*Date events*/
@@ -40,5 +60,27 @@ body{
     text-align: center;
 }
 .eventHeader_desktop{
-    font-size: 1.8em;
+    margin: 10px;
+    font-size: 1.75em;
+}
+.eventList_desktop{
+    position: absolute;
+    width: 90%;
+    height: 78%;
+    left: 5%;
+    top: 10%;
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+}
+.event_desktop{
+    position: relative;
+    font-size: 1.4em;
+    background-color: #227eeebb;
+    border-radius: 15px;
+    padding: 5px 10px 5px 10px;
+    width: 80%;
+    left: 5%;
+    margin: 10px 0px 0px 0px;
+    max-height: 40px;
 }

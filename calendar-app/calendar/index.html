@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="mobile.css">
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="app.js"></script>
 </head>
 <body>
 
@@ -30,12 +31,28 @@
           calendarDays_desktop: classObject.isDesktop
         }"
         v-for="day in days"
-        v-bind:id="day.text.toLowerCase()"
-        v-on:click="test(day.text)">
+        v-bind:id="day.text.toLowerCase()">
           {{ day.text }}
         </div>
       </div>
-      </div>
+
+      <!--Calendar dates-->
+      <div v-bind:class="{
+        calendarDates_div_mobile: classObject.isMobile,
+        calendarDates_div_desktop: classObject.isDesktop}">
+        <div v-for="date in dates"
+        v-bind:class="{
+            activeDateDesktop: date.activeDay && classObject.isDesktop,
+            activeDateMobile: date.activeDay && classObject.isMobile}"
+
+            v-on:click="setSelectedDay(date.date, date.month)">
+            <p v-if="date.activeDay">
+                {{ date.date }} {{ date.month }}
+            </p>
+        </div>
+    </div>
+
+    </div>
 
       <!--Events on selected day-->
       <div id="eventDiv"
@@ -48,14 +65,34 @@
         v-bind:class="{
           eventHeader_mobile: classObject.isMobile,
           eventHeader_desktop: classObject.isDesktop}">
-        {{ eventHeader.text }}
+        {{ eventHeader.text }} {{ selectedDay }}
       </div>
         <!--Events on selected date-->
+        <div v-bind:class="{
+            eventList_mobile: classObject.isMobile,
+            eventList_desktop: classObject.isDesktop
+          }"
+          id="eventList">
+            <div v-for="event in selectedDayEvents"
+            v-bind:class="{
+                event_mobile: classObject.isMobile,
+                event_desktop: classObject.isDesktop}">
+                <span>{{ event.description }}</span> <span>{{ event.time }}</span>
+            </div>
+        </div>
+
+        <!--Add new event-->
+        <div style="position: relative; top: 250px;">
+            <input id="descriptionInpt" type="text" name="description"><br>
+            <input id="timeInpt" type="text" name="time"><br>
+            <button v-on:click="sendEventToDB">Save</button>
+        </div>
 
     </div>
   </div>
 
-    <script src="app.js"></script>
-    <script src="regDate.js"></script>
+  <script>
+      setup();
+  </script>
 </body>
 </html>
