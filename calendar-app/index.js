@@ -34,7 +34,16 @@ index.get('/getTestDates', (req, res) => {
     res.json(testDates);
 })
 
-index.post('/open/calendarApp/', (req, res) => {
-    console.log(req.body.test);
-    res.redirect('/open/calendarApp/')
+index.get('/addNewEvent/eventName/:eventName/eventTime/:eventTime/eventKey/:eventKey', async (req, res) => {
+    const eventName = req.params.eventName;
+    const eventTime = req.params.eventTime;
+    const eventKey = req.params.eventKey;
+
+    console.log(eventName);
+    console.log(eventTime);
+    console.log(eventKey);
+
+    res.send({status: "success"})
+
+    // Sende til postgres DB
 })

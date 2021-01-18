@@ -40,7 +40,7 @@
       <div v-bind:class="{
         calendarDates_div_mobile: classObject.isMobile,
         calendarDates_div_desktop: classObject.isDesktop}">
-        <div v-for="date in dates"
+        <div v-for="date in dates" 
         v-bind:class="{
             activeDateDesktop: date.activeDay && classObject.isDesktop,
             activeDateMobile: date.activeDay && classObject.isMobile}"
@@ -48,6 +48,17 @@
             v-on:click="setSelectedDay(date.date, date.month)">
             <p v-if="date.activeDay">
                 {{ date.date }} {{ date.month }}
+
+                <div v-for="event in allEvents" v-bind:class="{
+                        calendarInEvents_div_mobile: classObject.isMobile,
+                        calendarInEvents_div_desktop: classObject.isDesktop}">
+                    <div v-for="ev in event[date.month + date.date]" v-bind:class="{
+                            calendarInEvents_mobile: classObject.isMobile,
+                            calendarInEvents_desktop: classObject.isDesktop}">
+                        <p><span>{{ ev.description }}</span></p>
+                    </div>
+                </div>
+
             </p>
         </div>
     </div>
@@ -82,10 +93,12 @@
         </div>
 
         <!--Add new event-->
-        <div style="position: relative; top: 250px;">
-            <input id="descriptionInpt" type="text" name="description"><br>
-            <input id="timeInpt" type="text" name="time"><br>
-            <button v-on:click="sendEventToDB">Save</button>
+        <div style="position: relative; top: 200px;" v-bind:class="{
+            addNewEventDiv_mobile: classObject.isMobile,
+            addNewEventDiv_desktop: classObject.isDesktop}">
+            <input v-on:keydown.enter="sendEventToDB" type="text" id="eventName"> <br>
+            <input v-on:keydown.enter="sendEventToDB" type="time" id="eventTime"> <br>
+            <button v-on:click="sendEventToDB">Add event</button>
         </div>
 
     </div>

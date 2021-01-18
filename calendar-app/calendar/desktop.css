@@ -43,9 +43,29 @@ body{
     border-radius: 10px;
     margin: 5px;
     background-color: #0350afd6;
+    min-height: 105px;
+    max-height: 105px;
 }
 .activeDateDesktop>p{
     margin: 5px 0px 0px 5px;
+}
+.calendarInEvents_div_desktop{
+    position: relative;
+    width: 80%;
+    top: 10px;
+    max-height: 50px;
+    overflow: scroll;
+}
+.calendarInEvents_desktop>p{
+    font-size: 0.8em;
+    margin: 3px;
+    background-color: rgb(160, 226, 255);
+    color: rgb(42, 42, 42);
+    border-radius: 10px;
+}
+.calendarInEvents_desktop>p>span{
+    position: relative;
+    left: 10px;
 }
 
 /*Date events*/

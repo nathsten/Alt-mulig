@@ -17,24 +17,29 @@ class renderHeigth{
     }
 }
 
+const sendEventToDB = (form) => {
+    console.log(form.test.value);
+}
+
 const setup = async () => {
     const getTestDates = await fetch('/getTestDates');
-    const testObject = await getTestDates.json();
+    let testObject = await getTestDates.json();
 
     const calendar = new Vue({
         el: "#calendarRoot",
         data: {
-            days: [],
-            dates: [],
-            classObject: {
-            isActive: true,
-            isMobile: false,
-            isDesktop: false
+                days: [],
+                dates: [],
+                classObject: {
+                isActive: true,
+                isMobile: false,
+                isDesktop: false
             },
             eventHeader: {text: `Evens on `},
             selectedDay: `${month} ${date}:`,
             selectedDayKey: month+date,
-            selectedDayEvents: []
+            selectedDayEvents: [],
+            allEvents: [testObject]
         },
         methods: {
             setSelectedDay: (date, month) => {
@@ -51,15 +56,15 @@ const setup = async () => {
                     calendar.selectedDayEvents = []; 
                 }
             },
-            sendEventToDB: async () => {
-                console.log(calendar.selectedDayKey);
-                const descriptionInput = select("#descriptionInpt");
-                const timeInput = select("#timeInpt");
-                const description = descriptionInput.value;
-                const time = timeInput.value;
-                console.log(description);
-                console.log(time);
-                descriptionInput.value = ""; timeInput.value = "";
+            sendEventToDB: () => {
+                const eventNameInput = select("#eventName");
+                const eventTimeInput = select("#eventTime");
+                const eventName = eventNameInput.value;
+                const eventTime = eventTimeInput.value;
+                fetch(`/addNewEvent/eventName/${eventName}/eventTime/${eventTime}/eventKey/${calendar.selectedDayKey}`)
+                .then(res => res.json())
+                .then((msg) => console.log(msg))
+                .catch(e => console.log(e));
             }
         }
     })
