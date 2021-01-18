@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tegneprogram</title>
+    <script src="circuitSimulator.js"></script>
+    <link rel="stylesheet" href="circuitSimulator.css">
+</head>
+<body>
+
+    <div id="gui">
+        <select name="type" id="type">
+            <option>resistor</option>
+            <option>kapasitans</option>
+            <option>spole</option>
+            <option>jord</option>
+            <option>batteripol</option>
+            <option>ledning</option>
+        </select>
+        <button id="deleteAll">Slett tegning</button>
+        <input type="text" id="voltInpt" placeholder="volt" class="hidden">
+
+    </div>
+    <br>
+
+    <div id="tegnebrett">
+        <canvas id="bakgrunn" width="400" height="400"></canvas>
+        <canvas id="ark" width="400" height="400"></canvas>
+
+    </div>
+    
+    <script>
+        setup();
+    </script>
+</body>
+</html>
