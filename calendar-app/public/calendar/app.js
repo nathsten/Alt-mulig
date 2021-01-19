@@ -22,8 +22,12 @@ const sendEventToDB = (form) => {
 }
 
 const setup = async () => {
-    const getTestDates = await fetch('/getTestDates');
-    let testObject = await getTestDates.json();
+    const getEvents = await fetch('/getTestDates');
+    let testObject = await getEvents.json();
+
+    fetch('/open/calendarApp/getUserEvents')
+    .then(res => res.json())
+    .then(res => console.log(res)); // Må sortere events på en annen måte i Vue setup. 
 
     const calendar = new Vue({
         el: "#calendarRoot",
@@ -57,8 +61,6 @@ const setup = async () => {
                 }
             },
             sendEventToDB: () => {
-                const eventNameInput = select("#eventName");
-                const eventTimeInput = select("#eventTime");
                 const eventName = eventNameInput.value;
                 const eventTime = eventTimeInput.value;
                 fetch(`/addNewEvent/eventName/${eventName}/eventTime/${eventTime}/eventKey/${calendar.selectedDayKey}`)
@@ -77,6 +79,9 @@ const setup = async () => {
 
     const eventList_desktop = new renderHeigth();
     eventList_desktop.div = select("#eventList");
+    const eventNameInput = select("#eventName");
+    const eventTimeInput = select("#eventTime");
+    
     if(testObject[calendar.selectedDayKey]){
         const events = [];
         Object.keys(testObject[calendar.selectedDayKey]).map(event => events.push(testObject[calendar.selectedDayKey][event]));
@@ -106,6 +111,15 @@ const setup = async () => {
     }
 
     window.onload = () => {
+        fetch('/checkUserExistence')
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === "not signed in"){
+                window.open('/open/calendarApp/signIn', '_self');
+            }
+        })
+        .catch(e => console.log(e))
+        .finally(console.log(`User existende is checked`));
         if (screen.width < 700){
             calendar.classObject.isMobile = true;
         }
