@@ -49,13 +49,14 @@
             <p v-if="date.activeDay">
                 {{ date.date }} {{ date.month }}
 
-                <div v-for="event in allEvents" v-bind:class="{
-                        calendarInEvents_div_mobile: classObject.isMobile,
-                        calendarInEvents_div_desktop: classObject.isDesktop}">
-                    <div v-for="ev in event[date.month + date.date]" v-bind:class="{
-                            calendarInEvents_mobile: classObject.isMobile,
-                            calendarInEvents_desktop: classObject.isDesktop}">
-                        <p><span>{{ ev.description }}</span></p>
+                <div v-bind:class="{
+                    calendarInEvents_div_mobile: classObject.isMobile,
+                    calendarInEvents_div_desktop: classObject.isDesktop}">
+                    <div v-for="event in allEvents[date.month + date.date]" 
+                    v-bind:class="{
+                        calendarInEvents_mobile: classObject.isMobile,
+                        calendarInEvents_desktop: classObject.isDesktop}">
+                        <p><span>{{ event.eventdescription }}</span></p>
                     </div>
                 </div>
 
@@ -88,12 +89,19 @@
             v-bind:class="{
                 event_mobile: classObject.isMobile,
                 event_desktop: classObject.isDesktop}">
-                <span>{{ event.description }}</span> <span>{{ event.time }}</span>
+                <span>{{ event.eventdescription }}</span> 
+                    <br>
+                <span>{{ event.eventtime }}</span>
+
+                <span v-on:click="deleteEvent(event.event_id)"
+                v-bind:class="{
+                    deleteEvent_mobile: classObject.isMobile,
+                    deleteEvent_desktop: classObject.isDesktop}"></span>
             </div>
         </div>
 
         <!--Add new event-->
-        <div style="position: relative; top: 200px;" v-bind:class="{
+        <div style="position: relative; top: 400px;" v-bind:class="{
             addNewEventDiv_mobile: classObject.isMobile,
             addNewEventDiv_desktop: classObject.isDesktop}">
             <input v-on:keydown.enter="sendEventToDB" type="text" id="eventName"> <br>

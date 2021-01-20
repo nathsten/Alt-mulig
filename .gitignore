@@ -12,3 +12,5 @@ calendar-app/client.js
 calendar-app/passProtect.js
 calendar-app/extras
 calendar-app/testDates.json
+calendar-app/dates.json
+calendar-app/public/calendar/icons

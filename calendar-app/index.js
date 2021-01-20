@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 const { client } = require('./client.js');
 const { encryptPassword, decryptPasword, randomKey } = require('./passProtect.js');
 const port = 8080;
@@ -29,7 +30,6 @@ index.get('/', async (req, res) => {
     res.json(data);
 });
 
-const fs = require('fs');
 const testDates = JSON.parse(fs.readFileSync('testDates.json'));
 
 index.get('/getTestDates', (req, res) => {
@@ -46,7 +46,8 @@ index.post('/open/calendarApp/signUp', (req, res) => {
         CREATE TABLE IF NOT EXISTS ${userName} (
             eventKey VARCHAR ( 50 ) NOT NULL,
             eventDescription VARCHAR ( 255 ) NOT NULL,
-            eventTime VARCHAR ( 50 ) UNIQUE NOT NULL
+            eventTime VARCHAR ( 50 ) NOT NULL,
+            event_id serial PRIMARY KEY
         );
     `))
     .then(() => client.query(`
@@ -67,7 +68,15 @@ index.post('/open/calendarApp/signIn', (req, res) => {
             const time = new Date;
             time.setTime(time.getTime() + 1 * 3600 * 1000);
 
-            res.cookie('userName', userName, {path: '/open/calendarApp', expires: time}).redirect('/open/calendarApp')
+            const key = randomKey();
+
+            client.query(`UPDATE userlist
+                SET sign_in_key = '${encryptPassword(key)}'
+                where username = '${userName}'`);
+
+            res.cookie('key', encryptPassword(key), {path: '/open/calendarApp', expires: time})
+            .cookie('userName', userName, {path: '/open/calendarApp', expires: time})
+            .redirect('/open/calendarApp');
         }
         else{
             console.log("NO");
@@ -80,53 +89,140 @@ index.post('/open/calendarApp/signIn', (req, res) => {
 })
 
 index.get('/open/calendarApp/getUserEvents', (req, res) => {
-    const userName = req.headers.cookie.split(/\n/)[0].split("=")[1];
-
-    const eventList = [];
-
-    client.query(`SELECT * FROM ${userName}`)
-    .then(res => {
-        const events = res.rows;
-        // console.log(events);
-        for(let i=0; i<events.length; i++){
-            const newEventList = {}
-            const date = newEventList[events[i].eventkey] = {};
-            date[events[i].eventtime] = {
-                eventdescription: events[i].eventdescription,
-                eventtime: events[i].eventtime
-            };
-            eventList.push(newEventList);
+    try{
+        const cookie = req.headers.cookie.split(" ");
+        let userName;
+        let key;
+        if(cookie[0].split("=")[0] === "key"){
+            key = cookie[0].split("=")[1];
+            let userNameC = cookie[1].split("=")[1];
+            userName = userNameC.split("").splice(0, userNameC.length).join("");
         }
-    })
-    .then(() => res.send(eventList))
-    .catch(e => console.log(e));
+        else{
+            let keyC = cookie[1].split("=")[1];
+            key = keyC.split("").splice(0, keyC.length).join("");
+            userName = cookie[0].split("=")[1];
+        }
+
+        const dates = JSON.parse(fs.readFileSync('dates.json'));
+
+        client.query(`SELECT * FROM userlist
+        where username = '${userName}'`)
+        .then(data => {
+            if(decryptPasword(data.rows[0].sign_in_key) === decryptPasword(key)){
+                client.query(`SELECT * FROM ${userName}`)
+                .then(res => {
+                    const events = res.rows;
+                    events.forEach(event => {
+                        dates[(event.eventkey)].push({
+                            eventdescription: event.eventdescription, 
+                            eventtime: event.eventtime,
+                            event_id: event.event_id
+                        })
+                    });
+                })
+                .then(() => res.send(dates))
+            }
+            else{
+                res.send({status: "Not autorized"})
+            }
+        })
+        .catch(e => {console.log(e); res.send({status: "Not autorized"})});
+        }
+    catch(e){
+        res.clearCookie('key', {path: '/open/calendarApp'})
+        .clearCookie('userName', {path: '/open/calendarApp'})
+        .send({status: "Not autorized"});
+        console.log(e);
+    }
 })
 
-index.get('/addNewEvent/eventName/:eventName/eventTime/:eventTime/eventKey/:eventKey', async (req, res) => {
+index.get('/open/calendarApp/addNewEvent/eventName/:eventName/eventTime/:eventTime/eventKey/:eventKey', async (req, res) => {
     const eventName = req.params.eventName;
     const eventTime = req.params.eventTime;
     const eventKey = req.params.eventKey;
 
-    console.log(eventName);
-    console.log(eventTime);
-    console.log(eventKey);
+    const cookie = req.headers.cookie.split(" ");
+    let userName;
+    let key;
+    if(cookie[0].split("=")[0] === "key"){
+        key = cookie[0].split("=")[1];
+        let userNameC = cookie[1].split("=")[1];
+        userName = userNameC.split("").splice(0, userNameC.length).join("");
+    }
+    else{
+        let keyC = cookie[1].split("=")[1];
+        key = keyC.split("").splice(0, keyC.length).join("");
+        userName = cookie[0].split("=")[1];
+    }
 
-    res.send({status: "success"})
+    const dates = JSON.parse(fs.readFileSync('dates.json'));
 
-    // Sende til postgres DB
+    client.query(`
+        INSERT INTO ${userName}(eventKey, eventDescription, eventTime)
+        values('${eventKey}', '${eventName}', '${eventTime}');
+    `)
+    .then(() => client.query(`SELECT * FROM ${userName}`))
+    .then(res => {
+        const events = res.rows;
+        events.forEach(event => {
+            dates[(event.eventkey)].push({
+                eventdescription: event.eventdescription, 
+                eventtime: event.eventtime,
+                event_id: event.event_id
+            })
+        })
+    })
+    .then(() => res.send(dates))
+    .catch(e => console.log(e));
 })
 
-index.get('/checkUserExistence', (req, res) => {
-    // res.send({status: "not signed in"});
-    res.send({status: "Signed in"});
+index.get('/open/calendarApp/deleteEvent/:eventId', (req, res) => {
+    const eventId = req.params.eventId;
+    const cookie = req.headers.cookie.split(" ");
+    let userName;
+    let key;
+    if(cookie[0].split("=")[0] === "key"){
+        key = cookie[0].split("=")[1];
+        let userNameC = cookie[1].split("=")[1];
+        userName = userNameC.split("").splice(0, userNameC.length).join("");
+    }
+    else{
+        let keyC = cookie[1].split("=")[1];
+        key = keyC.split("").splice(0, keyC.length).join("");
+        userName = cookie[0].split("=")[1];
+    }
+
+    const dates = JSON.parse(fs.readFileSync('dates.json'));
+
+    client.query(`DELETE FROM ${userName}
+        where event_id = ${eventId}`
+    )
+    .then(() => client.query(`SELECT * FROM ${userName}`))
+    .then(res => {
+        const events = res.rows;
+        events.forEach(event => {
+            dates[(event.eventkey)].push({
+                eventdescription: event.eventdescription, 
+                eventtime: event.eventtime,
+                event_id: event.event_id
+            })
+        })
+    })
+    .then(() => res.send(dates))
+    .catch(e => console.log(e));
 })
 
 /** ## COMMANDS ##
- * DELETE FROM testUsers
+ * DELETE FROM userlist
  * where id = 7;
  * 
- * SELECT * FROM testUsers;
+ * SELECT * FROM userlist;
  * 
- * INSERT INTO testUsers(username, socre)
+ * INSERT INTO userlist(username, socre)
  * values('userName', 'score')
+ * 
+ * UPDATE userlist
+ * SET sign_in_key = 'noe'
+ * where username = 'username'
  */

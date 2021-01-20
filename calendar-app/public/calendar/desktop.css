@@ -45,9 +45,13 @@ body{
     background-color: #0350afd6;
     min-height: 105px;
     max-height: 105px;
+    transition: 250ms;
 }
 .activeDateDesktop>p{
     margin: 5px 0px 0px 5px;
+}
+.activeDateDesktop:hover{
+    background-color: #307edec4;
 }
 .calendarInEvents_div_desktop{
     position: relative;
@@ -66,6 +70,7 @@ body{
 .calendarInEvents_desktop>p>span{
     position: relative;
     left: 10px;
+    font-size: 0.8em;
 }
 
 /*Date events*/
@@ -89,13 +94,13 @@ body{
     height: 78%;
     left: 5%;
     top: 10%;
-    text-align: center;
+    text-align: left;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
 }
 .event_desktop{
     position: relative;
-    font-size: 1.4em;
+    font-size: 1.2em;
     background-color: #227eeebb;
     border-radius: 15px;
     padding: 5px 10px 5px 10px;
@@ -103,4 +108,20 @@ body{
     left: 5%;
     margin: 10px 0px 0px 0px;
     max-height: 40px;
+}
+.deleteEvent_desktop{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: solid 2px  #56d2f7bb;
+    border-radius: 50%;
+    right: 5%;
+    top: 20%;
+    cursor: pointer;
+}
+.deleteEvent_desktop:hover{
+    background-image: url('icons/check.png');
+    background-position: center;
+    background-size: 80%;
+    background-repeat: no-repeat;
 }

@@ -17,24 +17,20 @@ class renderHeigth{
     }
 }
 
-const sendEventToDB = (form) => {
-    console.log(form.test.value);
-}
-
 const setup = async () => {
-    const getEvents = await fetch('/getTestDates');
-    let testObject = await getEvents.json();
+    const fetchEvents = await fetch('/open/calendarApp/getUserEvents');
+    const events = await fetchEvents.json();
 
-    fetch('/open/calendarApp/getUserEvents')
-    .then(res => res.json())
-    .then(res => console.log(res)); // Må sortere events på en annen måte i Vue setup. 
+    if(events.status === "Not autorized"){
+        window.open('/open/calendarApp/signIn', '_self');
+    }
 
     const calendar = new Vue({
         el: "#calendarRoot",
         data: {
-                days: [],
-                dates: [],
-                classObject: {
+            days: [],
+            dates: [],
+            classObject: {
                 isActive: true,
                 isMobile: false,
                 isDesktop: false
@@ -43,30 +39,53 @@ const setup = async () => {
             selectedDay: `${month} ${date}:`,
             selectedDayKey: month+date,
             selectedDayEvents: [],
-            allEvents: [testObject]
+            allEvents: events
         },
         methods: {
             setSelectedDay: (date, month) => {
                 calendar.selectedDay = `${month} ${date}:`;
                 calendar.selectedDayKey = month+date;
-                if(testObject[calendar.selectedDayKey]){
-                    const events = [];
-                    Object.keys(testObject[calendar.selectedDayKey]).map(event => events.push(testObject[calendar.selectedDayKey][event]));
-                    calendar.selectedDayEvents = events;
-                    eventList_desktop.height = events.length * 10;
+                if(events[calendar.selectedDayKey]){
+                    calendar.selectedDayEvents = events[calendar.selectedDayKey];
+                    eventList_desktop.height = calendar.selectedDayEvents.length * 10;
                     eventList_desktop.render();
                 }
                 else{
-                    calendar.selectedDayEvents = []; 
+                    calendar.selectedDayEvents = [];
                 }
             },
             sendEventToDB: () => {
                 const eventName = eventNameInput.value;
                 const eventTime = eventTimeInput.value;
-                fetch(`/addNewEvent/eventName/${eventName}/eventTime/${eventTime}/eventKey/${calendar.selectedDayKey}`)
+                fetch(`/open/calendarApp/addNewEvent/eventName/${eventName}/eventTime/${eventTime}/eventKey/${calendar.selectedDayKey}`)
                 .then(res => res.json())
-                .then((msg) => console.log(msg))
+                .then(events =>{
+                    if(events[calendar.selectedDayKey]){
+                        calendar.selectedDayEvents = events[calendar.selectedDayKey];
+                        eventList_desktop.height = calendar.selectedDayEvents.length * 10;
+                        calendar.allEvents = events;
+                        eventList_desktop.render();
+                    }
+                    else{
+                        calendar.selectedDayEvents = [];
+                    } 
+                })
                 .catch(e => console.log(e));
+            },
+            deleteEvent: event_id => {
+                fetch(`/open/calendarApp/deleteEvent/${event_id}`)
+                .then(res => res.json())
+                .then(events => {
+                    if(events[calendar.selectedDayKey]){
+                        calendar.selectedDayEvents = events[calendar.selectedDayKey];
+                        eventList_desktop.height = calendar.selectedDayEvents.length * 10;
+                        calendar.allEvents = events;
+                        eventList_desktop.render();
+                    }
+                    else{
+                        calendar.selectedDayEvents = [];
+                    } 
+                })
             }
         }
     })
@@ -81,14 +100,12 @@ const setup = async () => {
     eventList_desktop.div = select("#eventList");
     const eventNameInput = select("#eventName");
     const eventTimeInput = select("#eventTime");
-    
-    if(testObject[calendar.selectedDayKey]){
-        const events = [];
-        Object.keys(testObject[calendar.selectedDayKey]).map(event => events.push(testObject[calendar.selectedDayKey][event]));
-        calendar.selectedDayEvents = events;
+
+    if(events[calendar.selectedDayKey]){
+        calendar.selectedDayEvents = events[calendar.selectedDayKey];
     }
     else{
-        calendar.selectedDayEvents = []; 
+        calendar.selectedDayEvents = [];
     }
 
     eventList_desktop.height = calendar.selectedDayEvents.length * 10;
@@ -110,21 +127,10 @@ const setup = async () => {
         calendar.dates.push(day);
     }
 
-    window.onload = () => {
-        fetch('/checkUserExistence')
-        .then(res => res.json())
-        .then(res => {
-            if(res.status === "not signed in"){
-                window.open('/open/calendarApp/signIn', '_self');
-            }
-        })
-        .catch(e => console.log(e))
-        .finally(console.log(`User existende is checked`));
-        if (screen.width < 700){
-            calendar.classObject.isMobile = true;
-        }
-        else{
-            calendar.classObject.isDesktop = true;
-        }
+    if (screen.width < 700){
+        calendar.classObject.isMobile = true;
+    }
+    else{
+        calendar.classObject.isDesktop = true;
     }
 }
