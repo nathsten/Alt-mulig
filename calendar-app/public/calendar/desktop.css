@@ -88,15 +88,23 @@ body{
     margin: 10px;
     font-size: 1.75em;
 }
-.eventList_desktop{
+.eventBox_desktop{
     position: absolute;
     width: 90%;
-    height: 78%;
     left: 5%;
-    top: 10%;
+    height: 85%;
+    /* border: solid 1px white; */
+    overflow: hidden;
+}
+.eventList_desktop{
+    position: absolute;
+    width: 100%;
+    max-height: 80%;
+    top: 1%;
     text-align: left;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
+    overflow: scroll;
 }
 .event_desktop{
     position: relative;
@@ -104,8 +112,8 @@ body{
     background-color: #227eeebb;
     border-radius: 15px;
     padding: 5px 10px 5px 10px;
-    width: 80%;
-    left: 5%;
+    width: 90%;
+    left: 1%;
     margin: 10px 0px 0px 0px;
     max-height: 40px;
 }
@@ -124,4 +132,86 @@ body{
     background-position: center;
     background-size: 80%;
     background-repeat: no-repeat;
+}
+
+/*Add new event div:*/
+.addNewEventDiv_desktop{
+    position: absolute;
+    width: 80%;
+    height: 150px;
+    bottom: -170px;
+    border: solid 2px white;
+    border-radius: 10px;
+    left: 10%;
+    background-color: rgb(21, 21, 21);
+}
+.inptNewEventDescription_desktop{
+    border-radius: 10px;
+    height: 30px;
+    width: 90%;
+    outline: none;
+    background-color: transparent;
+    border: solid 1px white;
+    color: rgb(255, 255, 255);
+    font-size: 1.4em;
+    margin: 5px 0px 10px 0px;
+}   
+.inptNewEventTime_desktop{
+    border-radius: 10px;
+    height: 30px;
+    width: 60%;
+    outline: none;
+    background-color: transparent;
+    border: solid 1px white;
+    color: rgb(255, 255, 255);
+    font-size: 1.4em;
+    text-align: center;
+    margin: 5px 0px 10px 0px;
+}
+.addNewEventDiv_desktop>button{
+    border-radius: 10px;
+    height: 30px;
+    width: 60%;
+    outline: none;
+    background-color: transparent;
+    border: solid 1px white;
+    color: rgb(255, 255, 255);
+    font-size: 1.4em;
+    text-align: center;
+    margin: 5px 0px 10px 0px;
+    cursor: pointer;
+    transition: 250ms;
+}
+.addNewEventDiv_desktop>button:hover{
+    background-color: rgb(74, 74, 74);
+}
+
+.moveUpAddNewEventDiv{
+    animation: moveUp 500ms linear;
+    animation-fill-mode: forwards;
+}
+@keyframes moveUp{
+    0%{bottom: -170px;}
+    100%{bottom: 30px;}
+}
+.moveDownNewEventDiv{
+    animation: moveDown 500ms linear;
+    animation-fill-mode: forwards;
+}
+@keyframes moveDown{
+    0%{bottom: 30px;}
+    100%{bottom: -170px;}
+}
+.displayNewEventDivBtn_desktop{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url('icons/add.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    bottom: 20px;
+    cursor: pointer;
+    left: calc(50% - 25px);
+    transition: 250ms;
 }

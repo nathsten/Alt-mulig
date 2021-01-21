@@ -8,15 +8,19 @@
 </head>
 <body>
 
-    <div id="signinRoot">
-        <form action="/open/calendarApp/signIn" method="POST">
-            <label for="username">Username</label>
+    <div class="formDiv">
+        <div class="header">Sign in</div>
+        <hr style="width: 90%;">
+        <form class="form" action="/open/calendarApp/signIn" method="POST">
+            <label for="username">Username</label><br>
             <input type="text" name="username">
                 <br>
-            <label for="password">Password</label>
+            <label for="password">Password</label><br>
             <input type="password" name="password">
                 <br>
-            <input type="submit" value="Sign up">
+            <input class="sumbit" type="submit" value="Sign in">
+            <br>
+            Haven't created a user yet? Click <a href="/open/calendarApp/signUp" style="color:lightblue;">here</a>
         </form>
     </div>
 </body>

@@ -81,32 +81,49 @@
       </div>
         <!--Events on selected date-->
         <div v-bind:class="{
-            eventList_mobile: classObject.isMobile,
-            eventList_desktop: classObject.isDesktop
-          }"
-          id="eventList">
-            <div v-for="event in selectedDayEvents"
-            v-bind:class="{
-                event_mobile: classObject.isMobile,
-                event_desktop: classObject.isDesktop}">
-                <span>{{ event.eventdescription }}</span> 
-                    <br>
-                <span>{{ event.eventtime }}</span>
-
-                <span v-on:click="deleteEvent(event.event_id)"
+            eventBox_mobile: classObject.isMobile,
+            eventBox_desktop: classObject.isDesktop
+          }">
+            <div v-bind:class="{
+                eventList_mobile: classObject.isMobile,
+                eventList_desktop: classObject.isDesktop
+            }"
+            id="eventList">
+                <div v-for="event in selectedDayEvents"
                 v-bind:class="{
-                    deleteEvent_mobile: classObject.isMobile,
-                    deleteEvent_desktop: classObject.isDesktop}"></span>
+                    event_mobile: classObject.isMobile,
+                    event_desktop: classObject.isDesktop}">
+                    <span>{{ event.eventdescription }}</span> 
+                        <br>
+                    <span>{{ event.eventtime }}</span>
+
+                    <span v-on:click="deleteEvent(event.event_id)"
+                    v-bind:class="{
+                        deleteEvent_mobile: classObject.isMobile,
+                        deleteEvent_desktop: classObject.isDesktop}"></span>
+                </div>
+            </div>
+
+            <!--Add new event-->
+            <div id="addNewEventDiv" v-bind:class="{
+                addNewEventDiv_mobile: classObject.isMobile,
+                addNewEventDiv_desktop: classObject.isDesktop}">
+                <input v-on:keydown.enter="sendEventToDB" type="text" id="eventName"
+                v-bind:class="{
+                    inptNewEventDescription_mobile: classObject.isMobile,
+                    inptNewEventDescription_desktop: classObject.isDesktop}"
+                    placeholder="Event description"> <br>
+                <input v-on:keydown.enter="sendEventToDB" type="time" id="eventTime"
+                v-bind:class="{
+                    inptNewEventTime_mobile: classObject.isMobile,
+                    inptNewEventTime_desktop: classObject.isDesktop}"> <br>
+                <button v-on:click="sendEventToDB">Add event</button>
             </div>
         </div>
-
-        <!--Add new event-->
-        <div style="position: relative; top: 400px;" v-bind:class="{
-            addNewEventDiv_mobile: classObject.isMobile,
-            addNewEventDiv_desktop: classObject.isDesktop}">
-            <input v-on:keydown.enter="sendEventToDB" type="text" id="eventName"> <br>
-            <input v-on:keydown.enter="sendEventToDB" type="time" id="eventTime"> <br>
-            <button v-on:click="sendEventToDB">Add event</button>
+        <div id="displayNewEventBtn" v-bind:class="{
+            displayNewEventDivBtn_mobile: classObject.isMobile,
+            displayNewEventDivBtn_desktop: classObject.isDesktop}"
+            v-on:click="displayNewEvent">
         </div>
 
     </div>

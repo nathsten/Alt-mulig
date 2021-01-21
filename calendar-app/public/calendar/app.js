@@ -39,15 +39,16 @@ const setup = async () => {
             selectedDay: `${month} ${date}:`,
             selectedDayKey: month+date,
             selectedDayEvents: [],
-            allEvents: events
+            allEvents: events,
+            eventDivActive: false
         },
         methods: {
             setSelectedDay: (date, month) => {
                 calendar.selectedDay = `${month} ${date}:`;
                 calendar.selectedDayKey = month+date;
                 if(events[calendar.selectedDayKey]){
-                    calendar.selectedDayEvents = events[calendar.selectedDayKey];
-                    eventList_desktop.height = calendar.selectedDayEvents.length * 10;
+                    calendar.selectedDayEvents = calendar.allEvents[(month+date)];
+                    eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 12, 70);
                     eventList_desktop.render();
                 }
                 else{
@@ -61,10 +62,17 @@ const setup = async () => {
                 .then(res => res.json())
                 .then(events =>{
                     if(events[calendar.selectedDayKey]){
-                        calendar.selectedDayEvents = events[calendar.selectedDayKey];
-                        eventList_desktop.height = calendar.selectedDayEvents.length * 10;
+                        calendar.selectedDayEvents = events[(calendar.selectedDayKey)];
+                        eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 12, 70);
                         calendar.allEvents = events;
                         eventList_desktop.render();
+                        eventNameInput.value = "";
+                        eventTimeInput.value = "";
+                        addNewEventDiv.classList.remove("moveDownNewEventDiv", "moveUpAddNewEventDiv");
+                        void addNewEventDiv.offsetWidth;
+                        addNewEventDiv.classList.add("moveDownNewEventDiv");
+                        calendar.eventDivActive = false;
+                        displayNewEventBtn.style.transform = "rotate(0deg)";
                     }
                     else{
                         calendar.selectedDayEvents = [];
@@ -77,15 +85,31 @@ const setup = async () => {
                 .then(res => res.json())
                 .then(events => {
                     if(events[calendar.selectedDayKey]){
-                        calendar.selectedDayEvents = events[calendar.selectedDayKey];
-                        eventList_desktop.height = calendar.selectedDayEvents.length * 10;
+                        calendar.selectedDayEvents = events[(calendar.selectedDayKey)];
+                        eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 12, 70);
                         calendar.allEvents = events;
                         eventList_desktop.render();
                     }
                     else{
                         calendar.selectedDayEvents = [];
-                    } 
+                    }
                 })
+            },
+            displayNewEvent: () => {
+                if(!calendar.eventDivActive){
+                    addNewEventDiv.classList.remove("moveUpAddNewEventDiv", "moveDownNewEventDiv");
+                    void addNewEventDiv.offsetWidth;
+                    addNewEventDiv.classList.add("moveUpAddNewEventDiv");
+                    calendar.eventDivActive = true;
+                    displayNewEventBtn.style.transform = "rotate(45deg)";
+                }
+                else{
+                    addNewEventDiv.classList.remove("moveDownNewEventDiv", "moveUpAddNewEventDiv");
+                    void addNewEventDiv.offsetWidth;
+                    addNewEventDiv.classList.add("moveDownNewEventDiv");
+                    calendar.eventDivActive = false;
+                    displayNewEventBtn.style.transform = "rotate(0deg)";
+                }
             }
         }
     })
@@ -100,6 +124,8 @@ const setup = async () => {
     eventList_desktop.div = select("#eventList");
     const eventNameInput = select("#eventName");
     const eventTimeInput = select("#eventTime");
+    const addNewEventDiv = select("#addNewEventDiv");
+    const displayNewEventBtn = select("#displayNewEventBtn");
 
     if(events[calendar.selectedDayKey]){
         calendar.selectedDayEvents = events[calendar.selectedDayKey];
@@ -108,7 +134,7 @@ const setup = async () => {
         calendar.selectedDayEvents = [];
     }
 
-    eventList_desktop.height = calendar.selectedDayEvents.length * 10;
+    eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 12, 70);
     eventList_desktop.render();
 
     for(let i=0; i<firstDayInMonth; i++){
