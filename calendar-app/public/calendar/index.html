@@ -6,13 +6,23 @@
     <title>Calendar App</title>
     <link rel="stylesheet" href="desktop.css">
     <link rel="stylesheet" href="mobile.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
     <script src="app.js"></script>
 </head>
 <body>
-
-  <div id="headerRoot"></div>
+    
+  <div id="headerRoot">
+      <div v-bind:class="{
+        header_mobile: classObject.isMobile,
+        header_desktop: classObject.isDesktop}">
+            <h1>Welcome back, {{ userName }}!</h1>
+            <div v-bind:class="{
+                logOut_mobile: classObject.isMobile,
+                logOut_desktop: classObject.isDesktop}"
+                v-on:click="logout">Log out</div>
+    </div>
+  </div>
 
   <div id="calendarRoot">
     <!--Calendar div-->
@@ -27,7 +37,7 @@
         <!--Days divs-->
         <div
         v-bind:class="{
-          calendarDays_mobile: classObject.isMobile,
+          hidden: classObject.isMobile,
           calendarDays_desktop: classObject.isDesktop
         }"
         v-for="day in days"
@@ -40,10 +50,11 @@
       <div v-bind:class="{
         calendarDates_div_mobile: classObject.isMobile,
         calendarDates_div_desktop: classObject.isDesktop}">
-        <div v-for="date in dates" 
+        <div v-for="date in dates"
         v-bind:class="{
             activeDateDesktop: date.activeDay && classObject.isDesktop,
-            activeDateMobile: date.activeDay && classObject.isMobile}"
+            activeDateMobile: date.activeDay && classObject.isMobile,
+            selectedDay: selectedDayKey === (date.month+date.date)}"
 
             v-on:click="setSelectedDay(date.date, date.month)">
             <p v-if="date.activeDay">
@@ -56,7 +67,15 @@
                     v-bind:class="{
                         calendarInEvents_mobile: classObject.isMobile,
                         calendarInEvents_desktop: classObject.isDesktop}">
-                        <p><span>{{ event.eventdescription }}</span></p>
+                       <p><span>{{ event.eventdescription }} <br> 
+                        <span v-if="classObject.isMobile" v-bind:class="{eventTimeTextMobile: classObject.isMobile}">
+                            <span v-if="classObject.isMobile" v-bind:class="{eventTimeInEventIcon: classObject.isMobile}"></span> 
+                            <span v-if="classObject.isMobile" v-on:click="deleteEvent(event.event_id)" v-bind:class="{deleteEventMobileIcon: classObject.isMobile}"></span> 
+                            {{ event.eventtime }}
+                        </span>
+
+                    </span>
+                </p> 
                     </div>
                 </div>
 
@@ -69,9 +88,10 @@
       <!--Events on selected day-->
       <div id="eventDiv"
       v-bind:class="{
-        eventDiv_mobile: classObject.isMobile,
+        hidden: classObject.isMobile,
         eventDiv_desktop: classObject.isDesktop
-      }">
+      }"
+      v-if="classObject.isDesktop">
         <!--Header-->
         <div 
         v-bind:class="{
@@ -93,9 +113,22 @@
                 v-bind:class="{
                     event_mobile: classObject.isMobile,
                     event_desktop: classObject.isDesktop}">
-                    <span>{{ event.eventdescription }}</span> 
+                    <div
+                    v-bind:class="{
+                        eventDescriptionText_mobile: classObject.isMobile,
+                        eventDescriptionText_desktop: classObject.isDesktop}">
+                        <span>{{ event.eventdescription }}</span>
+                    </div> 
                         <br>
-                    <span>{{ event.eventtime }}</span>
+                    <span v-bind:class="{
+                        eventTimeIcon_mobile: classObject.isMobile,
+                        eventTimeIcon_desktop: classObject.isDesktop}">
+                    </span>
+                    <span v-bind:class="{
+                        eventTimeText_mobile: classObject.isMobile,
+                        eventTimeText_desktop: classObject.isDesktop}">
+                        {{ event.eventtime }}
+                    </span>
 
                     <span v-on:click="deleteEvent(event.event_id)"
                     v-bind:class="{
@@ -104,7 +137,7 @@
                 </div>
             </div>
 
-            <!--Add new event-->
+            <!--Add new event Desktop-->
             <div id="addNewEventDiv" v-bind:class="{
                 addNewEventDiv_mobile: classObject.isMobile,
                 addNewEventDiv_desktop: classObject.isDesktop}">
@@ -119,14 +152,38 @@
                     inptNewEventTime_desktop: classObject.isDesktop}"> <br>
                 <button v-on:click="sendEventToDB">Add event</button>
             </div>
+
         </div>
-        <div id="displayNewEventBtn" v-bind:class="{
+        <!--Add new eventBtn Desktop-->
+        <div id="displayNewEventBtn" v-if="classObject.isDesktop" v-bind:class="{
             displayNewEventDivBtn_mobile: classObject.isMobile,
             displayNewEventDivBtn_desktop: classObject.isDesktop}"
             v-on:click="displayNewEvent">
         </div>
-
     </div>
+
+    <!--Add new event input div Mobile-->
+    <div id="addNewEventDiv" v-if="classObject.isMobile" v-bind:class="{
+        addNewEventDiv_mobile: classObject.isMobile}">
+        <input v-if="classObject.isMobile" v-on:keydown.enter="sendEventToDB" type="text" id="eventName"
+        v-bind:class="{
+            inptNewEventDescription_mobile: classObject.isMobile,
+            inptNewEventDescription_desktop: classObject.isDesktop}"
+            placeholder="Event description"> <br>
+        <input v-if="classObject.isMobile" v-on:keydown.enter="sendEventToDB" type="time" id="eventTime"
+        v-bind:class="{
+            inptNewEventTime_mobile: classObject.isMobile,
+            inptNewEventTime_desktop: classObject.isDesktop}"> <br>
+        <button v-if="classObject.isMobile" v-on:click="sendEventToDB">Add event</button>
+    </div>
+
+    <!--add new event btn mobile-->
+    <div id="displayNewEventBtn" v-if="classObject.isMobile" v-bind:class="{
+        displayNewEventDivBtn_mobile: classObject.isMobile,
+        displayNewEventDivBtn_desktop: classObject.isDesktop}"
+        v-on:click="displayNewEvent">
+    </div>
+
   </div>
 
   <script>

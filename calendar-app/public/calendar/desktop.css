@@ -3,6 +3,40 @@ body{
     background-color: rgb(21, 21, 21);
     color: rgb(255, 255, 255);
 }
+/*Header:*/
+.header_desktop{
+    position: relative;
+    text-align: center;
+    width: 99%;
+    left: 0.5%;
+    height: 80px;
+    background-color: #0350afd6;
+    border-radius: 20px;
+}
+.header_desktop>h1{
+    position: relative;
+    font-weight: 200;
+    top: 20%;
+    font-size: 2.5em;
+    margin: 0px;
+}
+
+.logOut_desktop{
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    border: solid 1px white;
+    border-radius: 10px;
+    right: 2%;
+    top: 15%;
+    line-height: 27.5px;
+    cursor: pointer;
+    transition: 250ms;
+}
+.logOut_desktop:hover{
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
 /*Calendar div desktop*/
 .calendar_desktop{
     position: absolute;
@@ -58,7 +92,7 @@ body{
     width: 80%;
     top: 10px;
     max-height: 50px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 .calendarInEvents_desktop>p{
     font-size: 0.8em;
@@ -66,13 +100,16 @@ body{
     background-color: rgb(160, 226, 255);
     color: rgb(42, 42, 42);
     border-radius: 10px;
+    overflow: scroll;
 }
 .calendarInEvents_desktop>p>span{
     position: relative;
     left: 10px;
     font-size: 0.8em;
 }
-
+.selectedDay{
+    background-color: #307edec4;
+}
 /*Date events*/
 .eventDiv_desktop{
     position: absolute;
@@ -99,32 +136,32 @@ body{
 .eventList_desktop{
     position: absolute;
     width: 100%;
-    max-height: 80%;
     top: 1%;
     text-align: left;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     overflow: scroll;
+    border-radius: 20px;
 }
 .event_desktop{
     position: relative;
-    font-size: 1.2em;
+    font-size: 1em;
     background-color: #227eeebb;
     border-radius: 15px;
     padding: 5px 10px 5px 10px;
     width: 90%;
     left: 1%;
     margin: 10px 0px 0px 0px;
-    max-height: 40px;
+    height: 90px;
 }
 .deleteEvent_desktop{
     position: absolute;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     border: solid 2px  #56d2f7bb;
     border-radius: 50%;
     right: 5%;
-    top: 20%;
+    top: 30%;
     cursor: pointer;
 }
 .deleteEvent_desktop:hover{
@@ -133,17 +170,39 @@ body{
     background-size: 80%;
     background-repeat: no-repeat;
 }
+.eventTimeIcon_desktop{
+    background-image: url('icons/clock.png');
+    background-position: center;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 5%;
+    top: 55%;
+    transform: scaleX(-1);
+}
+.eventTimeText_desktop{
+    position: absolute;
+    left: 20%;
+    top: 60%;
+}
+.eventDescriptionText_desktop{
+    position: relative;
+    top: 10%;
+    max-width: 80%;
+}
 
 /*Add new event div:*/
 .addNewEventDiv_desktop{
     position: absolute;
-    width: 80%;
+    width: 98%;
     height: 150px;
     bottom: -170px;
     border: solid 2px white;
     border-radius: 10px;
-    left: 10%;
-    background-color: rgb(21, 21, 21);
+    left: 0%;
+    background-color: #023574;
 }
 .inptNewEventDescription_desktop{
     border-radius: 10px;
@@ -213,5 +272,5 @@ body{
     bottom: 20px;
     cursor: pointer;
     left: calc(50% - 25px);
-    transition: 250ms;
+    transition: 500ms;
 }

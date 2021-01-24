@@ -1,3 +1,186 @@
-.mobile{
-    color: green;
+.hidden{
+    display: none;
+}
+.header_mobile{
+    text-align: center;
+    background-color: #0350afd6;
+    height: 60px;
+    border-radius: 10px;
+}
+.header_mobile>h1{
+    font-size: 1.5em;
+    font-weight: 200;
+    line-height: 60px;
+}
+.logOut_mobile{
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    border: solid 1px white;
+    border-radius: 10px;
+    right: 2%;
+    top: 15%;
+    line-height: 27.5px;
+    cursor: pointer;
+    transition: 250ms;
+    display: none;
+}
+.logOut_mobile:hover{
+    background-color: rgba(255, 255, 255, 0.25);
+}
+.calendarDates_div_mobile{
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+}
+.activeDateMobile{
+    font-size: 1.4em;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin: 5px;
+    background-color: #0350afd6;
+    transition: 250ms;
+    max-height: 180px;
+    overflow: scroll;
+}
+.activeDateMobile>p{
+    margin: 10px 5px 5px 10px;
+}
+.selectedDay{
+    background-color: #307edec4;
+}
+.calendarInEvents_div_mobile{
+    position: relative;
+    width: 80%;
+    top: 10px;
+    left: 10px;
+    max-height: 100px;
+    overflow-y: scroll;
+}
+.calendarInEvents_mobile>p{
+    font-size: 0.7em;
+    margin: 5px;
+    background-color: rgb(160, 226, 255);
+    color: rgb(42, 42, 42);
+    border-radius: 10px;
+    overflow: scroll;
+    height: 60px;
+}
+.calendarInEvents_mobile>p>span{
+    margin: 10px;
+}
+.eventTimeTextMobile{
+    position: relative;
+    left: 35px;
+    top: 18px;
+}
+.eventTimeInEventIcon{
+    position: absolute;
+    background-image: url('icons/clockMobile.png');
+    width: 20px;
+    height: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    bottom: 1%;
+    left: -75%;
+    transform: scaleX(-1);
+}
+.deleteEventMobileIcon{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('icons/check.png');
+    background-size: 100%;
+    border: solid 1px #56d2f7bb;
+    background-color: #023574;
+    border-radius: 50%;
+    left: 450%;
+    top: -100%;
+    margin: 0px;
+}
+
+.displayNewEventDivBtn_mobile{
+    position: sticky;
+    width: 50px;
+    height: 50px;
+    background-image: url('icons/add.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    bottom: 5%;
+    cursor: pointer;
+    left: calc(50% - 25px);
+    transition: 500ms;
+}
+.addNewEventDiv_mobile{
+    position: sticky;
+    margin-bottom: 200px;
+    left: calc(50% - 100px);
+    width: 200px;
+    height: 150px;
+    border: solid 1px white;
+    border-radius: 10px;
+    background-color: #023574;
+    text-align: center;
+    display: none;
+}
+
+.inptNewEventDescription_mobile{
+    border-radius: 10px;
+    height: 30px;
+    width: 90%;
+    outline: none;
+    background-color: transparent;
+    border: solid 1px white;
+    color: rgb(255, 255, 255);
+    font-size: 1.4em;
+    margin: 5px 0px 10px 0px;
+}   
+.inptNewEventTime_mobile{
+    border-radius: 10px;
+    height: 30px;
+    width: 60%;
+    outline: none;
+    background-color: transparent;
+    border: solid 1px white;
+    color: rgb(255, 255, 255);
+    font-size: 1.4em;
+    text-align: center;
+    margin: 5px 0px 10px 0px;
+}
+.addNewEventDiv_mobile>button{
+    border-radius: 10px;
+    height: 30px;
+    width: 60%;
+    outline: none;
+    background-color: transparent;
+    border: solid 1px white;
+    color: rgb(255, 255, 255);
+    font-size: 1.4em;
+    text-align: center;
+    margin: 5px 0px 10px 0px;
+    cursor: pointer;
+    transition: 250ms;
+}
+
+.addNewEventDiv_mobile.moveUpAddNewEventDiv{
+    animation: moveUpMobile 500ms linear;
+    animation-fill-mode: forwards;
+    display: block;
+}
+@keyframes moveUpMobile{
+    0%{bottom: -170px;}
+    100%{bottom: 100px;}
+}
+.addNewEventDiv_mobile.moveDownNewEventDiv{
+    animation: moveDownMobile 500ms linear;
+    animation-fill-mode: forwards;
+    display: block;
+}
+@keyframes moveDownMobile{
+    0%{bottom: 100px;}
+    100%{bottom: -170px;}
 }

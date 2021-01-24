@@ -13,7 +13,9 @@ class renderHeigth{
     height = 0;
     div = undefined;
     render(){
-        this.div.style.height = `${this.height}%`;
+        try{
+            this.div.style.height = `${this.height}%`;
+        } catch(e){}
     }
 }
 
@@ -25,6 +27,14 @@ const setup = async () => {
         window.open('/open/calendarApp/signIn', '_self');
     }
 
+    const gUN = async () => {
+        const getUserName = await fetch('/open/calendarApp/getUserName');
+        const userName = await getUserName.json();
+        return userName;
+    }
+
+    const userName = await gUN();
+    
     const calendar = new Vue({
         el: "#calendarRoot",
         data: {
@@ -48,7 +58,7 @@ const setup = async () => {
                 calendar.selectedDayKey = month+date;
                 if(events[calendar.selectedDayKey]){
                     calendar.selectedDayEvents = calendar.allEvents[(month+date)];
-                    eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 12, 70);
+                    eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 20, 85);
                     eventList_desktop.render();
                 }
                 else{
@@ -56,6 +66,8 @@ const setup = async () => {
                 }
             },
             sendEventToDB: () => {
+                const eventNameInput = select("#eventName");
+                const eventTimeInput = select("#eventTime");
                 const eventName = eventNameInput.value;
                 const eventTime = eventTimeInput.value;
                 fetch(`/open/calendarApp/addNewEvent/eventName/${eventName}/eventTime/${eventTime}/eventKey/${calendar.selectedDayKey}`)
@@ -63,7 +75,7 @@ const setup = async () => {
                 .then(events =>{
                     if(events[calendar.selectedDayKey]){
                         calendar.selectedDayEvents = events[(calendar.selectedDayKey)];
-                        eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 12, 70);
+                        eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 20, 85);
                         calendar.allEvents = events;
                         eventList_desktop.render();
                         eventNameInput.value = "";
@@ -71,6 +83,7 @@ const setup = async () => {
                         addNewEventDiv.classList.remove("moveDownNewEventDiv", "moveUpAddNewEventDiv");
                         void addNewEventDiv.offsetWidth;
                         addNewEventDiv.classList.add("moveDownNewEventDiv");
+                        setTimeout(() => {addNewEventDiv.style.display = "none"}, 500);
                         calendar.eventDivActive = false;
                         displayNewEventBtn.style.transform = "rotate(0deg)";
                     }
@@ -86,7 +99,7 @@ const setup = async () => {
                 .then(events => {
                     if(events[calendar.selectedDayKey]){
                         calendar.selectedDayEvents = events[(calendar.selectedDayKey)];
-                        eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 12, 70);
+                        eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 20, 85);
                         calendar.allEvents = events;
                         eventList_desktop.render();
                     }
@@ -96,12 +109,15 @@ const setup = async () => {
                 })
             },
             displayNewEvent: () => {
+                const displayNewEventBtn = select("#displayNewEventBtn");
+                const addNewEventDiv = select("#addNewEventDiv");
                 if(!calendar.eventDivActive){
                     addNewEventDiv.classList.remove("moveUpAddNewEventDiv", "moveDownNewEventDiv");
                     void addNewEventDiv.offsetWidth;
                     addNewEventDiv.classList.add("moveUpAddNewEventDiv");
                     calendar.eventDivActive = true;
                     displayNewEventBtn.style.transform = "rotate(45deg)";
+                    addNewEventDiv.style.display = "block"
                 }
                 else{
                     addNewEventDiv.classList.remove("moveDownNewEventDiv", "moveUpAddNewEventDiv");
@@ -109,23 +125,32 @@ const setup = async () => {
                     addNewEventDiv.classList.add("moveDownNewEventDiv");
                     calendar.eventDivActive = false;
                     displayNewEventBtn.style.transform = "rotate(0deg)";
+                    setTimeout(() => {addNewEventDiv.style.display = "none"}, 500);
                 }
             }
         }
     })
 
     const header = new Vue({
-
+        el: "#headerRoot",
+        data: {
+            userName: userName,
+            classObject: {
+                isMobile: false,
+                isDesktop: false
+            }
+        },
+        methods: {
+            logout: () => {
+                fetch('/open/calendarApp/logout', {method: "POST"}).then(() => location.reload());
+            }
+        }
     });
 
     allDays.map(dag => calendar.days.push({text: dag}));
 
     const eventList_desktop = new renderHeigth();
     eventList_desktop.div = select("#eventList");
-    const eventNameInput = select("#eventName");
-    const eventTimeInput = select("#eventTime");
-    const addNewEventDiv = select("#addNewEventDiv");
-    const displayNewEventBtn = select("#displayNewEventBtn");
 
     if(events[calendar.selectedDayKey]){
         calendar.selectedDayEvents = events[calendar.selectedDayKey];
@@ -134,7 +159,7 @@ const setup = async () => {
         calendar.selectedDayEvents = [];
     }
 
-    eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 12, 70);
+    eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 20, 85);
     eventList_desktop.render();
 
     for(let i=0; i<firstDayInMonth; i++){
@@ -155,8 +180,10 @@ const setup = async () => {
 
     if (screen.width < 700){
         calendar.classObject.isMobile = true;
+        header.classObject.isMobile = true;
     }
     else{
         calendar.classObject.isDesktop = true;
+        header.classObject.isDesktop = true;
     }
 }
