@@ -1,0 +1,26 @@
+#tegneboks {
+    position: relative;
+}
+
+
+#tegning {
+    position: absolute;
+    left:10px;
+    top:10px;
+    width: 400px;
+    height: 400px;
+    border: solid red 1px;
+}
+
+#bakgrunn {
+    position: absolute;
+    left:10px;
+    top:10px;
+    width: 400px;
+    height: 400px;
+    border: solid transparent 1px;
+}
+
+#volt {
+    opacity: 0;
+}
