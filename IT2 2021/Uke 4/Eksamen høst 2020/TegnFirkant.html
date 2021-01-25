@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tegn firkant</title>
+</head>
+<style>
+    #c{
+        width: 400px;
+        height: 400px;
+        position: relative;
+    }
+    .moveIn{
+        animation: moveIn 1s linear;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes moveIn{
+        0%{left: 0px; top: 20px; opacity: 0;}
+        100%{left: 20px; top: 40px; opacity: 1;}
+    }
+</style>
+<body>
+    <input name="inptNumber" id="inptNumber" list="tall" type="number" value="Sriv inn tall"> <button id="tegn">Tegn</button>
+    
+    <datalist name="tall" id="tall">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+    </datalist>
+    <br>
+    <canvas id="c" width="400" height="400"></canvas>
+
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const tegnBtn = $("tegn");
+        const inptNumber = $("inptNumber");
+        const ark = $("c");
+        const ctx = ark.getContext("2d");
+        const sett = [];
+
+        const tegnFirkant = dim => {
+            const {w, h} = dim;
+            ctx.beginPath();
+            ctx.fillStyle = "rgb(0,0,0)"
+            ctx.strokeRect(10, 10, w, h);
+            ark.classList.remove("moveIn");
+            void ark.offsetWidth;
+            ark.classList.add("moveIn");
+        }
+
+        tegnBtn.addEventListener("click", () => {
+            const w = Number(inptNumber.value) * 50;
+            if(sett.indexOf(w) === -1){
+                sett.push(w);
+                const h = w-10;
+                const dim = {w, h};
+                ctx.clearRect(0,0,400, 400)
+                tegnFirkant(dim)
+            }
+            else{
+                alert("Du har allerede sett denne")
+            }
+        })
+    </script>
+</body>
+</html>
