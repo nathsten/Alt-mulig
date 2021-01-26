@@ -7,8 +7,8 @@
 </head>
 <style>
     #c{
-        width: 400px;
-        height: 400px;
+        width: 600px;
+        height: 600px;
         position: relative;
     }
     .moveIn{
@@ -22,21 +22,12 @@
     }
 </style>
 <body>
-    <input name="inptNumber" id="inptNumber" list="tall" type="number" value="Sriv inn tall"> <button id="tegn">Tegn</button>
-    
-    <datalist name="tall" id="tall">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-    </datalist>
+    <input name="inptNumber" id="inptNumber" list="tall" type="number" placeholder="Sriv inn tall">
+    <button id="tegn">Tegn</button>
+
+    <datalist name="tall" id="tall"></datalist>
     <br>
-    <canvas id="c" width="400" height="400"></canvas>
+    <canvas id="c" width="600" height="600"></canvas>
 
 
     <script>
@@ -45,13 +36,22 @@
         const inptNumber = $("inptNumber");
         const ark = $("c");
         const ctx = ark.getContext("2d");
-        const sett = new Set;
+        const tall = $("tall");
+        const sett = new Set();
 
+        const optionsTall = new Set();
+        "123456789".split("").forEach(t => optionsTall.add(t));
+        Array.from(optionsTall).map(o => `<option value="${o}">${o}</option>`).forEach(opt => tall.innerHTML += opt);
+
+        /**
+         * @param {{ w: number; h: number }} dim
+        */
         const tegnFirkant = dim => {
             const {w, h} = dim;
+            ctx.clearRect(0,0,600,600);
             ctx.beginPath();
-            ctx.fillStyle = "rgb(0,0,0)"
-            ctx.strokeRect(10, 10, w, h);
+            ctx.strokeStyle = "rgba(0,0,255,1)";
+            ctx.strokeRect(1, 1, w, h);
             ark.classList.remove("moveIn");
             void ark.offsetWidth;
             ark.classList.add("moveIn");
@@ -59,12 +59,21 @@
 
         tegnBtn.addEventListener("click", () => {
             const w = Number(inptNumber.value) * 50;
-            if(!sett.has(w)){
-                sett.add(w);
-                const h = w-10;
-                const dim = {w, h};
-                ctx.clearRect(0,0,400, 400)
-                tegnFirkant(dim)
+            if((!sett.has(w))){
+                if(w/50 >= 1 && w/50 <= 9){
+                    sett.add(w);
+                    const h = w-10;
+                    const dim = {w, h};
+                    tegnFirkant(dim);
+                    inptNumber.value = "";
+                    tall.innerHTML = "";
+                    optionsTall.delete(String(w/50));
+                    Array.from(optionsTall).map(o => `<option value="${o}">${o}</option>`).forEach(opt => tall.innerHTML += opt);
+                }   
+                else{
+                    alert("Ugyldig tall"); 
+                    inptNumber.value = "";
+                }
             }
             else{
                 alert("Du har allerede sett denne")

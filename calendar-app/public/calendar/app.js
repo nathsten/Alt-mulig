@@ -8,7 +8,6 @@ const daysInMonth = new Date(year, numMonth, 0).getDate();
 const firstDayInMonth = new Date(year, numMonth, 0).getDay();
 const allDays = "Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split(" ");
 
-// alle render klasser utenfor setup();
 class renderHeigth{
     height = 0;
     div = undefined;
@@ -138,11 +137,15 @@ const setup = async () => {
             classObject: {
                 isMobile: false,
                 isDesktop: false
-            }
+            },
+            selectedElementPosition: 0
         },
         methods: {
             logout: () => {
                 fetch('/open/calendarApp/logout', {method: "POST"}).then(() => location.reload());
+            },
+            scrollDown: () => {
+                window.scrollTo(0, header.selectedElementPosition);
             }
         }
     });
@@ -186,4 +189,14 @@ const setup = async () => {
         calendar.classObject.isDesktop = true;
         header.classObject.isDesktop = true;
     }
+
+    if(calendar.classObject.isMobile){
+        setTimeout(() => {
+            const calendarDatesDiv = select("#calendarDatesDiv");
+            calendarDatesDiv.childNodes.forEach(n => n.className.includes("selectedDay") ? 
+            header.selectedElementPosition = Array.from(calendarDatesDiv.childNodes).indexOf(n)*50:0);
+            header.scrollDown();
+        }, 100);
+    }
+
 }

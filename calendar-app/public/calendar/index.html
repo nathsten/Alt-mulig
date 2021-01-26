@@ -11,7 +11,7 @@
     <script src="app.js"></script>
 </head>
 <body>
-    
+
   <div id="headerRoot">
       <div v-bind:class="{
         header_mobile: classObject.isMobile,
@@ -47,7 +47,7 @@
       </div>
 
       <!--Calendar dates-->
-      <div v-bind:class="{
+      <div id="calendarDatesDiv" v-bind:class="{
         calendarDates_div_mobile: classObject.isMobile,
         calendarDates_div_desktop: classObject.isDesktop}">
         <div v-for="date in dates"
