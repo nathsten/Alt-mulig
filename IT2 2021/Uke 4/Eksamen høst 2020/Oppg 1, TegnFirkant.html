@@ -11,8 +11,11 @@
         height: 600px;
         position: relative;
     }
+    #areal{
+        margin-left: 10px;
+    }
     .moveIn{
-        animation: moveIn 1s linear;
+        animation: moveIn 2s linear;
         animation-fill-mode: forwards;
     }
 
@@ -24,11 +27,11 @@
 <body>
     <input name="inptNumber" id="inptNumber" list="tall" type="number" placeholder="Sriv inn tall">
     <button id="tegn">Tegn</button>
+    <span id="areal">Areal: 0</span>
 
     <datalist name="tall" id="tall"></datalist>
     <br>
     <canvas id="c" width="600" height="600"></canvas>
-
 
     <script>
         const $ = id => document.getElementById(id);
@@ -37,6 +40,7 @@
         const ark = $("c");
         const ctx = ark.getContext("2d");
         const tall = $("tall");
+        const areal = $("areal");
         const sett = new Set();
 
         const optionsTall = new Set();
@@ -45,6 +49,8 @@
 
         /**
          * @param {{ w: number; h: number }} dim
+         * Bruker canvas til å tegne en firkant med de dimensjonene som blir sendt inn.
+         * Den animeres så inn med å flyttes fra top og left og opacity 0-1;
         */
         const tegnFirkant = dim => {
             const {w, h} = dim;
@@ -55,19 +61,26 @@
             ark.classList.remove("moveIn");
             void ark.offsetWidth;
             ark.classList.add("moveIn");
+            if(sett.size >= 9){
+                setTimeout(() => {
+                    alert("Du har nå sett alle mulighetene");
+                    return;
+                }, 2000);
+            }
         }
 
         tegnBtn.addEventListener("click", () => {
-            const w = Number(inptNumber.value) * 50;
+            const w = Number(inptNumber.value);
             if((!sett.has(w))){
-                if(w/50 >= 1 && w/50 <= 9){
+                if(w >= 1 && w<= 9){
                     sett.add(w);
-                    const h = w-10;
-                    const dim = {w, h};
+                    const h = 10-w;
+                    const dim = {w:w*50, h:h*50};
                     tegnFirkant(dim);
+                    areal.innerHTML = `Areal: ${dim.w * dim.h}px`;
                     inptNumber.value = "";
                     tall.innerHTML = "";
-                    optionsTall.delete(String(w/50));
+                    optionsTall.delete(String(w));
                     Array.from(optionsTall).map(o => `<option value="${o}">${o}</option>`).forEach(opt => tall.innerHTML += opt);
                 }   
                 else{
@@ -76,7 +89,8 @@
                 }
             }
             else{
-                alert("Du har allerede sett denne")
+                alert("Du har allerede sett denne");
+                inptNumber.value = "";
             }
         })
     </script>

@@ -532,25 +532,32 @@ function numberNames(a,b){
 
 // console.log(numberNames("1bilde", 3))
 
-function reduce(a){
-    let nums = "";
-    let str = "";
+/**
+ * @param {string} a
+ */
+// function reduce(a){
+//     let nums = "";
+//     let str = "";
 
-    a.split("").reduce((a,b) => {
-        if(Number(a)){
-            nums += String(a);
-        }
-        if(Number(b)){
-            nums += String(b);
-        }
-        else{
-            str += String(b);
-        }
-    })
-    return [nums, str]
-}
+//     /**
+//      * @param {any} a
+//      * @param {any} b
+//      */
+//     a.split("").reduce((a,b) => {
+//         if(Number(a)){
+//             nums += String(a);
+//         }
+//         if(Number(b)){
+//             nums += String(b);
+//         }
+//         else{
+//             str += String(b);
+//         }
+//     })
+//     return [nums, str]
+// }
 
-console.log(reduce("hei12"))
+// console.log(reduce("hei12"))
 
 let byLister = ["oslo", "os"];
 
@@ -559,6 +566,10 @@ let byLister = ["oslo", "os"];
 class Elev{
     fornanvn; 
     etternavn;
+    /**
+     * @param {any} a
+     * @param {any} b
+     */
     constructor(a,b){
         this.fornanvn = a;
         this.etternavn = b
@@ -568,12 +579,23 @@ class Elev{
 let n = new Date();
 // console.log(n)
 
+/**
+ * @param {any[]} a
+ */
 function su(a){
+    /**
+     * @param {any} a
+     * @param {any} b
+     */
     return a.reduce((a,b) => a+b, 0)
 }
 
 // console.log(su([1,2,3]))
 
+/**
+ * @param {number} r
+ * @param {number} h
+ */
 function cylinder(r,h){
     let areal = r**2*Math.PI;
     return areal*h;
@@ -581,3 +603,25 @@ function cylinder(r,h){
 
 // console.log(cylinder(10, 5));
 
+/**
+ * @param {String} a
+ */
+const boyOrGirl = a => {
+    if(a.includes("a") || a.includes("unn") || a.includes("de") || a.includes("te") || a.includes("ri")){
+        return "f";
+    }
+    return "m";
+}
+
+// console.log(boyOrGirl("ingunn"));
+
+/**
+ * @param {String} a
+ */
+const ub = a => {
+    const obj = {}
+    a.toLowerCase().split("").forEach(b => obj[b] ? obj[b] +=1:0 || obj[b] === undefined ? obj[b] = 1:0);
+    return (Object.keys(obj).length);
+}
+
+console.log(ub("Nathaniel"));
