@@ -1,12 +1,13 @@
 const select = value => document.querySelector(value);
 const today = String(new Date()).split(" ")[0];
-const month = String(new Date()).split(" ")[1];
-const numMonth = new Date().getMonth();
-const date = new Date().getDate();
-const year = new Date().getFullYear();
-const daysInMonth = new Date(year, numMonth, 0).getDate();
-const firstDayInMonth = new Date(year, numMonth, 0).getDay();
+var numMonth = new Date().getMonth();
+var date = new Date().getDate();
+var year = new Date().getFullYear();
+var daysInMonth = new Date(year, numMonth+1, 0).getDate();
+var firstDayInMonth = new Date(year, numMonth, 0).getDay();
 const allDays = "Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split(" ");
+const allMonths = "Jan Feb Mar Apr May Jun Jul Aug Sep Okt Nov Dec".split(" ");
+var month = allMonths[numMonth];
 
 class renderHeigth{
     height = 0;
@@ -44,7 +45,7 @@ const setup = async () => {
                 isMobile: false,
                 isDesktop: false
             },
-            eventHeader: {text: `Evens on `},
+            eventHeader: {text: `Events on `},
             selectedDay: `${month} ${date}:`,
             selectedDayKey: month+date,
             selectedDayEvents: [],
@@ -146,6 +147,48 @@ const setup = async () => {
             },
             scrollDown: () => {
                 window.scrollTo(0, header.selectedElementPosition);
+            },
+            prevMonth: () => {
+                if(numMonth-1 >= 0){
+                    numMonth -= 1;
+                    date = 1;
+                    year = new Date().getFullYear();
+                    daysInMonth = new Date(year, numMonth+1, 0).getDate();
+                    firstDayInMonth = new Date(year, numMonth, 0).getDay();
+                    month = allMonths[numMonth];
+                    createDays();
+                    calendar.selectedDay = `${month} ${date}:`;
+                    calendar.selectedDayKey = month+date;
+                    if(events[calendar.selectedDayKey]){
+                        calendar.selectedDayEvents = calendar.allEvents[(month+date)];
+                        eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 20, 85);
+                        eventList_desktop.render();
+                    }
+                    else{
+                        calendar.selectedDayEvents = [];
+                    }
+                }
+            },
+            nextMonth: () => {
+                if(numMonth+1 < 12){
+                    numMonth += 1;
+                    date = 1;
+                    year = new Date().getFullYear();
+                    daysInMonth = new Date(year, numMonth+1, 0).getDate();
+                    firstDayInMonth = new Date(year, numMonth, 0).getDay();
+                    month = allMonths[numMonth];
+                    createDays();
+                    calendar.selectedDay = `${month} ${date}:`;
+                    calendar.selectedDayKey = month+date;
+                    if(events[calendar.selectedDayKey]){
+                        calendar.selectedDayEvents = calendar.allEvents[(month+date)];
+                        eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 20, 85);
+                        eventList_desktop.render();
+                    }
+                    else{
+                        calendar.selectedDayEvents = [];
+                    }
+                }
             }
         }
     });
@@ -165,21 +208,25 @@ const setup = async () => {
     eventList_desktop.height = Math.min(calendar.selectedDayEvents.length * 20, 85);
     eventList_desktop.render();
 
-    for(let i=0; i<firstDayInMonth; i++){
-        const emptyDay = {
-            activeDay: false
+    const createDays = () => {
+        calendar.dates = [];
+        for(let i=0; i<firstDayInMonth; i++){
+            const emptyDay = {
+                activeDay: false
+            }
+            calendar.dates.push(emptyDay);
         }
-        calendar.dates.push(emptyDay);
-    }
-
-    for(let i=1; i<=daysInMonth; i++){
-        const day = {
-            date: i,
-            month: month,
-            activeDay: true
+    
+        for(let i=1; i<=daysInMonth; i++){
+            const day = {
+                date: i,
+                month: month,
+                activeDay: true
+            }
+            calendar.dates.push(day);
         }
-        calendar.dates.push(day);
     }
+    createDays();
 
     if (screen.width < 700){
         calendar.classObject.isMobile = true;
@@ -198,5 +245,4 @@ const setup = async () => {
             header.scrollDown();
         }, 100);
     }
-
 }

@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const { client } = require('./client.js');
+const bcrypt = require('bcrypt');
 const { encryptPassword, decryptPasword, randomKey } = require('./passProtect.js');
 const port = 8080;
 const index = express();
@@ -36,8 +37,10 @@ index.post('/open/calendarApp/signUp', (req, res) => {
     const time = String(new Date()).split("").splice(16, 5).join("");
 
     if(password == repeatPassword){
+        bcrypt.hash(password, 10)
+        .then(encryptedPassword => 
         client.query(`INSERT INTO userlist(username, password)
-        values('${userName}', '${encryptPassword(password)}')`)
+        values('${userName}', '${encryptedPassword}')`)
         .then(() => client.query(`
             CREATE TABLE IF NOT EXISTS ${userName} (
                 eventKey VARCHAR ( 50 ) NOT NULL,
@@ -45,7 +48,7 @@ index.post('/open/calendarApp/signUp', (req, res) => {
                 eventTime VARCHAR ( 50 ) NOT NULL,
                 event_id serial PRIMARY KEY
             );
-        `))
+        `)))
         .then(() => client.query(`
             INSERT INTO ${userName}(eventKey, eventDescription, eventTime)
             values('${month+date}', 'Start using this awesome app', '${time}');
@@ -61,50 +64,37 @@ index.post('/open/calendarApp/signUp', (req, res) => {
 index.post('/open/calendarApp/signIn', (req, res) => {
     const userName = req.body.username;
     const password = req.body.password;
-
     client.query(`SELECT * FROM userlist where username = '${userName}'`)
     .then(userData => {
-        if(decryptPasword(userData.rows[0].password) === password){
-            const time = new Date;
-            time.setTime(time.getTime() + 1 * 3600 * 1000);
+        bcrypt.compare(password, userData.rows[0].password)
+    .then(checkPwd => {
+            if(checkPwd){
+                const time = new Date;
+                time.setTime(time.getTime() + 1 * 3600 * 1000);
 
-            const key = randomKey();
+                const key = randomKey();
 
-            client.query(`UPDATE userlist
-                SET sign_in_key = '${encryptPassword(key)}'
-                where username = '${userName}'`);
+                client.query(` UPDATE userlist 
+                    SET sign_in_key = '${encryptPassword(key)}'
+                    where username = '${userName}'`);
 
-            res.cookie('key', encryptPassword(key), {path: '/open/calendarApp', expires: time})
-            .cookie('userName', userName, {path: '/open/calendarApp', expires: time})
-            .redirect('/open/calendarApp');
-        }
-        else{
-            res.redirect('/open/calendarApp/signIn/error');
-        }
+                res.cookie('key', encryptPassword(key), {path: '/open/calendarApp', expires: time})
+                .cookie('userName', userName, {path: '/open/calendarApp', expires: time})
+                .redirect('/open/calendarApp');
+            }
+            else{
+                res.redirect('/open/calendarApp/signIn/error');
+            }
+        }).catch(e => console.log(e))
     })
-    .catch(e => res.redirect('/open/calendarApp/signIn/error'));
+    .catch(e => {console.log(e); res.redirect('/open/calendarApp/signIn/error')});
 })
 
 index.get('/open/calendarApp/getUserEvents', (req, res) => {
     try{
         const cookie = req.headers.cookie.split(" ");
-        let userName;
-        let key;
-        if(cookie[0].split("=")[0] === "key"){
-            key = cookie[0].split("=")[1];
-            userName = cookie[1].split("=")[1];
-        }
-        else if(cookie[0].split("=")[0] === "userName"){
-            key = cookie[1].split("=")[1];
-            userName = cookie[0].split("=")[1];
-        }
-        if(userName.includes(";")){
-            userName = userName.slice(0, userName.indexOf(";"));
-        }
-        if(key.includes(";")){
-            key = key.slice(0, key.indexOf(";"));
-        }
-
+        const { userName, key } = splitCookie(cookie);
+        
         const dates = JSON.parse(fs.readFileSync('dates.json'));
 
         client.query(`SELECT * FROM userlist
@@ -141,22 +131,8 @@ index.get('/open/calendarApp/getUserEvents', (req, res) => {
 index.get('/open/calendarApp/getUserName', (req, res) => {
     try{
         const cookie = req.headers.cookie.split(" ");
-        let userName;
-        let key;
-        if(cookie[0].split("=")[0] === "key"){
-            key = cookie[0].split("=")[1];
-            userName = cookie[1].split("=")[1];
-        }
-        else if(cookie[0].split("=")[0] === "userName"){
-            key = cookie[1].split("=")[1];
-            userName = cookie[0].split("=")[1];
-        }
-        if(userName.includes(";")){
-            userName = userName.slice(0, userName.indexOf(";"));
-        }
-        if(key.includes(";")){
-            key = key.slice(0, key.indexOf(";"));
-        }
+        const { userName, key } = splitCookie(cookie);
+
         res.json(userName);
     }
     catch(e){}
@@ -168,22 +144,7 @@ index.get('/open/calendarApp/addNewEvent/eventName/:eventName/eventTime/:eventTi
     const eventKey = req.params.eventKey;
 
     const cookie = req.headers.cookie.split(" ");
-    let userName;
-    let key;
-    if(cookie[0].split("=")[0] === "key"){
-        key = cookie[0].split("=")[1];
-        userName = cookie[1].split("=")[1];
-    }
-    else if(cookie[0].split("=")[0] === "userName"){
-        key = cookie[1].split("=")[1];
-        userName = cookie[0].split("=")[1];
-    }
-    if(userName.includes(";")){
-        userName = userName.slice(0, userName.indexOf(";"));
-    }
-    if(key.includes(";")){
-        key = key.slice(0, key.indexOf(";"));
-    }
+    const { userName, key } = splitCookie(cookie);
 
     const dates = JSON.parse(fs.readFileSync('dates.json'));
 
@@ -209,22 +170,7 @@ index.get('/open/calendarApp/addNewEvent/eventName/:eventName/eventTime/:eventTi
 index.get('/open/calendarApp/deleteEvent/:eventId', (req, res) => {
     const eventId = req.params.eventId;
     const cookie = req.headers.cookie.split(" ");
-    let userName;
-    let key;
-    if(cookie[0].split("=")[0] === "key"){
-        key = cookie[0].split("=")[1];
-        userName = cookie[1].split("=")[1];
-    }
-    else if(cookie[0].split("=")[0] === "userName"){
-        key = cookie[1].split("=")[1];
-        userName = cookie[0].split("=")[1];
-    }
-    if(userName.includes(";")){
-        userName = userName.slice(0, userName.indexOf(";"));
-    }
-    if(key.includes(";")){
-        key = key.slice(0, key.indexOf(";"));
-    }
+    const { userName, key } = splitCookie(cookie);
 
     const dates = JSON.parse(fs.readFileSync('dates.json'));
 
@@ -251,6 +197,31 @@ index.post('/open/calendarApp/logout', (req, res) => {
     .clearCookie('userName', {path: '/open/calendarApp'})
     .redirect('/open/calendarApp/signIn');
 })
+
+/**
+ * @param {string[]} cookie 
+ * @returns {object}
+ */
+const splitCookie = cookie => {
+    let userName;
+    let key;
+    if(cookie[0].split("=")[0] === "key"){
+        key = cookie[0].split("=")[1];
+        userName = cookie[1].split("=")[1];
+    }
+    else if(cookie[0].split("=")[0] === "userName"){
+        key = cookie[1].split("=")[1];
+        userName = cookie[0].split("=")[1];
+    }
+    if(userName.includes(";")){
+        userName = userName.slice(0, userName.indexOf(";"));
+    }
+    if(key.includes(";")){
+        key = key.slice(0, key.indexOf(";"));
+    }
+
+    return {userName, key};
+}
 
 /** ## COMMANDS ##
  * DELETE FROM userlist

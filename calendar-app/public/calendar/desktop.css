@@ -37,6 +37,38 @@ body{
     background-color: rgba(255, 255, 255, 0.25);
 }
 
+.selectMonth_desktop{
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    top: 4%;
+    left: 4%;
+    overflow: hidden;
+}
+.selectMonth_desktop>div{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-image: url('icons/upper-arrow.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 150%;
+    transition: 250ms;
+    cursor: pointer;
+}
+.selectMonth_desktop>div:hover{
+    opacity: 0.75;
+}
+
+#prevMonth{
+    transform: rotate(-90deg);
+}
+#nextMonth{
+    transform: rotate(90deg);
+}
+
 /*Calendar div desktop*/
 .calendar_desktop{
     position: absolute;
@@ -69,6 +101,7 @@ body{
     bottom: 0%;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    overflow-y: scroll;
 }
 .activeDateDesktop{
     cursor: pointer;

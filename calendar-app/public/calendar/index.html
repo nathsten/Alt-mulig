@@ -22,6 +22,12 @@
                 logOut_desktop: classObject.isDesktop}"
                 v-on:click="logout">Log out</div>
     </div>
+    <div v-bind:class="{
+        selectMonth_mobile: classObject.isMobile,
+        selectMonth_desktop: classObject.isDesktop}">
+        <div id="prevMonth" v-bind:class="{prevMonth_mobile: classObject.isMobile}" v-on:click="prevMonth"></div>
+        <div id="nextMonth" v-bind:class="{nextMonth_mobile: classObject.isMobile}" v-on:click="nextMonth"></div>
+    </div>
   </div>
 
   <div id="calendarRoot">
