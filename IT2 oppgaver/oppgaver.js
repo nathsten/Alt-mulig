@@ -624,4 +624,217 @@ const ub = a => {
     return (Object.keys(obj).length);
 }
 
-console.log(ub("Nathaniel"));
+// console.log(ub("Nathaniel"));
+
+/**
+ * @param {string} a
+ */
+function hils(a){
+    const ne = a.split(" ");
+    let output = "";
+    for(let i=0; i<ne.length; i++){
+        let navn = "";
+        for(let j=0; j<ne[i].length; j++){
+            if(j === 0){
+                navn += ne[i][j].toUpperCase();
+            }
+            else{
+                navn += ne[i][j];
+            }
+        }
+        if(i !== ne.length-1){
+            navn += " ";
+        }
+        output += navn;
+    }
+    return `Hei ${output}, velkommen!`;
+}
+// console.log(hils("nath sten"));
+
+/**
+ * @param {string | any[]} a
+ */
+function siste(a){
+    const len = a.length;
+    return a[len-1];
+}
+
+// console.log(siste("hei"));
+
+/**
+ * @param {number} n
+ */
+function bits(n){
+    let antall = 0;
+    while(n > 0){
+        if(n % 2 === 1){
+            antall ++;
+        }
+        n = Math.floor(n/2);
+    }
+    return antall;
+}
+
+// console.log(bits(12));
+
+/**
+ * @param {string} a
+ */
+function inits(a){
+    const n = a.split(" ");
+    let i = "";
+    n.forEach(e => i += e[0].toUpperCase());
+    return i;
+}
+
+// console.log(inits("Ulla vest"));
+
+/** 
+ * @param {string} a 
+ */
+function niceName(a){
+    return a.split(",").reverse().join(" ");
+}   
+
+// console.log(niceName("Olsen,Ole"))
+
+/** 
+ * @param {string} a 
+ */
+function onlyTheLonely(a){
+    return a === a.toLowerCase();
+}
+
+/** 
+ * @param {number[]} a 
+ * @param {number[]} b 
+ */
+function kontakt2(a,b){
+    return a.filter(e => !b.includes(e));
+}
+// console.log(kontakt2([1,2,3,4,5,6,7,8,9], [15,2,6,4]))
+
+/**
+ * @param {{Object: number}} byliste
+ * @returns {string[]}
+ */
+const findRoute = byliste => {
+    const byer = Object.keys(byliste);
+    const route = [];
+
+    return ["hei"];
+}
+
+const byer = {
+    Haugesund: 0,
+    Tysvær: 10,
+    Stavanger: 120,
+    Bokn: 40,
+    Vindafjord: 31,
+    Karmøy: 11,
+    Åkrehamn: 45,
+    Bryne: 89,
+    Kopervik: 18
+}
+
+/**
+ * @param {string} a
+ * @param {number} b
+ */
+function dupliser(a,b){
+    if(b < 1 || b > 10){
+        return "";
+    }
+    else{
+        return a.repeat(b);
+    }
+}
+// console.log(dupliser("X", 9));
+
+/**
+ * @param {string} a
+ * @param {string} b
+ * @param {number} c
+ */
+function shortname(a,b,c){
+    const l = n => n.length;
+    if(l(a) + l(b) < c){
+        return a + ' '+b;
+    }
+    else if(l(a[0]) + l(b) < c){
+        return a[0] + ' ' + b;
+    }
+    else{
+        return a[0] + ' ' + b[0];
+    }
+}
+// console.log(shortname("olse", "olsen", 3));
+
+const findNumbers1 = a => {
+    const tall = [];
+    const isN = s => "0123456789".includes(s);
+    for(let i=0; i<a.length; i++){
+        let ts = "";
+        if(isN(a[i])){
+            let j=i;
+            while(isN(a[j])){
+                ts += a[j];
+                i = j;
+                j++
+                if(!isN(a[j])){
+                    break;
+                }
+            }
+            if(ts){
+                tall.push(Number(ts));
+            }
+        }
+    }
+    return tall;
+}
+const a = "jeg er 12 og broren min er 16";
+// console.log(findNumbers(a));
+
+const findNums2 = a => {
+    const t = [];
+    a.replace(/(\d+)/gm, n => t.push(+n));
+    return t;
+}
+
+/**
+ * @param {string} a 
+ */
+const findNumbers = a => a.split(/(\d+)/).filter(e => +e).map(e => +e);
+// const findNumbers = a => a.split(/(\d+)/).filter(e => e === "0" || +e).map(e => +e);
+
+console.log(findNumbers("jeg er 12, broren min er 16 og min mor er 106"));
+
+class HashTable{
+    constructor(){
+        this.table = [];
+        this.length = 0;
+        this.keys = [];
+    }
+    genHashKey(){
+        const c = "qwertyuiopasdfghjklzxcvbnm1234567890";
+        const r = () => Math.floor(Math.random() * c.length);
+        let key = "";
+        for(let i=0; i<10; i++){
+            key += c[r()];
+        }
+        return {key};
+    }
+    add(username, score){
+        const userId = this.keys.length + 1;;
+        const {key} = this.genHashKey();
+        this.table.push({ [key]: {userId, username, score} });
+        this.length += 1;
+        this.keys.push(key)
+        return key;
+    }
+    get = key =>  this.table[key];
+}
+
+// const ht = new HashTable();
+// ht.add("Joe", 1000);
+// console.log(ht.add("Joe", 1000));
