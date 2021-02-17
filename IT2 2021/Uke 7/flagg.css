@@ -1,0 +1,13 @@
+#flaggliste{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+.flagg{
+    width: 250px;
+    height: 160px;
+    box-shadow: 5px 5px 5px gray;
+    margin: 1rem;
+    position: relative;
+    overflow: hidden;
+    border: solid 1px black;
+}

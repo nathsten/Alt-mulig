@@ -1,0 +1,48 @@
+#sjakkbrikker{
+    position: relative;
+    top: 50px;
+    left: 100px;
+}
+.bonde{
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+.bonde>.c{
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    left: 25%;
+    border-radius: 50%;
+    background-color: black;
+}
+.bonde>.h{
+    position: absolute;
+    width: 40%;
+    height: 20%;
+    left: 30%;
+    bottom: 35%;
+    background-color: black;
+}
+.bonde>.b{
+    position: absolute;
+    width: 80%;
+    height: 40%;
+    left: 10%;
+    bottom: 0%;
+    background-color: black;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+div.fare{
+    position: relative;
+    left: 200px;
+    top: -100px;
+    width: 0px;
+    height: 0px;
+    border-top: solid 20px transparent;
+    border-bottom: solid 50px red;
+    border-left: solid 30px transparent;
+    border-right: solid 30px transparent;
+}

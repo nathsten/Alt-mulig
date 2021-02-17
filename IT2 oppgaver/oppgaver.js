@@ -1,5 +1,7 @@
 // @ts-check
 
+const { mkdir } = require("fs");
+
 /** Finner alle tall over 0.
  * @param {number[]} a
  * @param {number[]} b
@@ -807,11 +809,95 @@ const findNums2 = a => {
 const findNumbers = a => a.split(/(\d+)/).filter(e => +e).map(e => +e);
 // const findNumbers = a => a.split(/(\d+)/).filter(e => e === "0" || +e).map(e => +e);
 
-console.log(findNumbers("jeg er 12, broren min er 16 og min mor er 106"));
+/**
+ * @param {string} a 
+ */
+const m = a => a.match(/(\d+)/g).map(e => +e);
+// console.log(m("jeg er 12, broren min er 16 og min mor er 106"));
+
+// console.log(findNumbers("jeg er 12, broren min er 16 og min mor er 106"));
+
+/**
+ * @param {string} a 
+ */
+const findNameAndAges = a => {
+    const namesAges = {};
+    const names = a.split(" ").filter(e => e[0] === e[0].toUpperCase()).filter(e => e.match(/[A-Z]/));
+    const ages = [];
+    a.match(/[A-Z(\d+)]/gm).join("").split(/(\d+)/gm).forEach(e => +e ? ages.push(e) : null);
+    for(let i in ages){
+        namesAges[names[i]] = +ages[i]
+    }
+    return namesAges
+}
+const na = `Ole er 12 år og Per er 14år, jeg Jonathan fyllte 18år i høst, og Gunnhild som er vår mor er 42år og vår bror Joe er en kul 19åring`;
+// console.log(findNameAndAges(na)); // { Ole: 12, Per: 14, Jonathan: 18, Gunnhild: 42, Joe: 19 }
+
+const tellOrd = a => a.split(/[ ,.]+/gm).length;
+// console.log(tellOrd("Hei, jeg heter Jones a sss"));
+
+/**
+ * @param {string} a 
+ */
+const forskjelligeOrd = a => {
+    const ord = {};
+    a.split(/[ ,.]+/gm).forEach(e => ord[e] ? ord[e] += 1 : ord[e] = 1);
+    return Object.keys(ord).length;
+}
+// console.log(forskjelligeOrd("Hei jeg heter jeg og jeg er jeg"));
+
+/**
+ * @param {string} a 
+ */
+const repitisjonsFrase = a => {
+    const treOrd = a.match(/(.*?\s){3}/g);
+    return treOrd;
+}
+// console.log(repitisjonsFrase("jeg heter joe jeg er kul jeg heter joe "))
+
+/**
+ * @param {string} a 
+ */
+const deriver = a => {
+    const potenser = a.split(/[+-]/g);
+    const tegn = a.match(/[+-]+/gm);
+    let i = 0;
+    let deriverte = "";
+    potenser.forEach(ledd => {
+        if(+ledd[0] && +ledd[ledd.length-1]){
+            const xs = +ledd[ledd.length-1] * +ledd[0];
+            deriverte += `${xs}${ledd[1]}`;
+            if(+ledd[ledd.length-1]-1 > 1){
+                deriverte += `^${+ledd[ledd.length-1]-1}`;
+            }
+            if(tegn[i]){
+                deriverte += tegn[i];
+            }
+        }
+        else{
+            deriverte += `${ledd.split("").filter(e => +e).join("")} `;
+            if(tegn[i]){
+                deriverte += tegn[i];
+            }
+        }
+        i++;
+    })
+
+    return deriverte;
+}
+
+console.log(deriver("3x^4-9x^3-3x^2+18x"));
+
+/**
+ * @param {string} a 
+ */
+const sisteOrd = a => a.split(/[ ]+/).filter(e => e[e.length-1] === ".").map(e => e.slice(0, e.length-1));
+
+// console.log(sisteOrd("Hei jeg heter. og jeg har."))
 
 class HashTable{
     constructor(){
-        this.table = [];
+        this.table = {};
         this.length = 0;
         this.keys = [];
     }
@@ -827,14 +913,18 @@ class HashTable{
     add(username, score){
         const userId = this.keys.length + 1;;
         const {key} = this.genHashKey();
-        this.table.push({ [key]: {userId, username, score} });
+        this.table[key]=  {userId, username, score};
         this.length += 1;
         this.keys.push(key)
         return key;
     }
-    get = key =>  this.table[key];
+    get = key => this.table[key];
 }
 
 // const ht = new HashTable();
-// ht.add("Joe", 1000);
-// console.log(ht.add("Joe", 1000));
+// const JKey = ht.add("Joe", 1000);
+// const BKey = ht.add("Ben", 2500);
+// const HKey = ht.add("Hans", 1800);
+// const MKey = ht.add("Martin", 2200);
+// console.log(ht.get(MKey))
+
