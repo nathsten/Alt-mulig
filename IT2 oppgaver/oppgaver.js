@@ -1,7 +1,3 @@
-// @ts-check
-
-const { mkdir } = require("fs");
-
 /** Finner alle tall over 0.
  * @param {number[]} a
  * @param {number[]} b
@@ -578,8 +574,6 @@ class Elev{
     }
 }
 
-let n = new Date();
-// console.log(n)
 
 /**
  * @param {any[]} a
@@ -759,6 +753,9 @@ function dupliser(a,b){
  * @param {number} c
  */
 function shortname(a,b,c){
+    /**
+     * @param {string | any[]} n
+     */
     const l = n => n.length;
     if(l(a) + l(b) < c){
         return a + ' '+b;
@@ -772,8 +769,14 @@ function shortname(a,b,c){
 }
 // console.log(shortname("olse", "olsen", 3));
 
+/**
+ * @param {string | any[]} a
+ */
 const findNumbers1 = a => {
     const tall = [];
+    /**
+     * @param {string} s
+     */
     const isN = s => "0123456789".includes(s);
     for(let i=0; i<a.length; i++){
         let ts = "";
@@ -797,8 +800,14 @@ const findNumbers1 = a => {
 const a = "jeg er 12 og broren min er 16";
 // console.log(findNumbers(a));
 
+/**
+ * @param {{ replace: (arg0: RegExp, arg1: (n: any) => number) => void; }} a
+ */
 const findNums2 = a => {
     const t = [];
+    /**
+     * @param {string | number} n
+     */
     a.replace(/(\d+)/gm, n => t.push(+n));
     return t;
 }
@@ -812,7 +821,7 @@ const findNumbers = a => a.split(/(\d+)/).filter(e => +e).map(e => +e);
 /**
  * @param {string} a 
  */
-const m = a => a.match(/(\d+)/g).map(e => +e);
+// const m = a => a.match(/(\d+)/g).map(e => +e);
 // console.log(m("jeg er 12, broren min er 16 og min mor er 106"));
 
 // console.log(findNumbers("jeg er 12, broren min er 16 og min mor er 106"));
@@ -822,7 +831,7 @@ const m = a => a.match(/(\d+)/g).map(e => +e);
  */
 const findNameAndAges = a => {
     const namesAges = {};
-    const names = a.split(" ").filter(e => e[0] === e[0].toUpperCase()).filter(e => e.match(/[A-Z]/));
+    const names = a.split(" ").filter(e => e[0].match(/[A-Z]/));
     const ages = [];
     a.match(/[A-Z(\d+)]/gm).join("").split(/(\d+)/gm).forEach(e => +e ? ages.push(e) : null);
     for(let i in ages){
@@ -833,8 +842,11 @@ const findNameAndAges = a => {
 const na = `Ole er 12 år og Per er 14år, jeg Jonathan fyllte 18år i høst, og Gunnhild som er vår mor er 42år og vår bror Joe er en kul 19åring`;
 // console.log(findNameAndAges(na)); // { Ole: 12, Per: 14, Jonathan: 18, Gunnhild: 42, Joe: 19 }
 
+/**
+ * @param {{ split: (arg0: RegExp) => { (): any; new (): any; length: any; }; }} a
+ */
 const tellOrd = a => a.split(/[ ,.]+/gm).length;
-// console.log(tellOrd("Hei, jeg heter Jones a sss"));
+// console.log(tellOrd("Hei, jeg heter Jones a sss")); // 6
 
 /**
  * @param {string} a 
@@ -844,16 +856,19 @@ const forskjelligeOrd = a => {
     a.split(/[ ,.]+/gm).forEach(e => ord[e] ? ord[e] += 1 : ord[e] = 1);
     return Object.keys(ord).length;
 }
-// console.log(forskjelligeOrd("Hei jeg heter jeg og jeg er jeg"));
+// console.log(forskjelligeOrd("Hei jeg heter jeg og jeg er jeg")); // 5
 
 /**
  * @param {string} a 
  */
 const repitisjonsFrase = a => {
-    const treOrd = a.match(/(.*?\s){3}/g);
-    return treOrd;
+    const prases = {};
+    if(!a.endsWith(' ')) a+= ' ';
+    a.match(/(.*?\s){3}/g).forEach(e => prases[e] ? prases[e] += 1 : prases[e] = 1);
+    return Object.keys(prases).filter(e => prases[e] > 1).map(e => e.slice(0, e.length-1));
 }
-// console.log(repitisjonsFrase("jeg heter joe jeg er kul jeg heter joe "))
+
+// console.log(repitisjonsFrase("jeg heter joe jeg er kul jeg heter joe jeg er kul jeg har noe kult på meg jeg heter joe jeg har noe kult på meg"));
 
 /**
  * @param {string} a 
@@ -874,6 +889,15 @@ const deriver = a => {
                 deriverte += tegn[i];
             }
         }
+        else if(ledd[0] === "x" && +ledd[ledd.length-1]){
+            deriverte += `${1*+ledd[ledd.length-1]}x`;
+            if(+ledd[ledd.length-1]-1 > 1){
+                deriverte += `^${+ledd[ledd.length-1]-1}`;
+            }
+            if(tegn[i]){
+                deriverte += tegn[i];
+            }
+        }
         else{
             deriverte += `${ledd.split("").filter(e => +e).join("")} `;
             if(tegn[i]){
@@ -886,14 +910,167 @@ const deriver = a => {
     return deriverte;
 }
 
-console.log(deriver("3x^4-9x^3-3x^2+18x"));
+// console.log(deriver("3x^4-9x^3-3x^2+18x")); // 12x^3-27x^2-6x+18 
+// console.log(deriver("4x^4-x^3-x^2+18x")); // 16x^3-3x^2-2x+18 
 
 /**
  * @param {string} a 
  */
 const sisteOrd = a => a.split(/[ ]+/).filter(e => e[e.length-1] === ".").map(e => e.slice(0, e.length-1));
 
-// console.log(sisteOrd("Hei jeg heter. og jeg har."))
+// console.log(sisteOrd("Hei jeg heter. og jeg har.")) // [ 'heter', 'har' ]
+
+/**
+ * @param {string} a 
+ */
+const forkortelser = a => {
+    const forkortObj = {};
+    const allUpperCaseOrd = a.split(/[ ,.!\n]/).filter(e => e.match(/[A-ZÆØÅ]+/) && e.length >=2);
+    const forkortelser = allUpperCaseOrd.filter(ord => !ord.match(/[a-zæøå]+/));
+    const upperCaseOrd = allUpperCaseOrd.filter(ord => ord.match(/[a-zæøå]+/));
+    forkortelser.forEach(fork => {
+        const kort = [];
+        [...fork].forEach(a => upperCaseOrd.forEach(b => b.startsWith(a) ? kort.push(b) : null));
+        forkortObj[fork] = kort.join(" ");
+    })
+    return forkortObj;
+}
+
+const forkortTekst = 
+`I et skriv har Norges Offentlige Utredninger 
+lagt fram en undersøkelse av forekomst av frostskader på barmark. 
+Videre har NOU rapporten argumentert for viktigheten av påstrøing 
+av mold på sentliggende snø. Europeiske Menneskerettighets Avtale 
+har bestemt at dette er bra. EMA er veldig bra.
+I Bergen finner du Norges Handels Høyskole, det er en bra
+skole for å utdanne ledere, dersom du vil lære om teknologi
+er kanskje ikke NHH det best for deg.`; // Test settning
+// console.log(forkortelser(forkortTekst)); 
+// { NOU: 'Norges Offentlige Utredninger', EMA: 'Europeiske Menneskerettighets Avtale' }
+
+/**
+ * @param {string} a 
+ *
+ */
+const forkort2 = a => {
+    const words = a.split(/[ .,\n]+/);
+    const setning = a.split(/[ \n]+/);
+    const summary = words.map(e => e[0]).join("");
+
+    const shorts = words.filter(w => w.length > 1 && w === w.toUpperCase() 
+    && summary.includes(w));
+    
+    const entries = shorts.map(w => [w,summary.indexOf(w)])
+    .map(([s,p]) => [s, setning.slice(p, p+s.length).join(" ")])
+    .map(([f,w]) => w.endsWith(".") ? [f, w.slice(0, w.length-1)] : [f,w])
+    .filter(([f,w]) => !w.includes("."));
+    const dict = Object.fromEntries(entries);
+    return dict;
+}
+// console.log(forkort2(forkortTekst));
+
+/**
+ * @param {string} a 
+ *
+ */
+const findShorts = a => {
+    const shortsDeff = {};
+    const words = a.split(/[ ,.!\n]+/);
+    const wordsAndSigns = a.split(/[ \n]+/);
+    const firsts = words.map(e => e[0]).join("");
+    const shorts = words.filter(e => e.length >= 2 && e === e.toUpperCase() && firsts.includes(e));
+
+    shorts.map(w => [w, firsts.indexOf(w)])
+    .map(([w, i]) => [w, wordsAndSigns.slice(i, i+w.length).join(" ")])
+    .map(([s, w]) => w.endsWith(".") ? [s, w.slice(0, w.length-1)] : [s,w])
+    .filter(([s, w]) => !w.includes("."))
+    .forEach(([s, w]) => shortsDeff[s] = w);
+    return shortsDeff;
+}
+// console.log(findShorts("nesten AFC Alle Fra. Cleo er bar AB Alle Barn"));
+
+/**
+ * @param {number[]} a
+ */
+const dynamciReduce = a => {
+    for(let i=1; i<a.length; i++){
+        let u = a[i-1];
+        let v = a[i];
+        const diff = Math.abs(u-v);
+        if(diff/u > 0.05) {a[i] = u};
+    }
+    return a;
+}
+const lydOpptak = [52.4, 67, 55.7, 60, 59, 69.6, 62.9, 63.7, 66.9, 59.9];
+// console.log(dynamciReduce(lydOpptak));
+
+/**
+ * @param {{ x: number; y: number; }} a
+ * @param {{ x: number; y: number; }} b
+ * @param {{ x: number; y: number; }} c
+ */
+const taSide = (a,b,c) => {
+    const v = {};
+    const w = {};
+    v.x = b.x - a.x;
+    v.y = b.y - a.y;
+    w.x = c.x - a.x;
+    w.y = c.y - a.y;
+    const s = w.x*v.y - w.y*v.x;
+    if(s > 0) return "right";
+    if(s < 0) return "left";
+    if(s === 0) return "online";
+}
+
+const s1 = {x: 12, y: 8}; const s2 = {x: 12, y: 9}; const s3 = {x: 8, y: 19};
+// console.log(taSide(s1, s2, s3))
+
+/**
+ * @param {number} a
+ * @param {number} b
+ * @param {number} c
+ */
+const heltalligAndregrad = (a,b,c) => {
+    const d = b**2 - (4*a*c);
+    if(d < 0) return false;
+    return Number.isInteger(
+        (-b + Math.sqrt(d))/2
+    )
+}
+
+// console.log(heltalligAndregrad(1, 5, 6));
+/**
+ * @param {{ x,y,w,h }} a
+ * @param {{ x,y,w,h }} b
+ * @returns {boolean}
+*/
+const overlapp = (a, b) => {
+    return (a.x + a.w) > b.x && (a.y - a.h) < b.y || ((b.x + b.w) - (a.x - a.w) < 0)
+}
+// console.log(overlapp({x:5,y:2,w:6,h:7},{x:1,y:5,w:2,h:6}));
+
+/**
+ * @param {string} a 
+ * @returns {number}
+ */
+const nettNumber = a => {
+    const newtworks = a.split(",").map(e => e.split("-").join(""));
+    return newtworks.filter(e => newtworks[newtworks.indexOf(e)+1] ? 
+    e[1] !== newtworks[newtworks.indexOf(e)+1][0] : null).length+1;
+}
+// console.log(nettNumber("a-b,b-c,c-d,d-e,e-f,f-g,h-i,i-j,j-k,k-l,l-m,m-n,o-p,p-q,q-r")); // 3
+
+/**
+ * @param {string} a 
+ * @returns {number}
+ */
+ const netCycles = a => {
+    const nets = a.split(",").map(e => e.split("-"));
+    const starts = nets.map(e => e[0]).join("");
+    const cycles = nets.filter(([n1, n2], index) => starts.includes(n2) && starts.indexOf(n2)-1 !== index);
+    return cycles.length;
+}
+// console.log(netCycles("a-b,b-c,c-a,d-e,e-f,f-g,g-c,h-i,i-e,j-k,k-l"))
 
 class HashTable{
     constructor(){
@@ -910,6 +1087,10 @@ class HashTable{
         }
         return {key};
     }
+    /**
+     * @param {any} username
+     * @param {any} score
+     */
     add(username, score){
         const userId = this.keys.length + 1;;
         const {key} = this.genHashKey();
@@ -918,6 +1099,9 @@ class HashTable{
         this.keys.push(key)
         return key;
     }
+    /**
+     * @param {string | number} key
+     */
     get = key => this.table[key];
 }
 
@@ -928,3 +1112,126 @@ class HashTable{
 // const MKey = ht.add("Martin", 2200);
 // console.log(ht.get(MKey))
 
+const { colors } = require('./colors');
+
+const hexNames = Object.fromEntries(colors.split(/\n+/gm).map(line => line.split(/[\t ]+/gm)).map(([n,f,h]) => [h,n]).filter(([h,n]) => n && h));
+const intHex = Object.fromEntries(colors.split(/\n+/gm).map(line => line.split(/[\t ]+/gm)).map(([n,fn,h]) => [h,h]).filter(([h1, h2]) => h1 && h2).map(([int, hex]) => [parseInt(int.slice(1, int.length), 16), hex]));
+
+const hexToColor = hex => {
+    const int = parseInt(hex, 16);
+    const ints = Object.keys(intHex);
+
+    var hexInt = ints[0];
+    ints.forEach(e => Math.abs(e - int) >= 0 && Math.abs(e - int) < Math.abs(hexInt - int) ? hexInt = e : hexInt = hexInt)
+    return hexNames[intHex[hexInt]];
+}
+// console.log(hexToColor("afe3e2"))
+
+/**
+ * @param {number[]} a sorted array
+ * @param {number} v search value
+ * @returns {{ index: number, attempts: number }} objetct of index and attempts
+ */
+const binarySearch = (a, v) => {
+    var low = 0;
+    var high = a.length-1;
+    var mid = Math.floor((high + low)/2);
+    var attempts = 0;
+    while(low <= high){
+        if(a[mid] === v) return {index: mid, attempts};
+        else if(a[mid] > v){
+            high = mid-1;
+            low = low;
+            mid = Math.floor((high + low)/2);
+        }
+        else if(a[mid] < v){
+            high = high;
+            low = mid+1;
+            mid = Math.floor((high + low)/2);
+        }
+        attempts++;
+    }
+}
+
+/**
+ * @param {number[]} a sorted array
+ * @param {number} v search value
+ * @returns {{ index: number, attempts: number }} objetct of index and attempts
+ */
+const sequentalSearch = (a, v) => {
+    var attempts = 0;
+    for(let i = 0; i < a.length; i++){
+        if(a[i] === v) return {index: i, attempts};
+        attempts++;
+    }
+}
+
+const sortedArr = [1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,
+    35,37,39,41,43,45,47,49,51,53,55,57,59];
+
+// console.log(binarySearch(sortedArr, 39)) // => { index: 19, attempts: 4 }
+// console.log(sequentalSearch(sortedArr, 39)) // => { index: 19, attempts: 19 }
+
+/**
+ * @param {number[]} a unsorted array
+ * @returns {{ sorted: number[], attempts: number }} sorted array
+ */
+const quickSort = a => {
+    var sorting = true;
+    var attempts = 0;
+    while(sorting){
+        var c = 0;
+        for(let i = 0; i < a.length; i++){
+            const n = a[i];
+            const k = a[i+1];
+            if(k < n) {
+                a[i] = k;
+                a[i+1] = n;
+            }
+            else c++;
+            attempts++;
+        }
+        if(c === a.length) sorting = false;
+    }
+    return {sorted: a, attempts};
+}
+
+// console.log(quickSort([5,2,4,3,6,1])); // => { sorted: [ 1, 2, 3, 4, 5, 6 ], attempts: 36 }
+
+/**
+ * @param {number} a 
+ * @returns 
+ */
+const skuddår = a => {
+    if(a%400 === 0) return 1;
+    if(a%100 === 0) return 0;
+    if(a%4 === 0) return 1;
+    return 0;
+}
+
+/**
+ * @param {number} y 
+ * @param {number} m 
+ */
+const montLength = (y, m) => {
+    const days = [31,28,31,30,31,30,31,31,30,31,30,31];
+    var dayInMonth = days[m];
+    if(m === 1) dayInMonth += skuddår(y);
+    return dayInMonth
+}
+
+// console.log(montLength(2005, 11))
+
+/**
+ * @param {string} a 
+ */
+const encode = a => {
+    return a.split(" ").map(e => e[0] + e.length).join("")
+}
+
+console.log(encode("aaa aaaaaaa bbbbbb c aaa bbb aaaaaaaaa bbb aaaaa ccccccc"));
+// var tstart = "19:30";
+// let [h,m] = (tstart || "29:00").split(":");
+// h = (+h + 23)  % 24;  // timezone offset
+// console.log(h, m)
+// console.log(("19" + 23) % 24)

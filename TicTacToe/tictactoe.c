@@ -1,30 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void printBoard(char b[5][5]);
-void placeBrick(char b[5][5], char p, char player);
-char getCPUPos(char b[5][5], char playerPos);
-int checkVictory(char b[5][5]);
+void printBoard();
+void placeBrick(char p, char player);
+void getCPUPos(char playerPos);
+int checkVictory();
 
+char b[5][5] = {
+    {' ', '|', ' ', '|', ' '},
+    {'-', '+', '-', '+', '-'},
+    {' ', '|', ' ', '|', ' '},
+    {'-', '+', '-', '+', '-'},
+    {' ', '|', ' ', '|', ' '}
+};
+// Probably doesn't work..
 int main(void){
-    char board[5][5] = {
-        {' ', '|', ' ', '|', ' '},
-        {'-', '+', '-', '+', '-'},
-        {' ', '|', ' ', '|', ' '},
-        {'-', '+', '-', '+', '-'},
-        {' ', '|', ' ', '|', ' '}
-    };
-    printBoard(board);
-    // int playing = checkVictory(board);
-    char p;
-    printf("%s", "Enter a possition between 0 and 9\n");
-    p = getchar();
-    placeBrick(board, p, 's');
-    char cpuPos = getCPUPos(board, p);
-    placeBrick(board, '1', 'cpu');
+    printBoard();
+    int playing = checkVictory();
+    while (playing == 1){
+        char p;
+        printf("%s", "Enter a possition between 0 and 9\n");
+        p = getchar();
+        placeBrick(p, 's');
+        getCPUPos(p);
+        printBoard();
+    }
 };
 
-void printBoard(char b[5][5]){
+void printBoard(){
     for(int i=0; i<5; i++){
         for(int j=0; j<5; j++){
             printf("%c", b[i][j]);
@@ -33,7 +36,7 @@ void printBoard(char b[5][5]){
     }
 }
 
-void placeBrick(char b[5][5], char p, char player){
+void placeBrick(char p, char player){
     char brick;
     if(player == 's'){
         brick = 'X';
@@ -45,104 +48,104 @@ void placeBrick(char b[5][5], char p, char player){
     switch (p){
         case '1':
             b[0][0] = brick;
-            printBoard(b);
             break;
         case'2':
             b[0][2] = brick;
-            printBoard(b);
             break;
         case'3':
             b[0][4] = brick;
-            printBoard(b);
             break;
         case'4':
             b[2][0] = brick;
-            printBoard(b);
             break;
         case'5':
             b[2][2] = brick;
-            printBoard(b);
             break;
         case'6':
             b[0][4] = brick;
-            printBoard(b);
             break;
         case'7':
             b[4][0] = brick;
-            printBoard(b);
             break;
         case'8':
             b[4][2] = brick;
-            printBoard(b);
             break;
         case'9':
             b[4][4] = brick;
-            printBoard(b);
             break;
         default:
             break;
     }
 }
 
-char getCPUPos(char b[5][5], char playerPos){
+void getCPUPos(char playerPos){
     int newBrickFound = 0;
 
     while (newBrickFound == 0){
-        time_t t;
+        // time_t t;
         char cpu = rand() % 10; 
         switch (cpu){
         case '1':
             if(b[0][0] == ' ' && playerPos != cpu){
                 newBrickFound = 1;
-                return cpu;
+                placeBrick(cpu, 'cpu');
+                printBoard();
             }
             break;
         case'2':
             if(b[0][2] == ' ' && playerPos != cpu){
                 newBrickFound = 1;
-                return cpu;
+                placeBrick(cpu, 'cpu');
+                printBoard();
             }
             break;
         case'3':
             if(b[0][4] == ' ' && playerPos != cpu){
                 newBrickFound = 1;
-                return cpu;
+                placeBrick(cpu, 'cpu');
+                printBoard();
             }
             break;
         case'4':
             if(b[2][0] == ' ' && playerPos != cpu){
                 newBrickFound = 1;
-                return cpu;
+                placeBrick(cpu, 'cpu');
+                printBoard();
             }
             break;
         case'5':
             if(b[2][2] == ' ' && playerPos != cpu){
                 newBrickFound = 1;
-                return cpu;
+                placeBrick(cpu, 'cpu');
+                printBoard();
             }
             break;
         case'6':
             if(b[2][4] == ' ' && playerPos != cpu){
                 newBrickFound = 1;
-                return cpu;
+                placeBrick(cpu, 'cpu');
+                printBoard();
             }
             break;
         case'7':
             if(b[4][0] == ' ' && playerPos != cpu){
                 newBrickFound = 1;
-                return cpu;
+                placeBrick(cpu, 'cpu');
+                printBoard();
             }
             break;
         case'8':
             if(b[4][2] == ' ' && playerPos != cpu){
                 newBrickFound = 1;
-                return cpu;
+                placeBrick(cpu, 'cpu');
+                printBoard();
             }
             break;
         case'9':
             if(b[4][4] == ' ' && playerPos != cpu){
                 newBrickFound = 1;
-                return cpu;
+                placeBrick(cpu, 'cpu');
+                printBoard();
             }
             break;
         default:
@@ -154,6 +157,6 @@ char getCPUPos(char b[5][5], char playerPos){
     }
 }
 
-int checkVictory(char b[5][5]){
+int checkVictory(){
     return 1;
 }

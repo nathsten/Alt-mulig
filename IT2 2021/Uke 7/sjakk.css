@@ -46,3 +46,22 @@ div.fare{
     border-left: solid 30px transparent;
     border-right: solid 30px transparent;
 }
+div.fare::after{
+    position: absolute;
+    top: 14px;
+    left: -5px;
+    display: block;
+    content: "!";
+    font-size: 1.8rem;
+
+}
+div.fare::before{
+    content: "";
+    position: absolute;
+    top: -7px;
+    left: -22.5px;
+    border-top: solid 15px transparent;
+    border-bottom: solid 37.5px white;
+    border-left: solid 22.5px transparent;
+    border-right: solid 22.5px transparent;
+}
