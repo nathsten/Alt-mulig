@@ -1,0 +1,40 @@
+div.month {
+    width: 16rem;
+    min-height: 10rem;
+    background-color:whitesmoke;
+    margin:0.5rem;
+}
+
+div.month > fieldset {
+    min-height: 9rem;
+    border: green 2px solid;
+}
+
+.arrow{cursor: pointer;}
+.nonSelect{user-select: none;}
+
+div.month  div.dager,
+div.month  div.ukedager {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+div.month  div.ukedager > span {
+    color:darkolivegreen;
+}
+div.month  div.dager > span {
+    display: inline-block;
+    text-align: right;
+    width: 20px;
+}
+div.month  div.dager > span:nth-child(7n) {
+   color:red;
+}
+
+#kalender {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+span.special {
+    text-shadow: 0 0 5px yellow;
+}
