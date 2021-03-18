@@ -1,4 +1,4 @@
-import numbers
+import math
 import json
 import requests as req
 import numpy
@@ -11,7 +11,6 @@ def main():
     wordList = parseText(allWords)
     gameOn = True
     charsLeft = splitString("abcdefghijklmopqrstuvwxyz")
-    startChars = splitString("aemioun") # Add theese to the first 2-3 guessed chars
     usedChars = []
     attemtsLeft = 10
     print("Game ready!\n")
@@ -71,7 +70,7 @@ def main():
             print("Is your word", word, "?")
             comfirm = str(input("(y/n) "))
             if(comfirm == "y"):
-                print("\nI won!\n")
+                print("\nI won! Your word is", word, "!", "\n")
                 break
 
 
@@ -119,7 +118,7 @@ def filterChars(wordList: list[str], used: list[str]):
     for word in wordList:
         letters = splitString(word)
         for l in letters:
-            if(l not in newChars and l not in used):
+            if(l not in used):
                 newChars.append(l)
 
     return newChars
