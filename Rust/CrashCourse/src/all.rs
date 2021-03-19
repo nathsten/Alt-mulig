@@ -224,3 +224,47 @@ pub fn structs() {
     println!("New Person: {} {}", p.firstName, p.lastName);
     println!("Fullname: {}", p.fullName());
 }
+
+// Types with a few definete values
+pub fn enums() {
+    // New enum
+    enum Movement {
+        // Variants
+        Up,
+        Down,
+        Left,
+        Right
+    }
+
+    fn move_avatar(m: Movement) {
+        // Preform action depending on parameter
+        match m {
+            Movement::Up => println!("Move Up"),
+            Movement::Down => println!("Move Down"),
+            Movement::Left => println!("Move Left"),
+            Movement::Right => println!("Move Right")
+        };
+    }
+
+    let newAvatar1 = Movement::Left;
+    let _newAvatar2 = Movement::Right;
+    let _newAvatar3 = Movement::Up;
+    let _newAvatar4 = Movement::Down;
+
+    move_avatar(newAvatar1);
+}
+
+// Get client info from rust command-line
+use std::env;
+pub fn cli(){
+    let args: Vec<String> = env::args().collect();
+
+    
+    // Compiled like: cargo run hello ->  ["target/debug/CrashCourse", "hello"]
+    println!("Args: {:?}", args);
+    
+    // Cloning 1st value of args Vector
+    let command = args[1].clone();
+    println!("Command: {}", command); // Prints hello.
+
+}
