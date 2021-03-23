@@ -1,13 +1,14 @@
 // @ts-check
 
-let year = 2021;
-let month = 2;
+let year = new Date().getFullYear();
+let month = new Date().getMonth();
+let today = new Date().getDate();
+const todayYear = new Date().getFullYear();
 
 const mNavn = ("Januar,Februar,Mars,April,Mai,Juni,Juli,August,"
                + "September,Oktober,November,Desember").split(",");
 
-function setup() {
-    
+function setup(helligdager) {
     const py = document.getElementById("py");
     const ny = document.getElementById("ny");
     const lblYear = document.getElementById("year");
@@ -33,7 +34,7 @@ function setup() {
     const makeMonth = () => {
         let mnr = 0;
         divMndr.forEach(div => {
-            drawMonth(year,mnr, div);
+            drawMonth(year,mnr, div, helligdager);
             mnr++;
         })
     }
@@ -75,22 +76,22 @@ const startDay = (y, m) => new Date(y, m, 0).getDay();
     var days = Math.floor(22 + D + E);
 
     if((D === 29) && (E === 6)) {
-        e.m = 4;
+        e.m = 3;
         e.d = 19
     }  
 
     else if((D === 28) && (E === 6)){
-        e.m = 4;
+        e.m = 3;
         e.d = 18;
     }
 
     else{
         if(days > 31){
-            e.m = 4;
+            e.m = 3;
             e.d = (days-31);
         }
         else{
-            e.m = 3;
+            e.m = 2;
             e.d = days;
         }
     }
@@ -132,22 +133,21 @@ const startDay = (y, m) => new Date(y, m, 0).getDay();
  * @param {number} y Gjeldende år
  * @param {number} m 0..11 måned-nr
  * @param {HTMLDivElement} div Div hvor måned skal rendres
+ * @param {{d: number, m: number}[]} helligdager
  */
-function drawMonth(y,m,div) {
+function drawMonth(y,m,div, helligdager) {
     // disse linjene skal kanskje flyttes ut av funksjonen
     const special = [];  // liste over datoer som skal markeres
     const east = easter(y);
-    special.push({y,m:4,d:17}); // 17.mai
-    special.push(east);    // 1. påskedag
+    special.push({y, m: east.m, d: east.d});    // 1. påskedag
     special.push(addDate(y, east.m, east.d, 1))  // 2.påskedag
     special.push(addDate(y, east.m, east.d, -2))  // langfredag
     special.push(addDate(y, east.m, east.d, -3))  // skjærtorsdag
-
+    helligdager.forEach(day => special.push({y: 2021, m: day.m, d: day.d}));    
     // finner special days for denne måned
     const notableThisMonth = special.filter(event => event.m === m);
     const specialDays = notableThisMonth.map(event => event.d);
     // specialDays er nå et array som [17,26]
-
     div.innerHTML = "";
     div.classList.add("month");
     const antall = antallDager(y,m);
@@ -155,9 +155,11 @@ function drawMonth(y,m,div) {
     let dagene = "";
     for (let i=1; i<42; i++) {
         const day = i - start;
-        const marked = (specialDays.includes(day)) ? 'class="special"' : "";
+        const cs = [];
+        (specialDays.includes(day)) ? cs.push("special") : "";
+        (day === today && m === month && y === todayYear ? cs.push("today") : ""); 
         const txt = (day > 0 && day <= antall) ? String(day) : "";
-        dagene += `<span ${marked}>${txt}</span>`;
+        dagene += `<span class="${cs.join(" ")}">${txt}</span>`;
     }
     let s = "";
     s += `
@@ -178,4 +180,3 @@ function drawMonth(y,m,div) {
     </fieldset>`;
     div.innerHTML = s;
 }
-
