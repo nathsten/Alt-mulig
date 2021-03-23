@@ -25,11 +25,11 @@
 
         fetch('/getData')
         .then(data => data.json())
-        .then(todos => {
-            const list = Object.keys(todos);
-            list.forEach(todo => {
+        .then(Todos => {
+            console.log(Todos);
+            Todos.todos.forEach(todo => {
                 const li = document.createElement("li");
-                li.innerHTML = todos[todo];
+                li.innerHTML = todo;
                 todoList.append(li);
             })
         })
