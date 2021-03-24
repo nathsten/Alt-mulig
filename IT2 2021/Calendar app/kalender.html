@@ -9,6 +9,19 @@
     <script src="kalender.js"></script>
 </head>
 
+    <form class="hidden" id="inptForm">
+        <div class='row'>
+        <label for='eventText' id="eventLabel">Event for: </label>
+        <div class='info'>
+            &#8627;
+        </div>
+        <input type='text' id='eventText' placeholder='event text'>
+        </div>
+        <div class='row'>
+        <input type='submit' id='submit' value='Register'>
+        </div>
+    </form>
+
 <body>
     <div id="main">
         <div id="yeardiv" class="nonSelect">
@@ -36,12 +49,6 @@
         import {helligdager} from './helligdager.js';
         setup(helligdager);
     </script>
-
-    <template id="kalender">
-        <fieldset>
-            <legend></legend>
-        </fieldset>
-    </template>
 
 </body>
 

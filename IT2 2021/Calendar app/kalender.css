@@ -1,4 +1,6 @@
 body{
+    padding: 20px;
+    font-weight: 300;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -24,6 +26,11 @@ div.month > fieldset {
     left: calc(50% - 125px);
 }
 
+div.month{
+    position: relative;
+    left: 20%;
+}
+
 div.month  div.dager,
 div.month  div.ukedager {
     display: grid;
@@ -36,7 +43,14 @@ div.month  div.dager > span {
     display: inline-block;
     text-align: right;
     width: 20px;
+    transition: 250ms;
+    cursor: pointer;
 }
+div.month  div.dager > span:hover{
+    opacity: 0.8;
+    color: cornflowerblue;
+}
+
 div.month  div.dager > span:nth-child(7n) {
    color:red;
 }
@@ -44,6 +58,7 @@ div.month  div.dager > span:nth-child(7n) {
 #kalender {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    text-align: center;
 }
 
 span.special {
@@ -53,4 +68,79 @@ span.special {
 .today{
     background-color: rgba(255, 0, 0, 0.529);
     border-radius: 50%;
+}
+
+.hidden{
+  display: none;
+}
+form{
+  background: #eee;
+  display: inline-block;
+  padding: 0 30px;
+  border-radius: 5px;
+  border: solid 1px black;
+}
+.row{
+  margin: 30px 0;
+}
+label{
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 700;
+  }
+.info{
+  font-size: 0.8em;
+  font-weight: 300;
+}
+input{
+  border: none;
+  border-bottom: 1px solid #000;
+  background: transparent;
+  width: 220px;
+  padding: 5px;
+  margin-top: 5px;
+  font-weight: 400;
+  transition: 250ms;
+}
+input:focus{
+    outline: none;
+}
+input[type=submit]{
+    padding: 10px 0;
+    width: 100%;
+    border: 1px solid #000;
+    cursor: pointer;
+}
+input:hover{
+    background-color: rgba(0, 0, 0, 0.274);
+    color: #eee;
+}
+
+#inptForm{
+    position: absolute;
+    left: calc(50% - 145px);
+    top: 200px;
+    z-index: 1;
+}
+
+.slideIn{
+    animation: slideIn 750ms linear;
+    animation-fill-mode: forwards;
+}
+
+.slideOut{
+    animation: slideOut 750ms linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes slideIn{
+    0%{top: 50px; opacity: 0;}
+    50%{top: 80px; opacity: 0.6;}
+    100%{top: 100px; opacity: 1;}
+}
+
+@keyframes slideOut{
+    0%{top: 100px; opacity: 1;}
+    50%{top: 130px; opacity: 0.4;}
+    100%{top: 150px; opacity: 0;}
 }

@@ -1,5 +1,3 @@
-// @ts-check
-
 let year = new Date().getFullYear();
 let month = new Date().getMonth();
 let today = new Date().getDate();
@@ -12,6 +10,10 @@ function setup(helligdager) {
     const py = document.getElementById("py");
     const ny = document.getElementById("ny");
     const lblYear = document.getElementById("year");
+    const inptForm = document.getElementById("inptForm");
+    const submit = document.getElementById("submit");
+    const inpt = document.getElementById("eventText");
+    const eventLabel = document.getElementById("eventLabel");
 
     py.addEventListener("click", prevYear);
     ny.addEventListener("click", nextYear);
@@ -30,6 +32,7 @@ function setup(helligdager) {
 
     // @ts-ignore
     const divMndr = /**@type {HTMLDivElement[]} */ (document.querySelectorAll(".mnd"));
+    divMndr.forEach(div => div.addEventListener("click", displayAddEvent));
 
     const makeMonth = () => {
         let mnr = 0;
@@ -39,6 +42,52 @@ function setup(helligdager) {
         })
     }
     makeMonth();
+
+    /**
+     * @param {MouseEvent} event
+     */
+    function displayAddEvent(event) {
+        const { target } = event;
+        if(target.className.includes("clndDay")){
+            const [ y, m, d ] = target.id.split(",").map(e => +e);
+            inptForm.classList.remove("hidden");
+            inptForm.classList.remove("slideOut");
+            inptForm.classList.add("slideIn");
+            inpt.focus();
+            eventLabel.innerHTML = `Event for: ${d}-${m+1}-${y}`;
+            
+            submit.addEventListener("click", saveEvent);
+            document.addEventListener("keydown", e => {if(e.keyCode === 27) {
+                inptForm.classList.remove("slideIn");
+                inptForm.classList.add("slideOut");
+                setTimeout(() => {
+                    inptForm.classList.add("hidden");
+                    inpt.value = "";
+                }, 751);
+                
+                submit.removeEventListener("click", saveEvent);
+            }});
+            
+            /**
+             * @param {MouseEvent} e
+             */
+            function saveEvent(e) {
+                e.preventDefault();
+                const text = inpt.value;
+                console.log({y, m, d, text});
+                lagreTextFor({y, m, d}, text);
+                inptForm.classList.remove("slideIn");
+                inptForm.classList.add("slideOut");
+                setTimeout(() => {
+                    inptForm.classList.add("hidden");
+                    inpt.value = "";
+                }, 751);
+                
+                submit.removeEventListener("click", saveEvent);
+            }
+        }
+    }
+
 }
 
 function skudd(y) {
@@ -127,6 +176,82 @@ const startDay = (y, m) => new Date(y, m, 0).getDay();
     return date
 }
 
+
+/**
+ * Lagrer text for en gitt dato, overskriver gammel
+ * @param { {y:number,m:number,d:number } } dato
+ * @param {string} text
+ */
+ function lagreTextFor(dato,text) {
+     /** ## PSEUDOKODE FOR HVORDAN JEG VILLE HA GJORT DET:
+      * 
+      * ## UTENFOR FUNKSJONEN:
+      *     * Ved program oppstart: kjør en funksjon som henter alle eventer fra localStorrage.
+      *     * en global datastruktur (var allEvents: [];) som inneholder alle tidligere eventer som er lagt til:
+      *         [{y: 2021, m: 2, d: 24, text: "Lage pseudokode"}, {y: 2021, m: 2, d: 26, text: "Matteprøve"}];
+      * 
+      * ## INNE I FUNSJONEN:
+      *     * Laget et object {y, m, d, text} med tilsendt dato og tilsendt text.
+      *     * Pusher object til allEvents.
+      *     * lagrer den nye allEvents til localStorrage, med value: "events".
+      *     * Siden allEvents nå allerede inneholder det nye eventet kan vi rendre kalenderen på nytt med allEvents
+      *         da slipper vi å ha en egen funksjon som henter text for hver dato.
+      * 
+      * ## PSEUDOKODE FOR GITTE FUNKSJONER:
+      *     * NOTE: localStorrage overskrives for hver gang vi legger til noe, dersom vi vil ta vare på de tiligere eventene
+      *         må vi hente frem det som allerede finner der. I funsksjonsbeskrivelsen skal det gamle overskrives. 
+      *     
+      *     * Pakker ut (y, m, d) fra dato: 
+      *         const { y, m, d } = dato;
+      * 
+      *     * Lage et nytt object med den nye dataen inkludert text: {y, m, d, text};
+      *     * Før vi lagerer objectet i localStorrage, må vi gjør den om til en JSON string.
+      *         JSON.stringify(object);
+      *     * Lagrer objectet i localstorrage med localStorrage.setItem(text, object);
+      *         Objectet blir da lagret i localStorrage med verdien gitt av texten du sendet inn. 
+      *     
+      */
+    const { y, m, d } = dato;
+    const event = {y, m, d, text};
+    localStorage.setItem(text, JSON.stringify(event));
+ }
+
+ /**
+ * Henter text for en gitt dato, tom tekst dersom ingenting lagra
+ * @param { {y:number,m:number,d:number } } dato
+ * @returns {string} text
+ */
+function hentTextFor(dato) {
+    /**
+     * ## PSEUDOKODE FOR GITTE FUNKSJONER:
+     *      * lar len være lengden av hele localStorrage.
+     *      * for i <- 0 til len:
+     *          * verdi <- localStorrage.key(i); // gir tilbake veriden som er lagra på plass nr i.
+     *          * data <- JSON.parse(localStorrage.getItem(verdi)); // Gir tilbake objectet som er lagra med verdi nr i.
+     *              data må parses tilbake til javascript object for at det skal være mulig å jobbe med.  
+     *          * dersom data.y, data.m og data.d er samme verdier som er lagret i dato.y,m,d:
+     *              * return verdi (eventuelt returnere data.text);
+     * 
+     *      * return ""; // Dersom ingen i locastorrage stemte med datoen returneres tom string. 
+     * 
+     * ## NOTE: dette vil være en veldig ueffektiv måte å lagre og hente data fra localstorrage siden vi må iterere 
+     *  mellom flere "skuffer" i localStorrage og bruke .getItem mange ganger, noe som gjør programmet veldig treigt og
+     *  ueffektivt. Det mest lønnsome ville ha vert som beskrevet øverst i lagreTextFor(){..} fordi da henter vi bare frem 
+     *  en "skuffe" fra localStorrage og der ligger alle eventene inne i en datastruktur. 
+     */     
+
+    const len = localStorage.length;
+        for(let i = 0; i < len; i++) {
+            const verdi = localStorage.key(i);
+            const data = JSON.parse(localStorage.getItem(verdi));
+            if(data.y === dato.y && data.m === dato.m && data.d === dato.d) {
+                return verdi; // eventuelt return data.text;
+            }
+        }
+
+    return ""; // Denne blir bare gjennomført dersom if-statementet feiler. 
+}
+
 /**
  * Skal tegne en måned gitt år,mnd og
  * en div til å rendre i
@@ -159,7 +284,7 @@ function drawMonth(y,m,div, helligdager) {
         (specialDays.includes(day)) ? cs.push("special") : "";
         (day === today && m === month && y === todayYear ? cs.push("today") : ""); 
         const txt = (day > 0 && day <= antall) ? String(day) : "";
-        dagene += `<span class="${cs.join(" ")}">${txt}</span>`;
+        dagene += `<span class="${(day > 0 && day <= antall) ? "clndDay " : ""}${cs.join(" ")}" id="${y},${m},${day}" >${txt}</span>`;
     }
     let s = "";
     s += `
