@@ -1,3 +1,5 @@
 target
 *.lock
 CrashCourse/*.toml
+lightroom_img_editor/metadata/*.NEF
+lightroom_img_editor/metadata/*.NEF.icloud
