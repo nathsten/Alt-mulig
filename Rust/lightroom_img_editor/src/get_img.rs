@@ -26,19 +26,7 @@ fn parse_xmp_data(file: String) -> Vec<Vec<String>> {
     xmp_data
 }
 
-pub fn get_img() -> Vec<Vec<String>> {
-    println!("\nEnter full directory link to the .xmp file: ");
-    let mut file_name = String::new();
-    // Read user input
-    io::stdin().read_line(&mut file_name).expect("File not found!");
-
-    // If the userinput String ends with newline or tab, will be removed. 
-    if let Some('\n')=file_name.chars().next_back() {
-        file_name.pop();
-    }
-    if let Some('\r')=file_name.chars().next_back() {
-        file_name.pop();
-    }
+pub fn get_img(file_name: String) -> Vec<Vec<String>> {
 
     println!("\nSearching for {} ...\n", file_name);
 
@@ -49,6 +37,32 @@ pub fn get_img() -> Vec<Vec<String>> {
     let xmp_data = String::from(read_file);
 
     // Parsing the raw file to a 2d vector. 
-    let parsed_xmp_data: Vec<Vec<String>> = parse_xmp_data(xmp_data);
-    parsed_xmp_data
+    parse_xmp_data(xmp_data)
+}
+
+// Change to Vec<Vec<i32>>
+pub fn get_rgb_data() -> Vec<Vec<i32>> {
+    let mut rgb_data: Vec<Vec<i32>> = vec![];
+
+    println!("\nEnter darkest, brightest, and perfect RGB value in the image spepperated by \",\"\nexample: \"68.119.87,255.237.248,187.199.137\"\nWhere the first 3 are the darkest values, second 3 are the brightest, \nand last 3 are the perfect values from a perfect spot in the image.");
+
+    let mut low_rgb = String::new();
+    io::stdin().read_line(&mut low_rgb).expect("Invalid RGB");
+    if let Some('\n')=low_rgb.chars().next_back(){low_rgb.pop();};
+    if let Some('\r')=low_rgb.chars().next_back(){low_rgb.pop();};
+
+    let arr_low_rgb = low_rgb.split(",");
+
+    for rgb in arr_low_rgb{
+        let split_by_dot = rgb.split(".");
+        let mut nums: Vec<i32> = vec![];
+
+        for r_g_b in split_by_dot{
+            nums.push(r_g_b.parse::<i32>().unwrap());
+        }
+
+        rgb_data.push(nums.to_vec());
+    }
+
+    rgb_data
 }
