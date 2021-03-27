@@ -1,3 +1,4 @@
+// Calculates brightness using three RGB values. (Dark, high, perfect).
 pub fn calculate_brightness(rgb_data: Vec<Vec<i32>>) -> f64 {
     let mut sum: i32 = 0;
 
@@ -12,19 +13,83 @@ pub fn calculate_brightness(rgb_data: Vec<Vec<i32>>) -> f64 {
     (sum/3) as f64 / 15.8
 }
 
+// Calculates how bright the image is, and adjusts, exposure, contrast, vibrance, whites, and blacks.
 pub fn caluclate_exposure_fix(img_brightness: f64, mut xmp_data: Vec<Vec<String>>) -> Vec<Vec<String>> {
     let exposure_change: f64 = (format!("{:.1}", 10 as f64 - img_brightness)).parse::<f64>().unwrap();
     println!("Exposure_change: {}", exposure_change);
 
     for i in 0..xmp_data.len(){
         if xmp_data[i][0] == "   crs:Exposure2012".to_string(){
-            let curr_exp: f64 = (xmp_data[i][1]).parse::<f64>().unwrap();
+            let curr_exp: f64 = (xmp_data[i][1]).replace("\"", "").parse::<f64>().unwrap();
             let new_exp: f64 = curr_exp + exposure_change;
-            xmp_data[i][1] = new_exp.to_string();
+            let mut change = String::new();
+            change.push('\"');
+            change.push_str(&new_exp.to_string());
+            change.push('\"');
+            xmp_data[i][1] = change;
         }
+        else if xmp_data[i][0] == "   crs:Vibrance".to_string(){
+            let curr_vib: f64 = (xmp_data[i][1]).replace("\"", "").parse::<f64>().unwrap();
+            let mut new_vib: f64 = curr_vib + (exposure_change * -1 as f64);
+            if exposure_change < 0 as f64{
+                new_vib = new_vib * 100 as f64;
+            }
+            else {
+                new_vib = new_vib * 50 as f64;
+            }
+            let mut change = String::new();
+            change.push('\"');
+            change.push_str(&new_vib.to_string());
+            change.push('\"');
+            xmp_data[i][1] = change;
+        }
+        else if xmp_data[i][0] == "   crs:Contrast2012".to_string(){
+            let curr_contr: f64 = (xmp_data[i][1]).replace("\"", "").parse::<f64>().unwrap();
+            let mut new_contr: f64 = curr_contr + exposure_change;
+            if exposure_change < 0 as f64{
+                new_contr = new_contr * 100 as f64;
+            }
+            else {
+                new_contr = new_contr * 50 as f64;
+            }
+            let mut change = String::new();
+            change.push('\"');
+            change.push_str(&new_contr.to_string());
+            change.push('\"');
+            xmp_data[i][1] = change;
+        }
+        else if xmp_data[i][0].to_string() == "   crs:Whites2012"{
+            let curr_white: f64 = (xmp_data[i][1]).replace("\"", "").parse::<f64>().unwrap();
+            let mut new_white: f64 = curr_white + exposure_change;
+            if exposure_change < 0 as f64{
+                new_white = new_white * 70 as f64;
+            }
+            else {
+                new_white = new_white * 35 as f64;
+            }
+            let mut change = String::new();
+            change.push('\"');
+            change.push_str(&new_white.to_string());
+            change.push('\"');
+            xmp_data[i][1] = change;
+        }
+        else if xmp_data[i][0].to_string() == "   crs:Blacks2012"{
+            let curr_black: f64 = (xmp_data[i][1]).replace("\"", "").parse::<f64>().unwrap();
+            let mut new_black: f64 = curr_black + exposure_change;
+            if exposure_change < 0 as f64{
+                new_black = new_black * 70 as f64;
+            }
+            else {
+                new_black = new_black * 35 as f64;
+            }
+            let mut change = String::new();
+            change.push('\"');
+            change.push_str(&new_black.to_string());
+            change.push('\"');
+            xmp_data[i][1] = change;
+        }
+
     }
 
     xmp_data
 }
-
-// 63.83.118,250.251.251,156.159.151

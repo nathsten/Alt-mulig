@@ -11,22 +11,17 @@ pub fn filter_edit_data(all_xmp_data: Vec<Vec<String>>) -> Vec<Vec<String>> {
     let mut necessary: Vec<Vec<String>> = vec![];
 
     // List of all names for the img-settings that will be added to necessary Vec. 
-    let id: [&str; 24] = ["   crs:Exposure2012", "   crs:Contrast2012", "   crs:Highlights2012", "   crs:Shadows2012", "   crs:Whites2012",
+    let id: [&str; 33] = ["   crs:Exposure2012", "   crs:Contrast2012", "   crs:Highlights2012", "   crs:Shadows2012", "   crs:Whites2012",
                         "   crs:Blacks2012", "   crs:Clarity2012", "   crs:DefringePurpleAmount", "   crs:DefringePurpleHueLo", 
                         "   crs:DefringePurpleHueHi", "   crs:DefringeGreenAmount", "   crs:DefringeGreenHueLo", "   crs:DefringeGreenHueHi",
                         "   crs:Temperature", "   crs:Tint", "   crs:Saturation", "   crs:HueAdjustmentRed", "   crs:HueAdjustmentOrange",
                         "   crs:HueAdjustmentYellow", "   crs:HueAdjustmentGreen", "   crs:HueAdjustmentAqua", "   crs:HueAdjustmentBlue",
-                        "   crs:HueAdjustmentPurple", "   crs:HueAdjustmentMagenta"];
+                        "   crs:HueAdjustmentPurple", "   crs:HueAdjustmentMagenta", "   crs:Vibrance", "    crs:SaturationAdjustmentRed",
+                        "    crs:SaturationAdjustmentOrange", "    crs:SaturationAdjustmentYellow", "    crs:SaturationAdjustmentGreen",
+                        "    crs:SaturationAdjustmentAqua", "    crs:SaturationAdjustmentBlue", "crs:SaturationAdjustmentPurple", 
+                        "    crs:SaturationAdjustmentMagenta"];
     
 // maybe add these
-    //    crs:SaturationAdjustmentRed="0"
-    //    crs:SaturationAdjustmentOrange="0"
-    //    crs:SaturationAdjustmentYellow="0"
-    //    crs:SaturationAdjustmentGreen="0"
-    //    crs:SaturationAdjustmentAqua="0"
-    //    crs:SaturationAdjustmentBlue="0"
-    //    crs:SaturationAdjustmentPurple="0"
-    //    crs:SaturationAdjustmentMagenta="0"
     //    crs:LuminanceAdjustmentRed="0"
     //    crs:LuminanceAdjustmentOrange="0"
     //    crs:LuminanceAdjustmentYellow="0"

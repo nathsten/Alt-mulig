@@ -17,7 +17,7 @@ fn parse_xmp_data(file: String) -> Vec<Vec<String>> {
         let mut setting_value: Vec<String> = vec![];
 
         for sv in split_by_equal{
-            setting_value.push(sv.replace("\"", "").to_string());
+            setting_value.push(sv.to_string());
         }
 
         xmp_data.push(setting_value);
