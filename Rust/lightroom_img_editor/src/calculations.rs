@@ -14,7 +14,7 @@ pub fn calculate_brightness(rgb_data: Vec<Vec<i32>>) -> f64 {
 }
 
 // Calculates how bright the image is, and adjusts, exposure, contrast, vibrance, whites, and blacks.
-pub fn caluclate_exposure_fix(img_brightness: f64, mut xmp_data: Vec<Vec<String>>) -> Vec<Vec<String>> {
+pub fn caluclate_exposure_fix(img_brightness: f64, mut xmp_data: Vec<Vec<String>>, rgb_data: Vec<Vec<i32>>) -> Vec<Vec<String>> {
     let exposure_change: f64 = (format!("{:.1}", 10 as f64 - img_brightness)).parse::<f64>().unwrap();
     println!("Exposure_change: {}", exposure_change);
 
@@ -66,6 +66,9 @@ pub fn caluclate_exposure_fix(img_brightness: f64, mut xmp_data: Vec<Vec<String>
             }
             else {
                 new_white = new_white * 35 as f64;
+            }
+            if rgb_data[1][0] > 250 && rgb_data[1][1] > 250 && rgb_data[1][2] > 250  {
+                new_white = new_white * 2.5;
             }
             let mut change = String::new();
             change.push('\"');

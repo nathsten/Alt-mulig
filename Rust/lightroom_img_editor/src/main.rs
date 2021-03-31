@@ -36,15 +36,15 @@ fn main(){
 
     println!("\nRGB data: {:?}", rgb_data);
 
-    let img_brightness: f64 = calculations::calculate_brightness(rgb_data);
+    let img_brightness: f64 = calculations::calculate_brightness(rgb_data.to_vec());
     println!("\nImg brightness: {}", img_brightness);
 
-    let xmp_data_exposure_fix: Vec<Vec<String>> = calculations::caluclate_exposure_fix(img_brightness, necessary_xmp.to_vec());
+    let xmp_data_exposure_fix: Vec<Vec<String>> = calculations::caluclate_exposure_fix(img_brightness, necessary_xmp.to_vec(), rgb_data.to_vec());
     println!("Updated exposure XMP: {:?}", xmp_data_exposure_fix);
 
     // Add a selection of the different image presets that client wants to be applied:
     println!("\nSelect a preset: type one of a-d");
-    let xmp_data_preset_add: Vec<Vec<String>> = presets::select_preset(xmp_data_exposure_fix.to_vec());
+    let xmp_data_preset_add: Vec<Vec<String>> = presets::select_preset(xmp_data_exposure_fix.to_vec(), img_brightness.clone());
 
     // Just for a test:
     let done = update_metadata::update_metadata(parsed_xmp_data.to_vec(), xmp_data_preset_add.to_vec(), file_name.clone());

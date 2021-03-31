@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <link rel="stylesheet" href="css/bits.css">
+    <link rel="stylesheet" href="css/sim.css">
+    <title>Digital logic simulator</title>
+</head>
+<body>
+
+    <!-- Main root, where the Vue engine is connected-->
+    <div id="mainRoot">
+        <!-- Simulator div -->
+        <h1 class="text-center">Digital logic simulator</h1>
+        <div id="simulator" v-if="newSimStarted">
+            <div id="mainSim">
+                <!-- Div that contains all the bits -->
+                <div id="bitDiv" style="width: 100%; height: 100%;"></div>
+
+                <div id="inputs">
+                    <!-- Inputs from main.inputList: -->
+                    <div v-for="inpt in inputList" >
+                        <div v-bind:class="{on: inpt.state === 1, off: inpt.state === 0}"
+                            v-on:click="changeInptState(inpt.state, inpt.id)" ></div>
+                        <div class="connector" id="{{ inpt.id }}"></div>
+                    </div>
+                </div>
+
+                <div id="menu">
+                    <div v-for="bit in bitList" class="text-center bitListBit" v-on:click="newBit(bit)">
+                        <h3 >{{ bit.name}}</h3>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Menu div-->
+        <div id="newSimulator" v-if="!newSimStarted">
+
+            <!-- Box of previous simulators -->
+            <div class="container" style="width: 90%;">
+                <h2 v-if="!allProjects.length">You have no projects, Create one!</h2>          
+                <h2 v-if="allProjects.length > 0">Select a project</h2>   
+                <button class="btn" style="position: relative; left: 90%; background-color: rgb(44, 44, 44);" v-on:click="newProject">New projct</button>       
+                <table class="table table-hover" style="cursor: pointer;">
+                  <thead>
+                    <tr>
+                      <th style="font-size: 1.3em;">Project name</th>
+                      <th style="font-size: 1.3em;">Description</th>
+                      <th style="font-size: 1.3em;">Last edited</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="pjct in allProjects" v-on:click="selectProject(pjct.name)">
+                      <td style="font-size: 1.3em;">{{ pjct.name }}</td>
+                      <td style="font-size: 1.3em;">{{ pjct.desc }}</td>
+                      <td style="font-size: 1.3em;">{{ pjct.lastEdt }}</td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+        </div>
+
+    </div>
+    
+    <script src="js/main.js"></script>
+    <script src="js/ls.js"></script>
+</body>
+</html>

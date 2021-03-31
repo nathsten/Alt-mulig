@@ -17,9 +17,9 @@ pub fn filter_edit_data(all_xmp_data: Vec<Vec<String>>) -> Vec<Vec<String>> {
                         "   crs:Temperature", "   crs:Tint", "   crs:Saturation", "   crs:HueAdjustmentRed", "   crs:HueAdjustmentOrange",
                         "   crs:HueAdjustmentYellow", "   crs:HueAdjustmentGreen", "   crs:HueAdjustmentAqua", "   crs:HueAdjustmentBlue",
                         "   crs:HueAdjustmentPurple", "   crs:HueAdjustmentMagenta", "   crs:Vibrance", "    crs:SaturationAdjustmentRed",
-                        "    crs:SaturationAdjustmentOrange", "    crs:SaturationAdjustmentYellow", "    crs:SaturationAdjustmentGreen",
-                        "    crs:SaturationAdjustmentAqua", "    crs:SaturationAdjustmentBlue", "crs:SaturationAdjustmentPurple", 
-                        "    crs:SaturationAdjustmentMagenta"];
+                        "   crs:SaturationAdjustmentOrange", "   crs:SaturationAdjustmentYellow", "   crs:SaturationAdjustmentGreen",
+                        "   crs:SaturationAdjustmentAqua", "   crs:SaturationAdjustmentBlue", "   crs:SaturationAdjustmentPurple", 
+                        "   crs:SaturationAdjustmentMagenta"];
     
 // maybe add these
     //    crs:LuminanceAdjustmentRed="0"
