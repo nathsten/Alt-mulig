@@ -27,8 +27,13 @@
                     <div v-for="inpt in inputList" >
                         <div v-bind:class="{on: inpt.state === 1, off: inpt.state === 0}"
                             v-on:click="changeInptState(inpt.state, inpt.id)" ></div>
-                        <div class="connector" id="{{ inpt.id }}"></div>
+                        <div class="connector" v-bind:id="'' + inpt.id + ',' + inpt.state"></div>
                     </div>
+                </div>
+
+                <div id="mainOutputDiv">
+                    <!-- Main output connector-->
+                    <div id="mainOutput"></div>
                 </div>
 
                 <div id="menu">

@@ -30,6 +30,24 @@
     border-radius: 50%;
     cursor: pointer;
 }
+
+#mainOutputDiv{
+    position: absolute;
+    right: -6%;
+    top: 40%;
+    width: 10%;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+
+#mainOutput{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: black;
+}
+
 .bitMain{
     position: absolute;
     cursor: move;
@@ -47,4 +65,29 @@
     text-align: center;
     margin-top: 5px;
     cursor: pointer;
+}
+
+.bitOut{
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.bitOut.on{
+    background-color: white;
+}
+
+.bitOut.off{
+    background-color: black;
+}
+
+.cableOn{
+    background-color: white;
+}
+
+.cableOff{
+    background-color: black;
 }
