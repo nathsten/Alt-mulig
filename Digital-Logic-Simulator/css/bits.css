@@ -52,6 +52,7 @@
     position: absolute;
     cursor: move;
     user-select: none;
+    border-radius: 2px;
 }
 .bitMain>p{
     font-size: 1.5em;

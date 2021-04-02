@@ -235,6 +235,75 @@ class outputBit{
                 }
                 return this.state;
             }
+            
+            case "Nand": {
+                const [ in1, in2 ] = allInpts;
+                if(in1.state === 0 && in2.state === 0){
+                    this.state = 1;
+                    this.div.classList.remove("off");
+                    this.div.classList.add("on");
+                    this.updateCables(this.state);
+                }
+                else {
+                    this.state = 0;
+                    this.div.classList.remove("on");
+                    this.div.classList.add("off");
+                    this.updateCables(this.state);
+                }
+                return this.state;
+            }
+
+            case "Xor": {
+                const [ in1, in2 ] = allInpts;
+                if((in1.state === 0 && in2.state === 1) || (in1.state === 1 && in2.state === 0)){
+                    this.state = 1;
+                    this.div.classList.remove("off");
+                    this.div.classList.add("on");
+                    this.updateCables(this.state);
+                }
+                else {
+                    this.state = 0;
+                    this.div.classList.remove("on");
+                    this.div.classList.add("off");
+                    this.updateCables(this.state);
+                }
+                return this.state;
+            }
+
+            // Fix whatever that goes wrong here!!!
+            default: {
+                const name = this.parrentBitId.split(",")[6];
+                main.bitList.forEach(bit => {
+                    if(bit.name === name){
+                        let insOn = 0;
+                        const l = +bit.qreq;
+                        allBits.forEach(({Bit}) => {
+                            Bit.inputList.forEach(inp => inp.state == 1 ? insOn+=1 : null);
+                        })
+                        // Fix this bug
+                        // if(insOn >= l && bit.allGt){
+                        //     this.state = 1;
+                        //     this.div.classList.remove("off");
+                        //     this.div.classList.add("on");
+                        //     this.updateCables(this.state);
+                        // }
+                        if(insOn === l){
+                            this.state = 1;
+                            this.div.classList.remove("off");
+                            this.div.classList.add("on");
+                            this.updateCables(this.state);
+                        }
+                        else{
+                            this.state = 0;
+                            this.div.classList.remove("on");
+                            this.div.classList.add("off");
+                            this.updateCables(this.state);
+                        }
+                        return this.state;
+                    }
+                })
+            }
+            break;
         }
     }
 
@@ -271,6 +340,7 @@ class MainOutput{
     }
 }
 
+// Createing a main output.
 const mainOutput = new MainOutput(document.getElementById("mainOutput"), 0, false);
 mainOutput.checkState();
 
@@ -282,7 +352,9 @@ const main = new Vue({
         bitList: [
             {name: "Not", w: 120, h:50, inpts: 1, outpts: 1, color: "red"}, 
             {name: "And", w: 120, h:70, inpts: 2, outpts: 1, color: "blue"}, 
-            {name: "Or", w: 120, h:70, inpts: 2, outpts: 1, color: "green"}
+            {name: "Or", w: 120, h:70, inpts: 2, outpts: 1, color: "green"},
+            {name: "Nand", w: 120, h:70, inpts: 2, outpts: 1, color: "purple"},
+            {name: "Xor", w: 120, h:70, inpts: 2, outpts: 1, color: "darkorange"}
         ],
         inputList: [{state: 0, id: 0}, {state: 0, id: 1}, {state: 0, id: 2}, {state: 0, id: 3}]
     },
@@ -324,6 +396,42 @@ const main = new Vue({
             main.inputList = main.inputList.slice(4, 8);
             renderBits();
         },
+        save: () => {
+
+        },
+        createNewBit: () => {
+            const inptNewBitForm = $("inptNewBit")[0];
+            inptNewBitForm.classList.remove("removeInptNewBit");
+            inptNewBitForm.classList.add("addInptNewBit");
+            inptNewBitForm.style.display = "block";
+        },
+        /** Save this to localStorrage
+         * @param {MouseEvent} e 
+         */
+        sumbitNewBit: e => {
+            e.preventDefault();
+
+            const inpts = $("bitName,inptsNr,outptsNr,colorVal,quantityReq").map(e => e.value);
+            // var undef = true;
+            // inpts.splice(3, 1).forEach(e => e.value == "" ? undef = true : 0);
+            // if(undef){
+            //     alert("please fill all fields");
+            //     return;
+            // }
+            const [ bitName, inptsNr, outptsNr, colorVal, quantityReq ] = inpts;
+            const [ allGt ] = $("allGt").map(e => e.checked);
+            console.log(bitName, inptsNr, outptsNr, colorVal, quantityReq);
+            const w = 120;
+            const h = inptsNr*50 - (inptsNr/2)*20;
+            const newBit = {name: bitName, w, h, inpts: inptsNr, outpts: outptsNr, color: colorVal, qreq: quantityReq, allGt};
+            main.bitList.push(newBit);
+            const inptNewBitForm = $("inptNewBit")[0];
+            inptNewBitForm.classList.remove("addInptNewBit");
+            inptNewBitForm.classList.add("removeInptNewBit");
+            setTimeout(() => {
+                inptNewBitForm.style.display = "none";
+            }, 751);
+        }   
     }
 });
 
@@ -337,6 +445,15 @@ document.addEventListener("mousemove",
     if(mouseDown && e.target.className.includes("bitMover")){
         const { clientX, clientY } = e
         const [ x, y, w, h, inpts, outpts, name, color ] = e.target.id.split(",");
+        for(let i=0; i<allBits.length; i++){
+            const bit = allBits[i].Bit
+            if(bit.div.id === e.target.id){
+                for(let j=0; j<bit.inputList.length; j++){
+                    const inpt = bit.inputList[j];
+                    if(inpt.connected) return;
+                }
+            }
+        }
         const div = new$("div");
         const newBit = new Bit(div, clientX-200, clientY-100, w, h, inpts, outpts, name, color);
         newBit.render();
