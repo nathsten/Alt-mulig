@@ -38,6 +38,7 @@ class Bit{
         this.color = color;
         this.inputList = [];
         this.outputList = [];
+        this.bitState = 0;
     }
 
     render(){
@@ -84,15 +85,30 @@ class Bit{
         // Creates a output(s) for the selected bit. 
         for(var i = 0; i < outpts; i++){
             const newOut = new$("div");
-            const out = new outputBit(this.inputList, newOut, name);
+            const out = new outputBit(this.inputList, newOut, name, div.id);
             out.div.className = "bitOut";
-            out.render();
+            out.render(div.id);
             outputDiv.append(out.div);
             this.outputList.push(out);
         }
 
         div.append(inputDiv);
         div.append(outputDiv);
+    }
+
+    // Changes the inputState of all the inputs that are serial connected
+    act(){
+        allCables.forEach(cbl => {
+            if(cbl.serial){
+                allBits.forEach(({Bit}) => {
+                    Bit.inputList.forEach(inpt => {
+                        if(inpt.div.id === cbl.connectedTo){
+                            inpt.state = cbl.parrentInptState
+                        }
+                    })
+                })
+            }
+        })
     }
 }
 
@@ -150,17 +166,18 @@ class outputBit{
      * @param {HTMLDivElement} div 
      * @param {string} parrentBit 
      */
-    constructor(allInpts, div, parrentBit){
+    constructor(allInpts, div, parrentBit, parrentBitId){
         this.allInpts = allInpts;
         this.div = div;
         this.parrentBit = parrentBit;
+        this.parrentBitId = parrentBitId;
         this.state = undefined;
     }
 
-    render(){
+    render(id){
         const { allInpts, div, parrentBit } = this;
         div.classList.add("off");
-        div.id = this.state;
+        div.id = `${this.state},${id},Output`;
     }
 
     // Tells if the output from selected bit is on(1) or off(0)
@@ -173,14 +190,17 @@ class outputBit{
                     this.state = 1;
                     this.div.classList.remove("off");
                     this.div.classList.add("on");
+                    this.updateCables(this.state);
                 }
                 else{
                     this.state = 0;
                     this.div.classList.remove("on");
                     this.div.classList.add("off");
+                    this.updateCables(this.state);
+                    
                 }
+                return this.state;
             }
-            break;
 
             case "And": {
                 const [ in1, in2 ] = allInpts;
@@ -188,14 +208,16 @@ class outputBit{
                     this.state = 1;
                     this.div.classList.remove("off");
                     this.div.classList.add("on");
+                    this.updateCables(this.state);
                 }
                 else{
                     this.state = 0;
                     this.div.classList.remove("on");
                     this.div.classList.add("off");
+                    this.updateCables(this.state);
                 }
+                return this.state;
             }
-            break;
 
             case "Or": {
                 const [ in1, in2 ] = allInpts;
@@ -203,15 +225,25 @@ class outputBit{
                     this.state = 1;
                     this.div.classList.remove("off");
                     this.div.classList.add("on");
+                    this.updateCables(this.state);
                 }
                 else{
                     this.state = 0;
                     this.div.classList.remove("on");
                     this.div.classList.add("off");
+                    this.updateCables(this.state);
                 }
+                return this.state;
             }
-            break;
         }
+    }
+
+    updateCables(state){
+        allCables.forEach(cabl => {
+            if(cabl.parrentId === this.parrentBitId){
+                cabl.parrentInptState = state;
+            }
+        })
     }
 }
 
@@ -227,10 +259,20 @@ class MainOutput{
         this.state = state;
         this.connected = connected;
     }
+
+    // Loop trough all cables to check if any is connected and then act on state
+    checkState(){
+        allCables.forEach(cbl => {
+            if(cbl.main){
+                this.state = cbl.parrentInptState;
+            }
+        })
+        this.div.className = this.state === 1 ? "cableOn" : "cableOff";
+    }
 }
 
-const mainOutput = new MainOutput($("mainOutput")[0], 0, false);
-
+const mainOutput = new MainOutput(document.getElementById("mainOutput"), 0, false);
+mainOutput.checkState();
 
 const main = new Vue({
     el: "#mainRoot",
@@ -289,6 +331,24 @@ const main = new Vue({
 var mouseDown = false
 document.addEventListener("mousedown",  ()=> mouseDown = true);
 document.addEventListener("mouseup", () => mouseDown = false);
+
+document.addEventListener("mousemove",
+/**@param {MouseEvent} e */ e => {
+    if(mouseDown && e.target.className.includes("bitMover")){
+        const { clientX, clientY } = e
+        const [ x, y, w, h, inpts, outpts, name, color ] = e.target.id.split(",");
+        const div = new$("div");
+        const newBit = new Bit(div, clientX-200, clientY-100, w, h, inpts, outpts, name, color);
+        newBit.render();
+        (allBits.length ? 
+            allBits.forEach((bit, i) => {
+                const { Bit, id } = bit;
+                if(id === e.target.id) allBits[i] = {Bit: newBit, id: newBit.div.id}
+            }) : allBits.push({Bit: newBit, id: e.target.id})
+        );
+        renderBits();
+    }
+})
 
 const [ inputs, bitDiv ] = $("inputs,bitDiv");
 var selectedInpt = false;
@@ -351,50 +411,8 @@ const connect = e => {
         selectedInpt = false;
         selectedInputId = undefined;
     }
-}
-
-document.addEventListener("mousemove",
-/**@param {MouseEvent} e */ e => {
-    if(mouseDown && e.target.className.includes("bitMover")){
-        const { clientX, clientY } = e
-        const [ x, y, w, h, inpts, outpts, name, color ] = e.target.id.split(",");
-        const revDiv = document.getElementById(e.target.id);
-        const div = new$("div");
-        const newBit = new Bit(div, clientX-200, clientY-100, w, h, inpts, outpts, name, color);
-        newBit.render();
-        (allBits.length ? 
-            allBits.forEach((bit, i) => {
-                const { Bit, id } = bit;
-                if(id === e.target.id) allBits[i] = {Bit: newBit, id: newBit.div.id}
-            }) : allBits.push({Bit: newBit, id: e.target.id})
-        );
-        renderBits();
-    }
-})
-
-
-var mainOutputActive = false;
-
-$("mainOutput")[0].addEventListener("click", 
-/** @param {MouseEvent} e*/ e => {
-    const { clientX, clientY } = e;
-    
-    const c = new Cable;
-    c.x1 = clientX-120;
-    c.y1 = clientY-75;
-    c.div = new$("div");
-    allCables.push(c);
-    mainOutputActive = true;
-})
-
-/** Change it up, select output on bit first then either main output or 
- * another bit input!!
- * @param {MouseEvent} e 
- */
-const connectOut = e => {
-    if(mainOutputActive){
+    else if(outputOnBitSelected){
         const { clientX, clientY } = e;
-    
         const { className, id } = e.target;
         let i = 0;
         let l = allCables.length;
@@ -402,24 +420,83 @@ const connectOut = e => {
             if(!c.x2 && !c.y2){
                 c.x2 = clientX-120;
                 c.y2 = clientY-75;
-                c.parrentInptState = mainOutput.state;
-                // c.parrentId = ;
-                c.div.className = mainOutput.state === 0 ? "cableOn" : "cableOff";
-                console.log(c);
+                c.serial = true;
+                c.connectedTo = id;
+                c.div.className = c.parrentInptState === 1 ? "cableOn" : "cableOff";
                 c.render(); 
-                mainOutput.connected = true;
-                mainOutput.state = +id || undefined;
+          
             }
             allCables.push(c);
             i++;
         })
-    
         // The list of all the cables is sliced down to the lengt of previous cables
         // in addition to the new one. 
         allCables = allCables.slice(l, l+i);
         // render the whole simulator for each new cable. 
         renderBits();
-        mainOutputActive = false;
+        outputOnBitSelected = false;
+    }
+}
+
+
+var outputSelected = false;
+
+
+// $("mainOutput")[0].addEventListener("click", 
+/** @param {MouseEvent} e*/
+const connectMainOut = e => {
+
+    const { className, id } = e.target;
+
+    if(outputOnBitSelected){
+        const { clientX, clientY } = e;
+        let i = 0;
+        let l = allCables.length;
+        allCables.forEach(c => {
+            if(!c.x2 && !c.y2){
+                c.x2 = clientX-120;
+                c.y2 = clientY-75;
+                c.main = true;
+                mainOutput.connected = true;
+                c.div.className = c.parrentInptState === 1 ? "cableOn" : "cableOff";
+                c.render(); 
+            }
+            allCables.push(c);
+            i++;
+        })
+        // The list of all the cables is sliced down to the lengt of previous cables
+        // in addition to the new one. 
+        allCables = allCables.slice(l, l+i);
+        // render the whole simulator for each new cable. 
+        renderBits();
+        outputOnBitSelected = false;
+    }
+
+}
+
+var outputOnBitSelected = false;
+
+/** Creates a new cable for the mainOutput. 
+ * @param {MouseEvent} e 
+ */
+const connectOut = e => {
+    const { className, id } = e.target;
+    
+    if(className.includes("bitOut")){
+        const { clientX, clientY } = e;
+        const l = id.split(",").length-1;
+        const parrentId = id.split(",").slice(1, l).join(",");
+        allBits.forEach(bit => {
+            if(bit.Bit.div.id === parrentId){
+                const c = new Cable;
+                c.x1 = clientX-120;
+                c.y1 = clientY-75;
+                c.parrentId = parrentId;
+                c.parrentInptState = bit.Bit.bitState;
+                allCables.push(c);
+            }
+        });
+        outputOnBitSelected = true;
     }
 }
 
@@ -444,7 +521,13 @@ const renderBits = () => {
     inptOnBits.forEach(inpt => inpt.addEventListener("click", connect));
 
     document.querySelectorAll(".bitOut")
-    .forEach(out => out.addEventListener("click", connectOut))
+    .forEach(out => out.addEventListener("click", connectOut));
+
+    // renders mainoutput div on each change
+    const [ mainOutDiv ] = $("mainOutputDiv");
+    mainOutDiv.innerHTML = "";
+    mainOutDiv.append(mainOutput.div);
+    mainOutDiv.addEventListener("click", connectMainOut);
 }
 
 // An interval that allways check if the bit req are furfilled in order to stay on. 
@@ -453,9 +536,12 @@ const renderBits = () => {
 setInterval(() => {
     allBits.forEach(bit => {
         bit.Bit.outputList.forEach(out => {
-            out.act();
+            const s = out.act();
+            bit.Bit.bitState = s;
         })
     })
 
-    mainOutput.div.classList.add(mainOutput.state === 1 ? "on" : "off")
+    allCables.forEach(cbl => cbl.parrentInptState === 1 ? cbl.div.className = "cableOn" : cbl.div.className = "cableOff")
+    allBits.forEach(bit => bit.Bit.act());
+    mainOutput.checkState();
 }, 10);
