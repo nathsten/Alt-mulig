@@ -1,0 +1,20 @@
+{
+  "name": "api-calendar-app",
+  "version": "1.0.0",
+  "description": "api for calendar app",
+  "main": "app.js",
+  "scripts": {
+      "test": "node app.js",
+    "dev": "nodemod app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+      "express": "4.17.1",
+      "body-parser": "1.19.0",
+      "cookie-parser": "1.4.5",
+      "cors": "2.8.5",
+      "express-session": "1.17.1",
+      "bcrypt": "5.0.1"
+  }
+}
