@@ -30,6 +30,8 @@ pub fn select_preset(xmp_data_exposure_fix: Vec<Vec<String>>, img_brightness: f6
     xmp_data_exposure_fix
 }
 
+// mod util;
+
 /**
  * Temperature + exposure diff * 100
  * HueAdjustmentBlue - exposure diff * 50
@@ -39,6 +41,7 @@ pub fn select_preset(xmp_data_exposure_fix: Vec<Vec<String>>, img_brightness: f6
  */
 pub fn teal(mut xmp_data_exposure_fix: Vec<Vec<String>>, exposure_diff: f64) -> Vec<Vec<String>>{
     let mut i: usize = 0;
+    // exposure_diff = util::max(exposure_diff, 0.3 as f64);
     while i < xmp_data_exposure_fix.len(){
         if xmp_data_exposure_fix[i][0] == "   crs:Temperature".to_string(){
             let mut new_temp = exposure_diff * 400 as f64;

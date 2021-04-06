@@ -15,7 +15,26 @@ pub fn calculate_brightness(rgb_data: Vec<Vec<i32>>) -> f64 {
 
 // Calculates how bright the image is, and adjusts, exposure, contrast, vibrance, whites, and blacks.
 pub fn caluclate_exposure_fix(img_brightness: f64, mut xmp_data: Vec<Vec<String>>, rgb_data: Vec<Vec<i32>>) -> Vec<Vec<String>> {
-    let exposure_change: f64 = (format!("{:.1}", 10 as f64 - img_brightness)).parse::<f64>().unwrap();
+    let mut exposure_change: f64 = (format!("{:.1}", 10 as f64 - img_brightness)).parse::<f64>().unwrap();
+
+    // test if this works
+    println!("Force negative exposure fix? \n(y/n)");
+    let mut yn = String::new();
+    std::io::stdin().read_line(&mut yn).expect("error");
+    if let Some('\n')=yn.chars().next_back() {
+        yn.pop();
+    }
+    if let Some('\r')=yn.chars().next_back() {
+        yn.pop();
+    }
+
+    if yn == "y".to_string() {
+        if exposure_change > 0 as f64{
+            exposure_change = exposure_change * -1 as f64;
+        }
+    }
+
+
     println!("Exposure_change: {}", exposure_change);
 
     for i in 0..xmp_data.len(){
