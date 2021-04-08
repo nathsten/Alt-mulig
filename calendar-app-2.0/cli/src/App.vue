@@ -1,5 +1,8 @@
 <template>
-    <Calendar ord="Hello from app"/>
+<div>
+    <Calendar />
+    
+</div>
 </template>
 
 <script>
@@ -9,17 +12,26 @@ export default {
   name: 'App',
   components: {
       Calendar
+  },
+  data: function(){
+      return{
+    }
+  },
+  props: {
+
   }
 }
 </script>
 
 <style>
+@import url('components/style.css');
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 </style>
