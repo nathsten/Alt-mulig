@@ -5,6 +5,13 @@ module.exports = {
     extend: {
         margin: {
             "15": "15px"
+        },
+        height: {
+            "26": "6.5rem",
+            "89%": "89%"
+        },
+        width: {
+            "32%": "32%"
         }
     },
   },

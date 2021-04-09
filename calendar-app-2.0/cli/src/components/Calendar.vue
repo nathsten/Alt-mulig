@@ -1,28 +1,37 @@
 <template>
-    <!-- contains everything -->
-    <div id="mainCalendar" class="flex-col-2 my-20 border-2 border-blue-500 rounded-md">
-        <h1 class="my-5 text-blue-500 text-2xl"> {{ date }}.{{ months[month] }}.{{ year }}</h1>
+    <div>
+        
+        <!-- contains everything -->
+        <div id="mainCalendar" class="select-none flex-col-2 my-10 border-2 border-blue-500 rounded-md">
+            <h1 class="my-5 text-blue-500 text-2xl"> {{ date }}.{{ months[month] }}.{{ year }}</h1>
 
-        <div  class="flex-grow h-16 container ">
-            <!-- Calendar days Mon-sun -->
-            <div class="grid-cols-7 my-5" id="dayList">   
-                <span class="calendarDayName my-10 text-blue-500" v-for="day in days" v-bind:key="day[0].id">{{ day[0].day }}</span>
+            <div>
+                <!-- Calendar days Mon-sun -->
+                <div class="grid-cols-7 my-5" id="dayList">   
+                    <span class="calendarDayName my-10 text-blue-500" v-for="day in days" v-bind:key="day[0].id">{{ day[0].day }}</span>
+                </div>
+
+                <!-- calendar dates -->
+                <Month v-bind:date=date 
+                    v-bind:month=month 
+                    v-bind:year=year 
+                    v-bind:addToMonth=addToMonth
+                    v-bind:subFromMonth=subFromMonth
+                    v-bind:strMonths=months
+                    v-bind:thisMonth=thisMonth
+                    v-bind:selectedDate=selectedDate
+                    v-bind:changeSelectedDate=changeSelectedDate />
             </div>
-
-            <!-- calendar dates -->
-            <Month v-bind:date=date 
-                v-bind:month=month 
-                v-bind:year=year 
-                v-bind:addToMonth=addToMonth
-                v-bind:subFromMonth="subFromMonth"
-                v-bind:strMonths="months"
-                v-bind:thisMonth="thisMonth" />
         </div>
+
+        <!-- Add event component, contains input for new event, uses selectedDate to send correct date to api-->
+        <AddEvent v-bind:selectedDate=selectedDate />
     </div>
 </template>
 
 <script>
 import Month from './Month';
+import AddEvent from './AddEvent';
 
 export default {
     name: "Calendar",
@@ -33,8 +42,13 @@ export default {
             date: new Date().getDate(),
             month: new Date().getMonth(),
             year: new Date().getFullYear(),
-            thisMonth: undefined
+            thisMonth: undefined,
+            selectedDate: undefined
         }
+    },
+    created: function(){
+        this.thisMonth = genMonth(this.month, this.year);
+        this.selectedDate = {d: this.date, m: this.months[this.month], y: this.year};
     },
     methods: {
         addToMonth: function(){
@@ -62,15 +76,16 @@ export default {
                 this.thisMonth = genMonth(this.month, this.year);
 
             }
+        },
+        changeSelectedDate: function(newDate){
+            this.selectedDate = {d: newDate.d, m: this.months[newDate.m], y: newDate.y};
         }
-    },
-    created: function(){
-        this.thisMonth = genMonth(this.month, this.year);
     },
     props: {
     },
     components: {
-        Month
+        Month,
+        AddEvent
     }
 }
 
@@ -95,11 +110,13 @@ const genMonth = (m, y) => {
     const daysInMonth = numberDays(y, m);
     const days = [];
 
-    for(let i = 0; i < 42; i++){
+    for(let i = 0; i < 35; i++){
         if(i >= startDate && i <= daysInMonth){
             const day = {
                 active: true,
-                day: i-startDate+1
+                day: i-startDate+1,
+                m,
+                y
             }
             days.push(day);
         }
@@ -116,7 +133,7 @@ const genMonth = (m, y) => {
     #mainCalendar{
         position: absolute;
         width: 65%;
-        height: 90%;
+        height: 89%;
     }
 
     .calendarDayName{
