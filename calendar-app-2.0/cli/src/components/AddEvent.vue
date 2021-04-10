@@ -1,21 +1,58 @@
 <template>
-    <div class="select-none right-0 mx-4 absolute w-32% h-92% border-2 rounded border-blue-500 my-10">
-        <h1 class="text-center text-2xl text-blue-500 my-2">
-            Events on: {{ selectedDate.d }}. {{ selectedDate.m }} {{ selectedDate.y }}
-        </h1>
+    <div class="w-full h-full">
+        <!-- Input form  -->
+        <form @submit="addEvent(formText, formTime, $event)"
+        class="text-center border border-blue-500 w-2/4 h-32 absolute left-1/4 bottom-24 rounded-md"
+        v-bind:class="openInptOn ? 'slideIn' : 'slideOut'">
+            <input type="text" name="text" v-model="formText" id="text" placeholder="Event name" 
+            class="focus:border-blue-700 border border-blue-300 rounded-md py-1 my-1 outline-none transition-all"><br>
+            <input type="time" name="time" v-model="formTime" id="time"
+            class="focus:border-blue-700 border border-blue-300 rounded-md py-1 my-1 px-2 outline-none transition-all"><br>
+            <input type="submit" value="Add event" class="bg-blue-200 outline-none cursor-pointer transition-all hover:bg-blue-300 py-1 px-2 text-lg rounded-lg ">
+        </form>
 
-        <!-- List of all events on selected date -->
-        <div class="h-auto grid grid-cols-1 w-2/3">
-            
-        </div>
+        <!-- open inputdiv button  -->
+        <i class="fas fa-plus-circle text-6xl hover:opacity-80 transition-opacity absolute bottom-4 cursor-pointer" style="left: calc(50% - 2.2rem)"
+        v-bind:class="openInptOn ? 'transform rotate-45 transition-transform' : 'transform rotate-0 transition-transform'"
+        @click="(this.openInptOn = !this.openInptOn) && (formText = '') && (formTime = '')"></i>
     </div>
 </template>
 
 <script>
 export default {
-    name: "AddEvent",
+    data: function(){
+        return{
+            openInptOn: false,
+            formText: "",
+            formTime: ""
+        }
+    },
     props: {
-        selectedDate: Object
+        addEvent: Function
     }
 }
 </script>
+
+<style>
+    .slideIn{
+        animation: SlideIn linear 750ms;
+        animation-fill-mode: forwards;
+    }
+
+    .slideOut{
+        animation: SlideOut linear 750ms;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes SlideIn{
+        0%{bottom: -2rem; opacity: 0;}
+        50%{bottom: 2rem; opacity: 0.6;}
+        100%{bottom: 6rem; opacity: 1;}
+    }
+
+    @keyframes SlideOut{
+        0%{bottom: 6rem; opacity: 1;}
+        50%{bottom: 2rem; opacity: 0.4;}
+        100%{bottom: -2rem; opacity: 0;}
+    }
+</style>

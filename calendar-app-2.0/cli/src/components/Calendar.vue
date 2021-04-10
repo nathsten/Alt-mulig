@@ -3,7 +3,7 @@
         
         <!-- contains everything -->
         <div id="mainCalendar" class="select-none flex-col-2 my-10 border-2 border-blue-500 rounded-md">
-            <h1 class="my-5 text-blue-500 text-2xl"> {{ date }}.{{ months[month] }}.{{ year }}</h1>
+            <h1 class="my-5 text-blue-500 text-2xl"> {{ months[month] }} {{ date }}. {{ year }}</h1>
 
             <div>
                 <!-- Calendar days Mon-sun -->
@@ -20,18 +20,22 @@
                     v-bind:strMonths=months
                     v-bind:thisMonth=thisMonth
                     v-bind:selectedDate=selectedDate
-                    v-bind:changeSelectedDate=changeSelectedDate />
+                    v-bind:changeSelectedDate=changeSelectedDate
+                    v-bind:allEvents=allEvents />
             </div>
         </div>
 
         <!-- Add event component, contains input for new event, uses selectedDate to send correct date to api-->
-        <AddEvent v-bind:selectedDate=selectedDate />
+        <EventOverview v-bind:selectedDate=selectedDate
+        v-bind:selectedDayEvents=selectedDayEvents
+        v-bind:changeEventState=changeEventState 
+        v-bind:addEvent=addEvent />
     </div>
 </template>
 
 <script>
 import Month from './Month';
-import AddEvent from './AddEvent';
+import EventOverview from './EventOverview';
 
 export default {
     name: "Calendar",
@@ -43,12 +47,17 @@ export default {
             month: new Date().getMonth(),
             year: new Date().getFullYear(),
             thisMonth: undefined,
-            selectedDate: undefined
+            selectedDate: undefined,
+            selectedDayEvents: [],
+            allEvents: []
         }
     },
-    created: function(){
+    created: async function(){
         this.thisMonth = genMonth(this.month, this.year);
         this.selectedDate = {d: this.date, m: this.months[this.month], y: this.year};
+        const getEvents = await fetch('/getUserEvents');
+        this.allEvents = await getEvents.json();
+        this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
     },
     methods: {
         addToMonth: function(){
@@ -78,14 +87,32 @@ export default {
             }
         },
         changeSelectedDate: function(newDate){
-            this.selectedDate = {d: newDate.d, m: this.months[newDate.m], y: newDate.y};
+            if(newDate.d){
+                this.selectedDate = {d: newDate.d, m: this.months[newDate.m], y: newDate.y};
+                this.selectedDayEvents = this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
+            }
+        },
+        deleteEvent: function(date){
+            // const date = date.split(".").map(e => +e ? +e : e = this.months.indexOf(e));
+        },
+        changeEventState: function(){
+            // fetch new event state
+        },
+        /**
+         * @param {HTMLFrom} form
+         * @param {MouseEvent} event
+         */
+        addEvent: function(text, time, event){
+            // fetch the new event. 
+            event.preventDefault();
+            console.log(text, time);
         }
     },
     props: {
     },
     components: {
         Month,
-        AddEvent
+        EventOverview
     }
 }
 

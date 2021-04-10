@@ -12,6 +12,9 @@ module.exports = {
         },
         width: {
             "32%": "32%"
+        },
+        left: {
+            "88": "22rem"
         }
     },
   },
