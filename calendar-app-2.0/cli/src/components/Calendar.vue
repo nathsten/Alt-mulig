@@ -2,8 +2,14 @@
     <div>
         
         <!-- contains everything -->
-        <div id="mainCalendar" class="select-none flex-col-2 my-10 border-2 border-blue-500 rounded-md">
-            <h1 class="my-5 text-blue-500 text-2xl"> {{ months[month] }} {{ date }}. {{ year }}</h1>
+        <div id="mainCalendar" class="w-full select-none flex-col-2 my-10 border-2 border-blue-500 rounded-md overflow-scroll">
+            <h1 class="my-5 text-blue-500 text-2xl"> 
+                <i class="fas fa-angle-left mx-3 text-2xl cursor-pointer hover:opacity-80 transition-all" @click="subFromMonth"></i>
+
+                {{ months[month] }} {{ date }}. {{ year }}
+
+                <i class="fas fa-angle-right mx-3 text-2xl cursor-pointer hover:opacity-80 transition-all" @click="addToMonth"></i>
+            </h1>
 
             <div>
                 <!-- Calendar days Mon-sun -->
@@ -29,7 +35,8 @@
         <EventOverview v-bind:selectedDate=selectedDate
         v-bind:selectedDayEvents=selectedDayEvents
         v-bind:changeEventState=changeEventState 
-        v-bind:addEvent=addEvent />
+        v-bind:addEvent=addEvent
+        v-bind:deleteEvent=deleteEvent />
     </div>
 </template>
 
@@ -52,12 +59,24 @@ export default {
             allEvents: []
         }
     },
+    props: {
+        changeSignedIn: Function
+    },
     created: async function(){
-        this.thisMonth = genMonth(this.month, this.year);
-        this.selectedDate = {d: this.date, m: this.months[this.month], y: this.year};
-        const getEvents = await fetch('/getUserEvents');
-        this.allEvents = await getEvents.json();
-        this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
+        try{
+            this.thisMonth = genMonth(this.month, this.year);
+            this.selectedDate = {d: this.date, m: this.months[this.month], y: this.year};
+            const getEvents = await fetch('/getUserEvents');
+            const response = await getEvents.json();
+            if(await response.status === "signedIn"){
+                this.allEvents = await response.allEvents;
+                this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
+            }
+            else{
+                this.changeSignedIn(false);
+            }
+        }
+        catch(e){ }
     },
     methods: {
         addToMonth: function(){
@@ -72,6 +91,7 @@ export default {
                 this.thisMonth = genMonth(this.month, this.year);
 
             }
+            this.changeSelectedDate({d: 1, m: this.month, y: this.year});
         },
         subFromMonth: function(){
             if(this.month-1 < 1){
@@ -85,30 +105,51 @@ export default {
                 this.thisMonth = genMonth(this.month, this.year);
 
             }
+            this.changeSelectedDate({d: 1, m: this.month, y: this.year});
         },
         changeSelectedDate: function(newDate){
-            if(newDate.d){
+            if(Number.isInteger(newDate.d)){
                 this.selectedDate = {d: newDate.d, m: this.months[newDate.m], y: newDate.y};
                 this.selectedDayEvents = this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
             }
         },
-        deleteEvent: function(date){
-            // const date = date.split(".").map(e => +e ? +e : e = this.months.indexOf(e));
+        deleteEvent: async function(key){
+            const deleteEvent = await fetch(`deleteEvent/${key}`);
+            this.allEvents = await deleteEvent.json();
+            this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
         },
-        changeEventState: function(){
+        changeEventState: async function(key){
             // fetch new event state
+            const changeEvent = await fetch(`changeEventState/${key}`);
+            this.allEvents = await changeEvent.json();
+            this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
+
         },
         /**
          * @param {HTMLFrom} form
          * @param {MouseEvent} event
          */
-        addEvent: function(text, time, event){
+        addEvent: async function(text, time, event){
             // fetch the new event. 
             event.preventDefault();
             console.log(text, time);
+            const init = {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({
+                    text, time, 
+                    date: this.selectedDate.d,
+                    month: this.selectedDate.m,
+                    year: this.selectedDate.y
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            const sendNewEvent = await fetch('/addEvent', init);
+            this.allEvents = await sendNewEvent.json();
+            this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
         }
-    },
-    props: {
     },
     components: {
         Month,
@@ -137,8 +178,8 @@ const genMonth = (m, y) => {
     const daysInMonth = numberDays(y, m);
     const days = [];
 
-    for(let i = 0; i < 35; i++){
-        if(i >= startDate && i <= daysInMonth){
+    for(let i = 0; i < 42; i++){
+        if(i >= startDate && i <= daysInMonth+startDate-1){
             const day = {
                 active: true,
                 day: i-startDate+1,

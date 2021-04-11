@@ -9,7 +9,11 @@
             <div class="w-5/6 h-4/5 overflow-scroll">
                 <!-- Inner eventnames -->
                 <span v-for="event in allEvents" v-bind:key="event.date+event.text">
-                    <p v-bind:class="!event.completed ? 'bg-blue-500' : 'bg-blue-300'" class="rounded-md px-0.5 text-white my-1" v-if="+(event.date.split('.')[0]) === day.day">{{ event.text }}</p>
+                    <p v-bind:class="!event.completed ? 'bg-blue-500' : 'bg-blue-300'" 
+                    class="rounded-md px-0.5 text-white my-1" 
+                    v-if="+(event.date.split('.')[0]) === day.day 
+                    && event.date.split('.')[1] === selectedDate.m
+                    && +event.date.split('.')[2] === selectedDate.y">{{ event.text }}</p>
                 </span>
             </div>
 
@@ -45,6 +49,4 @@ export default {
         allEvents: Array
     }
 }
-
-
 </script>

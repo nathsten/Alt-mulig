@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-full">
         <!-- Input form  -->
-        <form @submit="addEvent(formText, formTime, $event)"
+        <form @submit="addEvent(formText, formTime, $event) && (this.openInptOn = !this.openInptOn) && (formText = '') && (formTime = null)"
         class="text-center border border-blue-500 w-2/4 h-32 absolute left-1/4 bottom-24 rounded-md"
         v-bind:class="openInptOn ? 'slideIn' : 'slideOut'">
             <input type="text" name="text" v-model="formText" id="text" placeholder="Event name" 
