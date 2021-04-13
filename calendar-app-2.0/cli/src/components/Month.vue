@@ -2,7 +2,7 @@
     <div class="grid grid-cols-7 overflow-hidden">
 
         <div @click="changeSelectedDate({d: day.day, m: day.m, y: day.y})" v-for="day in thisMonth" v-bind:key="day.day" 
-        v-bind:class="[(day.active) ? 'w-30 h-26 mx-1 my-1 border border-blue-900 cursor-pointer hover:bg-blue-200 transition-colors select-none text-left px-2 py-2' : 'select-none', 
+        v-bind:class="[(day.active) ? 'w-30 h-26 mx-0.5 my-0.5 border border-blue-900 cursor-pointer hover:bg-blue-200 transition-colors select-none text-left px-2 py-2' : 'select-none', 
         (day.day === selectedDate.d && day.m === months.indexOf(selectedDate.m) && day.y === selectedDate.y) ? 'bg-blue-100' : '' ]">
 
             <span class="text-blue-700" v-if="day.active">{{day.day}}</span>

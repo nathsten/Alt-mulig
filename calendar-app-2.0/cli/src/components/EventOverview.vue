@@ -14,7 +14,7 @@
                     <!-- complete btn -->
                     <i v-bind:class="!event.completed ? 'far fa-check-circle' : 'fas fa-check-circle'"
                     class=" cursor-pointer hover:opacity-80 transition-opacity text-3xl relative -top-9" style="left: 22rem"
-                    @click="changeEventState(event.key)"></i>
+                    @click="changeEventState(event.key, event.completed)"></i>
                     <!-- Change to this when finished -->
                     <!-- <i class="fas fa-check-circle"></i> -->
                 </div>

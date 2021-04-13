@@ -114,15 +114,35 @@ export default {
             }
         },
         deleteEvent: async function(key){
-            const deleteEvent = await fetch(`deleteEvent/${key}`);
+            const init = {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({key}),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            const deleteEvent = await fetch(`deleteEvent`, init);
             this.allEvents = await deleteEvent.json();
             this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
         },
-        changeEventState: async function(key){
+        changeEventState: async function(key, state){
             // fetch new event state
-            const changeEvent = await fetch(`changeEventState/${key}`);
-            this.allEvents = await changeEvent.json();
-            this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
+            try{
+                const init = {
+                    method: "POST",
+                    credentials: "include",
+                    body: JSON.stringify({key, state: !state}),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+                const changeEvent = await fetch(`changeEventState`, init);
+                this.allEvents = await changeEvent.json();
+                this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
+            } catch(e) {
+                console.log(e);
+            }
 
         },
         /**
