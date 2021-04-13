@@ -6,9 +6,11 @@
             <h1 class="my-5 text-blue-500 text-2xl"> 
                 <i class="fas fa-angle-left mx-3 text-2xl cursor-pointer hover:opacity-80 transition-all" @click="subFromMonth"></i>
 
-                {{ months[month] }} {{ date }}. {{ year }}
+                {{ months[todayMonth] }} {{ date }}. {{ year }}
 
                 <i class="fas fa-angle-right mx-3 text-2xl cursor-pointer hover:opacity-80 transition-all" @click="addToMonth"></i>
+
+                <button @click="logout" class="absolute right-3 top-3 text-base hover:text-blue-700 transition-all">Log out</button>
             </h1>
 
             <div>
@@ -52,6 +54,7 @@ export default {
             months: "January,February,March,April,May,June,July,August,September,October,November,December".split(","),
             date: new Date().getDate(),
             month: new Date().getMonth(),
+            todayMonth: new Date().getMonth(),
             year: new Date().getFullYear(),
             thisMonth: undefined,
             selectedDate: undefined,
@@ -91,7 +94,7 @@ export default {
                 this.thisMonth = genMonth(this.month, this.year);
 
             }
-            this.changeSelectedDate({d: 1, m: this.month, y: this.year});
+            this.changeSelectedDate({d: this.selectedDate.d, m: this.month, y: this.year});
         },
         subFromMonth: function(){
             if(this.month-1 < 1){
@@ -105,7 +108,7 @@ export default {
                 this.thisMonth = genMonth(this.month, this.year);
 
             }
-            this.changeSelectedDate({d: 1, m: this.month, y: this.year});
+            this.changeSelectedDate({d: this.selectedDate.d, m: this.month, y: this.year});
         },
         changeSelectedDate: function(newDate){
             if(Number.isInteger(newDate.d)){
@@ -169,6 +172,12 @@ export default {
             const sendNewEvent = await fetch('/addEvent', init);
             this.allEvents = await sendNewEvent.json();
             this.selectedDayEvents = await this.allEvents.filter(e => e.date === `${this.selectedDate.d}.${this.selectedDate.m}.${this.selectedDate.y}`);
+        },
+        logout: function() {
+            fetch('/logout')
+            .then(res => res.json())
+            .then(res => res.status === "success" ? location.reload() : alert("something went wrong"))
+            .catch(e => alert("something went wrong") && console.log(e));
         }
     },
     components: {

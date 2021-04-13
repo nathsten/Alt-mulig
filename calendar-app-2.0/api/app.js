@@ -13,6 +13,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(session({secret: "test", saveUninitialized: false, resave: false}));
+app.use("/", express.static("public"));
 
 app.listen(PORT, e => e ? console.log(e) : console.log(`listening on port:${PORT}`));
 
@@ -135,4 +136,8 @@ app.post('/changeEventState', async (req, res) => {
         const updAllEvents = await client.db("calendar-app").collection("allEvents").find({userID: sid.userID}).toArray();
         res.json(await updAllEvents)
     }
+})
+
+app.get('/logout', (req, res) => {
+    res.clearCookie("connect.sid").json({status: "success"});
 })
