@@ -12,35 +12,35 @@ const new$ = el => document.createElement(el);
 
 /**
  * Setter eventlistener på diven som blir sendt inn og
- * returnerer en ferdig laget html parragraf med animasjon slik at 
- * det er bare å legge den rett til i #main-diven.
- * Dette hindrer også at teksten animeres inn flere ganger, men lyden spilles
- * fortsatt av når du klikker på den. 
+ * animerer inn text samtidig som den spiller av lyden 
  * @param {HTMLElement} div 
+ * @param {HTMLElement} main 
  * @param {string} text 
  * @param {Audio} sound 
  */
-const animate = async (div, text, sound) => new Promise((resolve, reject) => {
+const animate = (div, main, text, sound) =>  {
     div.addEventListener("click",
     // @ts-ignore
     /** @param {MouseEvent} e */ 
     e => {
-        try{
-            const { clientX, clientY } = e;
-            const aniText = new$("p");
-            aniText.innerHTML = text;
-            aniText.className = "aniText";
-            aniText.style.left = `${clientX}px`;
-            aniText.style.top = `${clientY-20}px`;
-            aniText.classList.add("aniIn");
+        const { clientX, clientY } = e;
+        const [ id ] = $(text);
+        const aniText = new$("p");
+        aniText.innerHTML = text;
+        aniText.className = "aniText";
+        aniText.id = text.split(" ")[0];;
+        aniText.style.left = `${clientX}px`;
+        aniText.style.top = `${clientY-20}px`;
+        aniText.classList.add("aniIn");
+        setTimeout(() => {           
             // @ts-ignore
             sound.play();
-            resolve(aniText);
-        }
+        }, 400);
+        try{main.removeChild(id)}catch{};
+        main.append(aniText);
         // Hvis noe feiler. Feks hvis lydfilen ikke virker. 
-        catch(e) { reject(e); }
     })
-})
+}
 
 const main = async () => {
     // Bruker utpakking av array til å lage koblinger til DOM raskere. 
@@ -52,9 +52,7 @@ const main = async () => {
     imgEl.style.backgroundImage = `url(${URL.createObjectURL(img)})`;
 
     // @ts-ignore 
-    const pAs = await animate(armstrekkeren, "Armstrekkeren", srcArm);
-    main.append(pAs);
+    animate(armstrekkeren, main, "Armstrekkeren", srcArm);
     // @ts-ignore
-    const pDBR =  await animate(DBR, "Den brede ryggmuskelen", srcDBR);
-    main.append(pDBR);
+    animate(DBR, main, "Den brede ryggmuskelen", srcDBR);
 }

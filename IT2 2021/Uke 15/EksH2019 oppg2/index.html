@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppgave 2</title>
+    <style>
+        body{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 20px;
+        }
+        h3,h2{
+            margin: 5px;
+        }
+        #svar{
+            width: 400px;
+            height: 150px;
+            margin-left: 5px;
+            border: solid 1px black;
+            padding: 10px;
+            font-size: 1.2em;
+        }
+        #flyt{
+            position: absolute;
+            right: 50px;
+            top: -60px;
+            background-image: url('Flytdiagram.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 400px;
+            height: 800px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="main">
+        <h3>Velg aktivitet</h3>
+        <select id="AktivitetListe">
+        </select>
+
+        <h3>Velg intensivitet</h3>
+        <div id="intensivitet">
+            <label>Lav</label>
+            <input type="radio" class="intensivitet" id="0.8" value="Lav" name="intensivitet"><br>
+            <label>Middels</label>
+            <input type="radio" class="intensivitet" id="1" value="Middels" name="intensivitet"><br>
+            <label></label>Høy</label>
+            <input type="radio" class="intensivitet" id="1.2" value="Høy" name="intensivitet">
+        </div>
+
+        <label>Skriv inn varighet i minutter: <input type="number" id="varighet"></label>
+        <br>
+        <button id="beregn">Beregn</button>
+        <br><br>
+        <h2>Beregning:</h2>
+        <div id="svar"></div>
+    </div>
+
+    <div id="flyt"></div>
+    
+    
+    <script src="oppg2.js"></script>
+</body>
+</html>
