@@ -1,5 +1,5 @@
 <template>
-    <div class="select-none right-0 mx-4 absolute w-32% h-89% border-2 rounded border-blue-500 my-10 overflow-hidden">
+    <div class="select-none right-0 mx-4 absolute w-32% h-89% border-2 rounded border-blue-500 my-10 overflow-scroll">
         <h1 class="text-center text-2xl text-blue-500 my-4">
             Events on: {{ selectedDate.m }} {{ selectedDate.d }}. {{ selectedDate.y }}
         </h1>
@@ -13,7 +13,7 @@
                     <p>kl: {{ event.time }}</p>
                     <!-- complete btn -->
                     <i v-bind:class="!event.completed ? 'far fa-check-circle' : 'fas fa-check-circle'"
-                    class=" cursor-pointer hover:opacity-80 transition-opacity text-3xl relative -top-9" style="left: 22rem"
+                    class=" cursor-pointer hover:opacity-80 transition-opacity text-3xl relative -top-9" style="left: 20rem"
                     @click="changeEventState(event.key, event.completed)"></i>
                     <!-- Change to this when finished -->
                     <!-- <i class="fas fa-check-circle"></i> -->

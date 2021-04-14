@@ -2,7 +2,7 @@
     <div class="w-full h-full">
         <!-- Input form  -->
         <form @submit="addEvent(formText, formTime, $event) && (this.openInptOn = !this.openInptOn) && (formText = '') && (formTime = null)"
-        class="text-center border border-blue-500 w-2/4 h-32 absolute left-1/4 bottom-24 rounded-md"
+        class="text-center border border-blue-500 w-2/4 h-32 absolute left-1/4 bottom-24 rounded-md bg-white"
         v-bind:class="openInptOn ? 'slideIn' : 'slideOut'">
             <input type="text" name="text" v-model="formText" id="text" placeholder="Event name" 
             class="focus:border-blue-700 border border-blue-300 rounded-md py-1 my-1 outline-none transition-all"><br>

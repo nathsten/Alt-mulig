@@ -1,21 +1,22 @@
 <template>
     <div>
+        <button @click="logout" v-if="isMobile" class="absolute right-3 top-1 text-blue-500 text-lg hover:text-blue-700 transition-all">Log out</button>
         
         <!-- contains everything -->
-        <div id="mainCalendar" class="w-full select-none flex-col-2 my-10 border-2 border-blue-500 rounded-md overflow-scroll">
-            <h1 class="my-5 text-blue-500 text-2xl"> 
+        <div id="mainCalendar" v-bind:class="!isMobile ? 'mainCalendarWidth' : 'w-5/6 right-9'" class=" select-none flex-col-2 my-10 border-2 border-blue-500 rounded-md overflow-scroll">
+            <h1 class="my-5 text-blue-500 text-2xl sm:sticky"> 
                 <i class="fas fa-angle-left mx-3 text-2xl cursor-pointer hover:opacity-80 transition-all" @click="subFromMonth"></i>
 
-                {{ months[todayMonth] }} {{ date }}. {{ year }}
+                {{ months[month] }} {{ selectedDate.d}}. {{ year }}
 
                 <i class="fas fa-angle-right mx-3 text-2xl cursor-pointer hover:opacity-80 transition-all" @click="addToMonth"></i>
 
-                <button @click="logout" class="absolute right-3 top-3 text-base hover:text-blue-700 transition-all">Log out</button>
+                <button @click="logout" v-if="!isMobile" class="absolute right-3 top-3 text-base hover:text-blue-700 transition-all">Log out</button>
             </h1>
 
             <div>
                 <!-- Calendar days Mon-sun -->
-                <div class="grid-cols-7 my-5" id="dayList">   
+                <div class="grid md:grid-cols-7 my-4 relative md:-top-6" v-if="!isMobile" id="dayList">   
                     <span class="calendarDayName my-10 text-blue-500" v-for="day in days" v-bind:key="day[0].id">{{ day[0].day }}</span>
                 </div>
 
@@ -29,28 +30,37 @@
                     v-bind:thisMonth=thisMonth
                     v-bind:selectedDate=selectedDate
                     v-bind:changeSelectedDate=changeSelectedDate
-                    v-bind:allEvents=allEvents />
+                    v-bind:allEvents=allEvents 
+                    v-bind:isMobile=isMobile 
+                    v-bind:changeEventState=changeEventState />
             </div>
         </div>
 
+        <div v-if="!isMobile">
         <!-- Add event component, contains input for new event, uses selectedDate to send correct date to api-->
         <EventOverview v-bind:selectedDate=selectedDate
         v-bind:selectedDayEvents=selectedDayEvents
         v-bind:changeEventState=changeEventState 
         v-bind:addEvent=addEvent
         v-bind:deleteEvent=deleteEvent />
+        </div>
+
+        <div v-if="isMobile">
+            <AddEvent v-bind:addEvent=addEvent />
+        </div>
     </div>
 </template>
 
 <script>
 import Month from './Month';
 import EventOverview from './EventOverview';
+import AddEvent from './AddEvent';
 
 export default {
     name: "Calendar",
     data: function(){
         return{
-            days: "Monday,Tuesday,Wensday,Thursday,Friday,Saturday,Sunday".split(",").map((e, i) => [{id: i, day: e}]),
+            days: "Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday".split(",").map((e, i) => [{id: i, day: e}]),
             months: "January,February,March,April,May,June,July,August,September,October,November,December".split(","),
             date: new Date().getDate(),
             month: new Date().getMonth(),
@@ -59,7 +69,8 @@ export default {
             thisMonth: undefined,
             selectedDate: undefined,
             selectedDayEvents: [],
-            allEvents: []
+            allEvents: [],
+            isMobile: screen.width <= 770
         }
     },
     props: {
@@ -79,7 +90,7 @@ export default {
                 this.changeSignedIn(false);
             }
         }
-        catch(e){ }
+        catch(e){ } 
     },
     methods: {
         addToMonth: function(){
@@ -182,7 +193,8 @@ export default {
     },
     components: {
         Month,
-        EventOverview
+        EventOverview,
+        AddEvent
     }
 }
 
@@ -229,9 +241,10 @@ const genMonth = (m, y) => {
 <style>
     #mainCalendar{
         position: absolute;
-        width: 65%;
+        /* width: 65%; */
         height: 89%;
     }
+    .mainCalendarWidth{ width: 65%; }
 
     .calendarDayName{
         margin: 5px 4% 5px 4%;
