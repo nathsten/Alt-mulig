@@ -77,8 +77,8 @@ const getPdfObject = async (url) => {
     const str = await lines.join("").split("DEL").map(e => e.split("Oppgave"))
     .map(del => del.map((oppg, i) => ["Oppgave " + i, oppg]));
     const oppgObj = str.slice(1, str.length).map(del => Object.fromEntries(del));
-    return oppgObj;
+    return oppgObj[0] !== undefined ? oppgObj : str.map(del => Object.fromEntries(del));
 };
-// var url = "https://matematikk.net/res/eksamen/S1/kort/S1_H18.pdf";
+// var url = "http://matematikk.net/res/eksamen/S1/kort/S1_V08.pdf";
 // getPdfObject(url).then(res => console.log(res));
 module.exports = { getPdfObject };

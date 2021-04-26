@@ -10,5 +10,28 @@
 </head>
 <body>
     
+    <div id="app">
+        <form @submit="hentEksamensOppg($event)">
+            <label>Velg type matte: </label>
+            <input type="text" placeholder="type matte" v-model="fag" class="rounded border border-blue-500"><br>
+            <label>Velg et emne: </label>
+            <input type="text" placeholder="type matte" v-model="sokeord"  class="rounded border border-blue-500"><br>
+            <input type="submit" value="Søk">
+        </form>
+
+        <div>
+            <div v-for="oppg in exams">
+                <p> Årstall: {{ oppg.year }} {{ oppg.oppg }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- lage datalist -->
+
+    <script type="module">
+        import main from './main.js';
+        main();
+    </script>
+    <!-- <script>main()</script> -->
 </body>
 </html>
