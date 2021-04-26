@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppg 3 del 2</title>
+    <script src="oppg3.2.js"></script>
+    <style>
+        body{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        #main{
+            position: relative;
+            margin: 20px;
+        }
+        table{
+            width: 600px;
+            height: auto;
+            border: solid 1px black;
+            padding: 5px;
+        }
+        table>thead>tr>td, table>tbody>tr>th{
+            border: solid 1px black;
+            font-size: 1.2em;
+        }
+        #form, #form>input, #form>label{
+            padding: 5px;
+        }
+        #tableBody>tr>td{
+            border: solid 1px black;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h1>Lag treningsprogram</h1>
+
+        <form id="form">
+            <label>Sett: <br><input type="number" id="Sett"></label><br>
+            <label>Repitisjoner: <br><input type="number" id="Repitisjoner"></label><br>
+            <label>Motstand: <br><input type="number" id="Motstand"></label><br>
+            <input type="submit" value="lagre set">
+        </form>
+
+        <br>
+        <h2 id="res">Resultat: Treningsvolum: 0kg</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Sett</th>
+                    <th>Repitisjoner</th>
+                    <th>Motstand</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td> &nbsp; </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        main();
+    </script>
+</body>
+</html>
