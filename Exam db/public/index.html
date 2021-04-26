@@ -10,18 +10,19 @@
 </head>
 <body>
     
-    <div id="app">
-        <form @submit="hentEksamensOppg($event)">
-            <label>Velg type matte: </label>
-            <input type="text" placeholder="type matte" v-model="fag" class="rounded border border-blue-500"><br>
-            <label>Velg et emne: </label>
-            <input type="text" placeholder="type matte" v-model="sokeord"  class="rounded border border-blue-500"><br>
-            <input type="submit" value="Søk">
+    <div id="app" class="mx-2 my-2 px-2 py-2">
+        <h1 class="text-2xl self-center text-center">Søk etter emner fra tidligere eksamenssett</h1>
+        <form @submit="hentEksamensOppg($event)" class="self-center text-lg text-center">
+            <label>Velg type matte: </label><br>
+            <input type="text" placeholder="type matte" v-model="fag" class="rounded border border-blue-500 my-2"><br>
+            <label>Velg et emne: </label> <br>
+            <input type="text" placeholder="type matte" v-model="sokeord"  class="rounded border border-blue-500 my-2"><br>
+            <input type="submit" value="Søk" class="w-20 h-8 cursor-pointer hover:bg-blue-500 transition-all my-3 rounded-md border border-green-200 bg-blue-300">
         </form>
 
-        <div>
-            <div v-for="oppg in exams">
-                <p> Årstall: {{ oppg.year }} {{ oppg.oppg }}</p>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 sm:grid-cols-1 self-center text-lg text-center items-center">
+            <div v-for="oppg in exams" class="w-52 h-24 rounded-md border border-green-200 bg-blue-300 mx-3 my-3">
+                <p> Årstall: {{ oppg.year }} {{ oppg.oppg }} <a v-bind:href="oppg.link" target="_blank">link</a> </p> 
             </div>
         </div>
     </div>
@@ -32,6 +33,5 @@
         import main from './main.js';
         main();
     </script>
-    <!-- <script>main()</script> -->
 </body>
 </html>

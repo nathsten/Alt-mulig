@@ -39,9 +39,10 @@ app.get('/oppdaterEksamensoppgaver/:fag', async (req, res) => {
         const getLink = await elLink.getProperty("href");
         const link = await getLink.jsonValue();
         const readPdf = await getPdfObject(link);
+        // legge med link på et vis. 
         const år = await eksamenFag[fagnr];
         fagnr += 3;
-        alleEksamenForFag[år] = await readPdf;
+        alleEksamenForFag[år] = await {link, readPdf};
     }
     db[fag] = alleEksamenForFag;
     writeFileSync('db.json', JSON.stringify(db, null, 2));
