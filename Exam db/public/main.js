@@ -21,7 +21,14 @@ const main = () => {
             const month = new Date().getUTCMonth();
             const year = new Date().getUTCFullYear();
             // sjekker om databasen må oppdateres. 
-            const checkDb = await fetch(`/oppdaterEksamensoppgaver/${month}/${year}`);
+            const checkDb = await fetch(`/oppdaterEksamensoppgaver`, {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({month, year}),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
             const status = await checkDb.json();
             console.log(status.status);
         }
