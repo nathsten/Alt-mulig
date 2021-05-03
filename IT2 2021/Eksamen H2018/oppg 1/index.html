@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppg 1</title>
+    <script src="oppg1.js"></script>
+    <style>
+        body{
+            margin: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        #bestillinger{
+            width: 1200px;
+            height: auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .heiskort{
+            border: solid 1px rgb(8, 154, 203);
+            background-color: rgba(6, 186, 186, 0.488);
+            border-radius: 10px;
+            padding: 5px;
+            margin: 10px 0px 0px 10px;
+        }
+    </style>
+</head>
+<body>
+    <form id="ui">
+        <label>Antall barn (12år eller yngre): <br><input type="number" min="0" id="barn"></label><br>
+        <label>Antall Voksne: <br><input type="number" min="0" id="voksne"></label><br>
+        <label>Antall dager: <br><input type="number" min="0" id="dager"></label>
+        <input type="submit" value="Bestill">
+    </form>
+    <div id="bestillinger"></div>
+    <script>main()</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppg 2</title>
+    <script src="oppg2.js"></script>
+    <style>
+        #velgHytte{
+        width: 853px;
+        height: 480px;
+        position: relative;
+        left: calc(50% - 426px);
+        background-image: url('../Vedlegg/menybilde.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 100%;
+    }
+    #granbo{
+        position: absolute;
+        left: 320px;
+        top: 100px;
+        width: 120px;
+        height: 100px;
+        cursor: pointer;
+    }
+    #granstua{
+        position: absolute;
+        left: 430px;
+        top: 140px;
+        width: 120px;
+        height: 100px;
+        cursor: pointer;
+    }
+    #info{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        width: 853px;
+        position: relative;
+        margin: 20px 0px 20px 0px;
+        left: calc(50% - 426px);
+    }
+    #info>span{
+        margin: auto;
+    }
+    #galleri{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .galleriBilder{
+        width: 200px;
+        height: 150px;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: center;
+        margin: auto;
+        cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <button id="back" style="display: none; position: absolute;">Tilbake</button>
+    <div id="velgHytte">
+        <div id="granbo"></div>
+        <div id="granstua"></div>
+    </div>
+
+    <h1 id="hytte" style="text-align: center;"></h1>
+    <div id="info"></div>
+    <div id="galleri"></div>
+
+    <script>main();</script>
+</body>
+</html>
