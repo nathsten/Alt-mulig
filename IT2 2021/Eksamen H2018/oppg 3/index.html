@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppg 3</title>
+    <style>
+        tbody{
+            margin: none;
+        }
+        table{
+            border: solid 1px black;
+            margin: 20px;
+            padding: 5px;
+        }
+        td, th{
+            border: solid 1px black;
+            padding: 0px 4px 0px 4px;
+        }
+        .hytteKlikk{
+            cursor: pointer;
+
+        }
+    </style>
+</head>
+<body>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Hytte</th>
+                <th>Jul</th>
+                <th>Vinterferie</th>
+                <th>Påske</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <div id="selector"></div>
+    <div id="bestilling"></div>
+    
+    <script type="module">
+        import main from './oppg3.js';
+        import {$} from '../../util.js';
+        main($);
+    </script>
+</body>
+</html>
