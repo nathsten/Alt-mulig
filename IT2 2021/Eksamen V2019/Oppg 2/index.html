@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .liggende{
+            background-color: gray;
+            width: 300px;
+            height: 200px;
+        }
+        .stående{
+            background-color: gray;
+            width: 200px;
+            height: 300px;
+        }
+        .kvadrat{
+            background-color: gray;
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="summary"></div>
+    <br>
+    <form id="ui">
+        <label>Bredde: <br><input type="number" max="1920" required></label><br>
+        <label>Høyde: <br><input type="number" required></label><br>
+        <input type="submit" value="Kalkuler">
+    </form>
+
+    <h2 id="output"></h2>
+    <div id="firkantOut"></div>
+    <script type="module">
+        import main from './oppg2.js';
+        main();
+    </script>
+</body>
+</html>
