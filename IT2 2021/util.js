@@ -10,7 +10,7 @@ const $ = ids => ids.split(" ").map(id => document.getElementById(id));
 const new$ = el => document.createElement(el);
 
 /**
- * Returnerer et promise med liste eller objekt med bilder eller lyder
+ * Returnerer et promise med liste eller objekt med bilder eller lyder.
  * Bør brukes med en try - catch | .then().catch().., da den "rejecter" en eventuell error.
  * @param {string} type lyd | bilde | bildeListe
  * @param {string} dir hvilke mappe filen ligger i 
@@ -66,4 +66,40 @@ const new$ = el => document.createElement(el);
     }
 })
 
-export {$, new$, hentFiler};
+/** Lager et HTMLElement for hver verdi i en array.
+ * @param {any[]} arr 
+ * @param {HTMLDivElement} div 
+ * @param {string} tag 
+ * @param {string} className 
+ * @returns {void}
+ */
+const printArray = (arr, div, tag, className) => 
+    arr.forEach(e => {
+        const el = new$(tag);
+        el.className = className;
+        el.innerHTML = e;
+        div.append(el);
+    })
+
+
+/**
+ * @param {string} tag 
+ * @param {string} text 
+ * @param {{ id: string, class: string, href: string, value: string, target: string}} obj 
+ * @returns {string} HTML-tag med innsendte verdier. 
+ */
+const makeTag = (tag, text, obj) => `<${tag} id="${obj.id ? obj.id : ''}" class="${obj.class ? obj.class : ''}" ${obj.href ? `href="${obj.href}"` : '/'} ${obj.value ? `value="${obj.value}"` : ''} ${obj.target ? `value="${obj.target}"` : ''}>${text}</${tag}>`;
+
+/**
+ * @param {number} num 
+ * @returns {string} gjør tall til string
+ */
+const _S = num => num.toString();
+
+/**
+ * @param {number} num 
+ * @returns {boolean} sjekker om tallet er en integer (helt tall).
+ */
+const isInt = num => Number.isInteger(+num);
+
+export { $, new$, hentFiler, printArray, makeTag, _S, isInt };
