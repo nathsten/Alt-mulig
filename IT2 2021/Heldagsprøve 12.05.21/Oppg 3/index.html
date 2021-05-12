@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oppg 3, arbeidsfordeling</title>
+    <link rel="stylesheet" href="oppg3.css">
+</head>
+<body>
+    
+    <div id="main">
+
+        
+        <div id="funksjonsListe">
+            <h2>Velg hvilke handling du vil gjøre</h2>
+            <button id="rama">Registrer ansatt med arbeid</button>
+            <button id="ltan">Legg til ansatt</button>
+            <button id="ltar">Legg til arbeid</button>
+            <button id="masf">Merk arbeid som ferdig</button>
+        </div>
+        
+        <br>
+        <div id="funkDiv"></div>
+
+        <div id="visArbeidsListe">
+            <h2>ArbeidsListe:</h2>
+            <div id="arbeidsliste">
+                <div class="liste">
+                    <span>Navn</span>
+                    <span>Arbeid</span>
+                    <span>Antall på gruppen</span>
+                    <span>Fullført av</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="infoBoks">
+            <h3>Infoboks. <br> Klikk på et navn eller <br> arbeid i tabellen for å se info</h3>
+            <h4 id="infoHeader"></h4>
+            <ul id="infoList"></ul>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import main from './oppg3.js';
+        main();
+    </script>
+</body>
+</html>
