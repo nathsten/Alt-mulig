@@ -40,12 +40,12 @@ struct Point* getFile(char filename[]){
         int c = 0;
         int i = 0;
         int length = lengthOfString(str);
-        while(str[i] != ' '&&i != length){
+        while(str[i] != ' '&&i != length&&str[i] != '\0'){
             xs[i] = str[i];
             i++;
         }
         i++;
-        while (i <= length){
+        while (i <= length&&str[i] != '\0'){
             ys[c] = str[i];
             c++;
             i++;
