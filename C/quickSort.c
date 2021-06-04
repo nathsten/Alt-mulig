@@ -2,19 +2,27 @@
 #include <stdlib.h>
 #define SIZEOF(a) sizeof(a)/sizeof(a[0])
 
+struct Filtered{
+    int *arr;
+    int index;
+};
+
 int* quickSort(int *arr, int size);
-int* filter(int *arr, int size, int req, char oper);
+struct Filtered* filter(int *arr, int size, int req);
 int* concat(int *arr1, int *arr2, int avgnum);
 int avgNum(int *arr, int size);
 int pointerSize(int *p);
 void printArr(int *arr, int size);
 
 int main(){
-    int arr[] = {4, 1, 8, 7, 12, 9, 17, 5, 3, 6};
+    int arr[] = {4, 9, 1, 8, 7, 12, 9, 17, 5, 3, 6, 2};
     int size = SIZEOF(arr);
     int *p = arr;
-    int *s = quickSort(p, size);
-    printArr(s, pointerSize(s));
+    // int *s = quickSort(p, size);
+    // printArr(s, pointerSize(s));
+    struct Filtered *f = filter(p, size, 7);
+    printArr(f->arr, size);
+    printf("index: %d\n", f->index);
     return 1;
 }
 
@@ -31,35 +39,36 @@ int* quickSort(int *arr, int size){
         return arr;
     }
     
-    int m = arr[(int)size/2];
-    int *underAvg = filter(arr, pointerSize(arr), m, '<');
-    int *overAvg = filter(arr, pointerSize(arr), m, '>');
+    int m = (arr[(int)size/2] + arr[0] + arr[size-1])/3;
+    struct Filtered *filtered = filter(arr, pointerSize(arr), m);
 
-    int uasize = pointerSize(underAvg);
-    int oasize = pointerSize(overAvg);
-    return concat(quickSort(underAvg, uasize), quickSort(overAvg, oasize), m);
+
+    // int uasize = pointerSize(underAvg);
+    // int oasize = pointerSize(overAvg);
+    // return concat(quickSort(underAvg, uasize), quickSort(overAvg, oasize), m);
+    return arr;
 }
 
-int* filter(int *arr, int size, int req, char oper){
-    int *p = malloc(sizeof(int)*size);
-    int i, j=0;
-    if(oper == '<'){
-        for(i=0; i<size; ++i){
-            if(arr[i] < req){
-                *(p+j) = arr[i];
-                ++j;
-            }
+struct Filtered* filter(int *arr, int size, int req){
+    struct Filtered *ret = (struct Filtered*)malloc(sizeof(struct Filtered));
+    int i=0, j=size-1;
+    while(i < j){
+        if(*(arr+i) < req) i++;
+
+        if(*(arr+j) > req) j--;
+
+        if(*(arr+i) > *(arr+j)){
+            int low = *(arr+i);
+            int high = *(arr+j);
+            *(arr+i) = high;
+            *(arr+j) = low;
+            i++;
+            j--;
         }
     }
-    else if(oper == '>'){
-        for(i=0; i<size; ++i){
-            if(arr[i] > req){
-                *(p+j) = arr[i];
-                ++j;
-            }
-        }
-    }
-    return p;
+    (ret)->arr = arr;
+    (ret)->index = i-1;
+    return ret;
 }
 
 int* concat(int *arr1, int *arr2, int avgnum){

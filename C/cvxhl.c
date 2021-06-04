@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-
-#define LEN(a) sizeof(a)/sizeof(a[0])
 
 struct Point* getFile(char filename[]);
+struct Point* convex_hull(struct Point* allPoints);
 void printPointer(struct Point *p);
 int lengthOfString(char str[]);
 
@@ -23,7 +21,7 @@ int main(){
 
 struct Point* getFile(char filename[]){
     FILE *txt;
-    char str[100];
+    char str[1000];
     struct Point *allPoints;
     allPoints = (struct Point*) malloc(100* sizeof(struct Point));
     int p = 0;
@@ -33,44 +31,40 @@ struct Point* getFile(char filename[]){
         printf("Could not open file %s\n",filename);
         return allPoints;
     }
-    while (fgets(str, 100, txt) != NULL){
-        // printf("%s", str);
-        char xs[3];
-        char ys[3];
-        int c = 0;
-        int i = 0;
-        int length = lengthOfString(str);
-        while(str[i] != ' '&&i != length&&str[i] != '\0'){
-            xs[i] = str[i];
-            i++;
+    while (fgets(str, 1000, txt) != NULL)
+    {
+        int i=0;
+        char *splitted = strtok(str, " ");
+        struct Point *point = (struct Point*)malloc(sizeof(struct Point));
+        while( splitted != NULL && i < 2) {
+            if(i == 0){
+                point->x = atoi(splitted);
+                splitted = strtok(NULL, "\n");
+            }
+            if(i == 1) point->y = atoi(splitted);
+            ++i;
         }
-        i++;
-        while (i <= length&&str[i] != '\0'){
-            ys[c] = str[i];
-            c++;
-            i++;
-        }
-        (allPoints+p)->x = atoi(xs);
-        (allPoints+p)->y = atoi(ys);
-        p++;
+        (allPoints+p)->x = point->x;
+        (allPoints+p)->y = point->y;
+        free(point);
+        ++p;
+        // printf("%d %d", point->x, point->y);
+        // printf("\n");
     }
-        // printf("\n"); 
+    
     fclose(txt);
 
+    return allPoints;
+}
+
+struct Point* convex_hull(struct Point* allPoints)
+{
     return allPoints;
 }
 
 void printPointer(struct Point *p){
     for(int i=0; i<50; i++){
         if((p+i)->x == 0 && (p+i)->y == 0) break;
-        printf("%d\t%d\n", (p+i)->x, (p+i)->y);
+        printf("x: %d\ty: %d\n", (p+i)->x, (p+i)->y);
     }
-}
-
-int lengthOfString(char str[]){
-    int i = 0;
-    for(i=0; i<1000000; ++i){
-        if(str[i] == 0) break;
-    }
-    return i-1;
 }
