@@ -52,13 +52,13 @@ pub async fn send_data() -> impl Responder{
 #[pg_mapper(table = "todos")]
 pub struct Todo{
     pub id: i32,
-    pub name: String,
+    pub title: String,
     pub checked: bool
 }
 
 pub async fn get_todos(db_pool: web::Data<Pool>) -> impl Responder{
     let client: Client = 
-        db_pool.get().await.expect("no get todods...");
+        db_pool.get().await.expect("no todods...");
 
     let result = db::get_todos(&client).await;
 
