@@ -5,7 +5,8 @@
   "main": "db.js",
   "scripts": {
     "start": "node db.js",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "dev": "nodemon db.ts"
   },
   "author": "Nathaniel Stensen",
   "license": "ISC",
