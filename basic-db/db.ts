@@ -7,6 +7,9 @@ class Database{
     private collectionValue: string;
     private dbName: string;
 
+    /**
+     * @param {string} name Name of the database
+     */
     constructor(name: string){
         this.collectionValue = "";
         this.dbName = name;
@@ -15,13 +18,13 @@ class Database{
             this.db = JSON.parse(decrypt(JSON.parse(db)));
         }
         catch(error){
-            const dbInfo = JSON.stringify({});
-            fs.writeFileSync(`${this.dbName}.db`, JSON.stringify(encrypt(dbInfo)))
+            this.db = {};
+            fs.writeFileSync(`${this.dbName}.db`, JSON.stringify(encrypt(JSON.stringify(this.db))))
         }
     }
 
     /**
-     * @param collectioName name of the collection you want to select.
+     * @param {string} collectioName  Name of the collection you want to select.
      * @returns 
      */
 
@@ -30,7 +33,7 @@ class Database{
         return {get: this.get, insert: this.insert, delete: this.delete, db: this.db, collectionValue: this.collectionValue, dbName: this.dbName};
     }
     /**
-     * @param args argumenst to filter out rows
+     * @param {Object} args Argumenst to filter out rows
      * @returns {Array<Object>} 
      */
     private get(args: any){
@@ -43,7 +46,9 @@ class Database{
         }
         return this.db[this.collectionValue] || [];
     }
-
+    /**
+     * @param {Object} obj The object you want to insert into the collection.
+     */
     private insert(obj: Object): void{
         if(this.db[this.collectionValue]){
             this.db[this.collectionValue].push(obj)
@@ -54,6 +59,9 @@ class Database{
         fs.writeFileSync(`${this.dbName}.db`, JSON.stringify(encrypt(JSON.stringify(this.db))));
     }
 
+    /**
+     * @param {object} args Criteria for what to delete
+     */
     private delete(args: any): void{
         if(Object.keys(args).length > 0){
             try{

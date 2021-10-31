@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const crypto_1 = require("./crypto");
 class Database {
+    /**
+     * @param {string} name Name of the database
+     */
     constructor(name) {
         this.collectionValue = "";
         this.dbName = name;
@@ -14,12 +17,12 @@ class Database {
             this.db = JSON.parse(crypto_1.decrypt(JSON.parse(db)));
         }
         catch (error) {
-            const dbInfo = JSON.stringify({});
-            fs_1.default.writeFileSync(`${this.dbName}.db`, JSON.stringify(crypto_1.encrypt(dbInfo)));
+            this.db = {};
+            fs_1.default.writeFileSync(`${this.dbName}.db`, JSON.stringify(crypto_1.encrypt(JSON.stringify(this.db))));
         }
     }
     /**
-     * @param collectioName name of the collection you want to select.
+     * @param {string} collectioName  Name of the collection you want to select.
      * @returns
      */
     collection(collectioName) {
@@ -27,7 +30,7 @@ class Database {
         return { get: this.get, insert: this.insert, delete: this.delete, db: this.db, collectionValue: this.collectionValue, dbName: this.dbName };
     }
     /**
-     * @param args argumenst to filter out rows
+     * @param {Object} args Argumenst to filter out rows
      * @returns {Array<Object>}
      */
     get(args) {
@@ -40,6 +43,9 @@ class Database {
         }
         return this.db[this.collectionValue] || [];
     }
+    /**
+     * @param {Object} obj The object you want to insert into the collection.
+     */
     insert(obj) {
         if (this.db[this.collectionValue]) {
             this.db[this.collectionValue].push(obj);
@@ -49,6 +55,9 @@ class Database {
         }
         fs_1.default.writeFileSync(`${this.dbName}.db`, JSON.stringify(crypto_1.encrypt(JSON.stringify(this.db))));
     }
+    /**
+     * @param {object} args Criteria for what to delete
+     */
     delete(args) {
         if (Object.keys(args).length > 0) {
             try {
@@ -66,5 +75,4 @@ class Database {
         }
     }
 }
-
-module.exports = {Database};
+module.exports = { Database };
