@@ -30,7 +30,7 @@ class Database{
 
     collection(collectioName: string){
         this.collectionValue = collectioName;
-        return {get: this.get, insert: this.insert, delete: this.delete, db: this.db, collectionValue: this.collectionValue, dbName: this.dbName};
+        return {get: this.get, insert: this.insert, delete: this.delete, db: this.db, collectionValue: this.collectionValue, dbName: this.dbName};;
     }
     /**
      * @param {Object} args Argumenst to filter out rows
@@ -49,7 +49,7 @@ class Database{
     /**
      * @param {Object} obj The object you want to insert into the collection.
      */
-    private insert(obj: Object): void{
+    private insert(obj: any): void{
         if(this.db[this.collectionValue]){
             this.db[this.collectionValue].push(obj)
         }
@@ -79,4 +79,4 @@ class Database{
     }
 }
 
-export default Database;
+export = Database;

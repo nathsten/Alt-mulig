@@ -2,7 +2,6 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const crypto_1 = require("./crypto");
 class Database {
@@ -28,6 +27,7 @@ class Database {
     collection(collectioName) {
         this.collectionValue = collectioName;
         return { get: this.get, insert: this.insert, delete: this.delete, db: this.db, collectionValue: this.collectionValue, dbName: this.dbName };
+        ;
     }
     /**
      * @param {Object} args Argumenst to filter out rows
@@ -75,4 +75,4 @@ class Database {
         }
     }
 }
-module.exports = { Database };
+module.exports = Database;
