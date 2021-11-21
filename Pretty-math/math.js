@@ -101,6 +101,9 @@ class PrettyMath{
     }
 }
 
+/**
+ * @type {PrettyMath} PrettyMath object
+ */
 const PM = new PrettyMath();
 
 /**

@@ -1,0 +1,3 @@
+F = integral[2x+1,a,b] = |x^(2)+x+C|_a^b nl 
+sum[n=1,n<\infty] a_1*k^(n-1) = a_1 * (k^(n)-1)/k-1 nl 
+sum[n=1,\infty] a_1*k^(n-1) = a_1/k-1
