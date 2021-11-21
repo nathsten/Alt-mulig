@@ -54,7 +54,7 @@ class PrettyMath{
             func = u;
         });
         func = this.check(func);
-        formatted += "\\frac{dy}{dx} = (";
+        formatted += "\\frac{dy}{dx} (";
         formatted += func + ")$$ ";
         return formatted;
     }
@@ -110,7 +110,8 @@ const PM = new PrettyMath();
  * @param {string} i 
  * @returns {void}
  */
-const main = (i = i.toLocaleLowerCase()) => {
+const main = (i) => {
+    i = i.toLocaleLowerCase();
     const n = i.split(" ");
     if(n.length > 1) {
         outptField.innerHTML = "";
