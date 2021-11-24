@@ -6,6 +6,23 @@
 .field{
     border: black 1px solid;
     margin: 2rem;
-    max-width: 630px;
+    /* max-width: 630px; */
     overflow-x: scroll;
+}
+
+.tag{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 2rem;
+}
+.tag>h1{
+    width: 630px;
+}
+
+.header{
+    position: relative;
+    left: 12.5%;
+}
+.header>h1{
+    line-height: 4.5rem;
 }

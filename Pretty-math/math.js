@@ -89,6 +89,10 @@ class PrettyMath{
         return formatted;
     }
 
+    /**
+     * @param {string} str flat math string
+     * @returns {string} formatted MathJax
+     */
     sum(str){
         var formatted = "$$";
         var args = [];
@@ -97,6 +101,38 @@ class PrettyMath{
         });
         args.map((e,i) => args[i] = this.check(e));
         formatted += `\\sum_{${args[0]}}^{${args[1]}}$$`;
+        return formatted;
+    }
+
+    /**
+     * @param {string} str flat math string
+     * @returns {string} formatted MathJax
+     */
+    derivative(str){
+        var formatted = "$$";
+        var func = "";
+        var v = "x"
+        str.replace(/\[(.+?)\]/g, (a,u) => {
+            u = u.split(",");
+            func = u[0];
+            v = u[1];
+        });
+        func = this.check(func);
+        formatted += "\\frac{dy}{dx} (";
+        formatted += func + ") = ";
+        formatted += this.check(String(math.derivative(func.replaceAll("ln", "log"), v)).split(" * ").join("")) + "$$";
+        return formatted;
+    }
+
+    sqrt(str){
+        var formatted = "$$";
+        var func = "";
+        str.replace(/\[(.+?)\]/g, (a,u) => {
+            func = u;
+        });
+        func = this.check(func);
+        formatted += `\\sqrt{${func}}$$`;
+        console.log(formatted)
         return formatted;
     }
 }
@@ -156,6 +192,14 @@ const main = (i) => {
             outptField.innerHTML += PM.sum(i);
             return;
         }
+        if(i.includes("derivative[")){
+            outptField.innerHTML += PM.derivative(i);
+            return;
+        }
+        if(i.includes("sqrt[")){
+            outptField.integral += PM.sqrt(i);
+            return;
+        }
         if(i.includes("/")){
             outptField.innerHTML += PM.frac(i);
             return;
@@ -171,3 +215,5 @@ const main = (i) => {
 const [ inptField, outptField ] = $("inptField outptField");
 
 inptField.addEventListener("input", () => main(inptField.value));
+
+// math.derivative("x^2", "x");
