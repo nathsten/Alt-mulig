@@ -17,6 +17,9 @@ class PrettyMath{
         if(str.includes("/") && !str.includes("frac")){
             return this.check(this.frac(str).split("$$").join(""));
         }
+        if(str.includes("sqrt[") && !str.includes("\\sqrt{")){
+            return this.check(this.sqrt(str).split("$$").join(""));
+        }
         return str;
     }
 
@@ -169,7 +172,7 @@ const main = (i) => {
             return;
         }
         if(i.includes("<=")){
-            outptField.innerHTML += "$$\\if$$";
+            outptField.innerHTML += "$$\\iff$$";
             return;
         }
         if(i.includes("nl")){
@@ -197,7 +200,7 @@ const main = (i) => {
             return;
         }
         if(i.includes("sqrt[")){
-            outptField.integral += PM.sqrt(i);
+            outptField.innerHTML += PM.sqrt(i);
             return;
         }
         if(i.includes("/")){
@@ -215,5 +218,3 @@ const main = (i) => {
 const [ inptField, outptField ] = $("inptField outptField");
 
 inptField.addEventListener("input", () => main(inptField.value));
-
-// math.derivative("x^2", "x");
