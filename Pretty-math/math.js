@@ -11,11 +11,11 @@ class PrettyMath{
      * @returns {string} formatted MathJax
      */
     check(str){
-        if(str.includes("^")){
-            return this.power(str).split("$$").join("");
+        if(str.includes("^(") && !str.includes("{")){
+            return this.check(this.power(str).split("$$").join(""));
         }
-        if(str.includes("/")){
-            return this.frac(str).split("$$").join("");
+        if(str.includes("/") && !str.includes("frac")){
+            return this.check(this.frac(str).split("$$").join(""));
         }
         return str;
     }
@@ -39,7 +39,7 @@ class PrettyMath{
     frac(str){
         var formatted = "$$";
         const [u, v] = str.split("/");
-        formatted += `\\frac{${u}}{${v}}$$`;
+        formatted += `\\frac{${this.check(u)}}{${this.check(v)}}$$`;
         return formatted;
     }
 
@@ -152,12 +152,12 @@ const main = (i = i.toLocaleLowerCase()) => {
             outptField.innerHTML += PM.sum(i);
             return;
         }
-        if(i.includes("^")){
-            outptField.innerHTML += PM.power(i);
-            return;
-        }
         if(i.includes("/")){
             outptField.innerHTML += PM.frac(i);
+            return;
+        }
+        if(i.includes("^(")){
+            outptField.innerHTML += PM.power(i);
             return;
         }
         outptField.innerHTML += i;
